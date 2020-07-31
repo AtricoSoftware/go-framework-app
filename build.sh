@@ -2,10 +2,6 @@ MODULE="dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app"
 export OUTPUT_NAME="go-framework-app"
 TARGET_DIR=release
 TARGET_PLATFORMS="darwin windows linux"
-VERSION=$(git describe --tags --dirty)
-GIT_SHA=$(git rev-parse HEAD)
-BUILT_ON=$(date)
-BUILT_BY=$(whoami)
 
 # Caller can specify extra info in version
 if [[ ! -z "$1" ]]
@@ -17,12 +13,21 @@ echo Building Version $VERSION
 export CGO_ENABLED=0
 export GOARCH="amd64"
 
+# setup details
+VERSION=$(git describe --tags --dirty)
+# built
+BUILT_ON=$(date)
+BUILT_BY=$(whoami)
+# git
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+GIT_COMMIT=$(git rev-parse HEAD)
+
+DETAILS="{\"Built\":{\"On\":\"$BUILT_ON\", \"By\":\"$BUILT_BY\"},\"Git\":{ \"Repository\":\"MODULE\",\"Branch\":\"$GIT_BRANCH\",\"Commit\":\"$GIT_COMMIT\"} }"
 # Setup ldflags
 LDFLAGS="-s -w"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Version=$VERSION'"
-LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Git=$GIT_SHA'"
-LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuiltOn=$BUILT_ON'"
-LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuiltBy=$BUILT_BY'"
+LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
+
 
 mkdir -p $TARGET_DIR
 for GOOS in $TARGET_PLATFORMS; do

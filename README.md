@@ -21,7 +21,25 @@ Root command is implemented idiomatically<br>
 
 
 ## <a name="builddetails"/> Build details
-TODO 
+The version command can display full application details, these are read from the pkg.BuildDetails variable which is a JSON string.  This is set using ldflags as can be seen in build.sh<br>
+#### example
+```bash
+> go-framework-app version --full
+
+go-framework-app
+Here is the describtion
+v1.0.0
+
+Details
+-------
+Built:
+  Built on: Fri Jul 31 12:15:59 BST 2020
+  Built by: rob
+Git:
+  Repository: MODULE
+  Branch: master
+  Commit: e916cd3dccf2a7b8226f3fa2b19e5b4a66761d63
+```
 
 ## <a name="pipeline"/> Build pipeline
 TODO 
