@@ -1,0 +1,9 @@
+{
+  "files": [
+    {
+      "pattern": "./release/*.zip",
+      "target": "conditioninsight-dev-local/go-framework-app/",
+      "props": "version=REPLACE;"
+    }
+  ]
+}

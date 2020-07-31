@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include:
+      - refs/tags/*
+pr: none
+
+resources:
+  containers:
+    - container: go-build-agent
+      image: mclaren-cloudplatform-docker-dev-local.jfrog.io/golang:1.13
+      endpoint: artifactory-cloud-mcp-docker
+
+variables:
+  - group: condition-insight-dev
+
+pool:
+  name: 'ConditionInsight-Dev'
+
+stages:
+  - stage: BUILD
+    displayName: Build
+    jobs:
+      - job: build_and_publish
+        container: go-build-agent
+        displayName: Build
+        steps:
+          - script: |
+              ./build.sh
+            displayName: Build go-framework-app
+          - task: ArtifactoryGenericUpload@1
+            inputs:
+              artifactoryService: 'Artifactory Cloud'
+              specSource: 'file'
+              file: './pattern.json'
+              failNoOp: true
+            displayName: Publish go-framework-app to Artifactory
