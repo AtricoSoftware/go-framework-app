@@ -7,6 +7,8 @@ type Settings interface {
 	ApplicationName() string
 	// Path to the repository
 	RepositoryPath() string
+	// Commands to add
+	Commands() []string
 }
 
 // Get the settings for this run

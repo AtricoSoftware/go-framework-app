@@ -11,18 +11,26 @@ import (
 )
 
 const filesPkg = "files"
+const templatesPkg = "templates"
 
 func main() {
-	// Create file templates
-	tFile, err := os.Create(filepath.Join(filesPkg, "templates.go"))
+	// Create files templates
+	createTemplates(filesPkg, fileHeader, fileFooter, addFilesTemplate)
+	// Create specific templates
+	createTemplates(templatesPkg, templatesHeader, templatesFooter, addTemplatesTemplate)
+}
+
+func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents []byte)string) {
+	// Create templates from files
+	tFile, err := os.Create(filepath.Join(pkg, "templates.go"))
 	if err != nil {
 		panic(err)
 	}
 	defer tFile.Close()
 	// Write file header
-	tFile.WriteString(fileHeader)
+	tFile.WriteString(header)
 	// Find all files starting with underscore
-	filepath.Walk(filesPkg, func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(pkg, func(path string, info os.FileInfo, err error) error {
 		if info.Mode().IsRegular() && strings.HasPrefix(info.Name(), "_") {
 			// Read file contents
 			file, err := os.Open(path)
@@ -35,15 +43,15 @@ func main() {
 				return err
 			}
 			// Strip leading underscore and filesPkg
-			newName := strings.Replace(path, info.Name(), info.Name()[1:], 1)[len(filesPkg)+1:]
+			newName := strings.Replace(path, info.Name(), info.Name()[1:], 1)[len(pkg)+1:]
 			fmt.Println("Adding: ", newName)
 			// TODO - handle ` in file (readme)
-			tFile.WriteString(fmt.Sprintf("Files = append(Files, template.Must(template.New(`%s`).Parse(`%s`)))\n", newName, contents))
+			tFile.WriteString(addTemplate(newName, contents))
 		}
 		return nil
 	})
 	// Write file footer
-	tFile.WriteString(fileFooter)
+	tFile.WriteString(footer)
 	tFile.Sync()
 }
 
@@ -61,9 +69,24 @@ func init() {
 var fileFooter = `
 }`
 
-func fileAddTemplate(path string, contents string) string {
-	return fmt.Sprintf(`			
-Files = append(template.Must(template.New(%s).Parse(contents)\n")
+func addFilesTemplate(name string, contents []byte) string {
+	return fmt.Sprintf("Files = append(Files, template.Must(template.New(`%s`).Parse(`%s`)))\n", name, contents)
+}
 
-`, path)
+var templatesHeader = fmt.Sprintf(`
+package %s
+
+import "text/template"
+
+// Specific file templates
+var Templates = make(map[string]*template.Template)
+
+func init() {
+`, templatesPkg)
+
+var templatesFooter = `
+}`
+func addTemplatesTemplate(name string, contents []byte) string {
+	name2 := strings.Replace(filepath.Base(name), filepath.Ext(name), "", 1)
+	return fmt.Sprintf("Templates[`%s`] = template.Must(template.New(`%s`).Parse(`%s`))\n", name2, name2, contents)
 }

@@ -10,3 +10,12 @@ func GetStringOrDefault(key string, defaultValue string) string {
 	}
 	return defaultValue
 }
+
+func GetStringSliceOrDefault(key string, defaultValue []string) []string {
+	value := viper.GetStringSlice(key)
+	if value != nil {
+		return value
+	}
+	return defaultValue
+
+}

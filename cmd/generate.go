@@ -12,6 +12,7 @@ import (
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/common"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/pkg"
+	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/templates"
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/files"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/requirements"
@@ -31,7 +32,13 @@ var generateCmd = &cobra.Command{
 		values := createTemplateValues(settings)
 		// Create all standard files
 		for _, t := range files.Files {
-			generateFile(settings.TargetDirectory(), t, values)
+			generateFile(settings.TargetDirectory(), t.Name(), t, values)
+		}
+		// Create commands
+		cmdPath := filepath.Join(settings.TargetDirectory(), "cmd")
+		for _,command := range settings.Commands() {
+			values["CommandName"] = command
+			generateFile(cmdPath, fmt.Sprintf("%s.go", command), templates.Templates["cmd"], values)
 		}
 		// Get the requirements
 		requirements.GetRequirements(settings.TargetDirectory())
@@ -70,15 +77,16 @@ func validateFolder(path string) {
 	}
 }
 
-func createTemplateValues(settings settings.Settings) map[string]string {
-	return map[string]string{
+func createTemplateValues(settings settings.Settings) map[string]interface{} {
+	return map[string]interface{}{
 		"ApplicationName": settings.ApplicationName(),
 		"RepositoryPath":  settings.RepositoryPath(),
+		"Commands":        settings.Commands(),
 	}
 }
 
-func generateFile(path string, contents *template.Template, values map[string]string) error {
-	fullPath := filepath.Join(path, contents.Name())
+func generateFile(path string, filename string, contents *template.Template, values map[string]interface{}) error {
+	fullPath := filepath.Join(path, filename)
 	fmt.Println("Writing: ", fullPath)
 	os.MkdirAll(filepath.Dir(fullPath), 0755)
 	file, err := os.Create(fullPath)
@@ -87,7 +95,7 @@ func generateFile(path string, contents *template.Template, values map[string]st
 	}
 	defer file.Close()
 	writer := bufio.NewWriter(file)
-	if comment := getComment(filepath.Base(contents.Name())); comment != "" {
+	if comment := getComment(filepath.Base(filename)); comment != "" {
 		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, time.Now().Format("2006-02-01"), pkg.Name, pkg.Version))
 	}
 	if err = contents.Execute(writer, values); err != nil {
