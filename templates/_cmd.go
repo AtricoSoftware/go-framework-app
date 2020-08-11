@@ -6,9 +6,9 @@ import (
 	"{{.RepositoryPath}}/settings"
 )
 
-var {{.CommandName}}Cmd = &cobra.Command{
-	Use:   "{{.CommandName}}",
-	Short: "TODO summary",
+var {{.Command.Name}}Cmd = &cobra.Command{
+	Use:   "{{.Command.Name}}",
+	Short: "{{.Command.Description}}",
 	Run: func(*cobra.Command, []string) {
 		// Implementation here!
 		settings := settings.GetSettings() // Get the default settings
@@ -17,10 +17,10 @@ var {{.CommandName}}Cmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand({{.CommandName}}Cmd)
+	rootCmd.AddCommand({{.Command.Name}}Cmd)
 {{- range .UserSettings}}
-	{{- if .AppliesToCmd $.CommandName}}
-	settings.Add{{.Name}}Flag({{$.CommandName}}Cmd.PersistentFlags())
+	{{- if .AppliesToCmd $.Command.Name}}
+	settings.Add{{.Name}}Flag({{$.Command.Name}}Cmd.PersistentFlags())
 	{{- end}}
 {{- end}}
 }

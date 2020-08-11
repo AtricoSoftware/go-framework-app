@@ -1,8 +1,17 @@
 {
   "commands": [
-    "cmd1",
-    "cmd2",
-    "cmd3"
+    {
+      "name": "cmd1",
+      "description": "Command 1"
+    },
+    {
+      "name": "cmd2",
+      "description": "Command 2"
+    },
+    {
+      "name": "cmd3",
+      "description": "Command 3"
+    }
   ],
   "settings": [
     {

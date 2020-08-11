@@ -37,8 +37,8 @@ var generateCmd = &cobra.Command{
 		// Create commands
 		cmdPath := filepath.Join(settings.TargetDirectory(), "cmd")
 		for _, command := range settings.Commands() {
-			values["CommandName"] = command
-			generateFile(cmdPath, fmt.Sprintf("%s.go", command), templates.Templates["cmd"], values)
+			values["Command"] = command
+			generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["cmd"], values)
 		}
 		// Create settings
 		settingsPath := filepath.Join(settings.TargetDirectory(), "settings")

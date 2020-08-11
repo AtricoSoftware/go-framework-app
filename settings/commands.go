@@ -1,12 +1,54 @@
 package settings
 
 import (
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/viperEx"
+	"fmt"
+
+	"github.com/spf13/viper"
 )
 
 const commandsSettingName = "commands"
 
-// Fetch the setting
-func (theSettings) Commands() []string {
-	return viperEx.GetStringSliceOrDefault(commandsSettingName, []string{"example"})
+type UserCommand interface {
+	Name() string
+	Description() string
 }
+
+// Fetch the setting
+func (theSettings) Commands() []UserCommand {
+	set := viper.Get(commandsSettingName)
+	if set == nil {
+		return []UserCommand{
+			userCommand{
+				name:        "example",
+				description: "Example command",
+			}}
+	}
+	results := make([]UserCommand, len(set.([]interface{})))
+	for i, item := range set.([]interface{}) {
+		name := ""
+		description := ""
+		for k, v := range item.(map[string]interface{}) {
+			val := fmt.Sprintf("%s", v)
+			switch k {
+			case "name":
+				name = val
+			case "description":
+				description = val
+			}
+		}
+		results[i] = userCommand{
+			name:            name,
+			description:     description,
+		}
+	}
+
+	return results
+}
+
+type userCommand struct {
+	name        string
+	description string
+}
+
+func (c userCommand) Name() string        { return c.name }
+func (c userCommand) Description() string { return c.description }
