@@ -6,24 +6,59 @@
   ],
   "settings": [
     {
-      "name": "setting1",
+      "name": "String1",
+      "description": "This is setting 1 (string, shortcut)",
       "type": "string",
       "cmdline": "setting1",
-      "cmdlineshort": "a",
-      "default": "hello",
-      "applies": [
+      "cmdlineShortcut": "a",
+      "defaultVal": "hello1",
+      "appliesTo": [
+        "root",
+        "cmd1"
+      ]
+    },
+    {
+      "name": "String2",
+      "description": "This is setting 2 (string, no-shortcut)",
+      "type": "string",
+      "cmdline": "setting2",
+      "defaultVal": "hello2",
+      "appliesTo": [
+        "cmd2",
+        "cmd3"
+      ]
+    },
+    {
+      "name": "String3",
+      "description": "This is setting 3 (string, no-cmdline)",
+      "type": "string",
+      "defaultVal": "hello3"
+    },
+    {
+      "name": "Slice4",
+      "description": "This is setting 4 (string slice)",
+      "type": "[]string",
+      "cmdline": "setting4",
+      "appliesTo": [
         "root"
       ]
     },
     {
-      "name": "setting2",
-      "type": "[]string",
-      "cmdline": "setting2",
-      "cmdlineshort": "b",
-      "default": "world",
-      "applies": [
-        "subcmd1",
-        "cmd2"
+      "name": "Bool5",
+      "description": "This is setting 5 (bool)",
+      "type": "bool",
+      "cmdline": "setting5",
+      "appliesTo": [
+        "root"
+      ]
+    },
+    {
+      "name": "Int6",
+      "description": "This is setting 6 (int)",
+      "type": "int",
+      "cmdline": "setting6",
+      "appliesTo": [
+        "root"
       ]
     }
   ]

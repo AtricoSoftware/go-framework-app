@@ -12,10 +12,10 @@ import (
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/common"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/pkg"
+	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/requirements"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/templates"
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/files"
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/requirements"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/settings"
 )
 
@@ -36,9 +36,15 @@ var generateCmd = &cobra.Command{
 		}
 		// Create commands
 		cmdPath := filepath.Join(settings.TargetDirectory(), "cmd")
-		for _,command := range settings.Commands() {
+		for _, command := range settings.Commands() {
 			values["CommandName"] = command
 			generateFile(cmdPath, fmt.Sprintf("%s.go", command), templates.Templates["cmd"], values)
+		}
+		// Create settings
+		settingsPath := filepath.Join(settings.TargetDirectory(), "settings")
+		for _, setting := range settings.UserSettings() {
+			values["Setting"] = setting
+			generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), templates.Templates["setting"], values)
 		}
 		// Get the requirements
 		requirements.GetRequirements(settings.TargetDirectory())
@@ -82,10 +88,11 @@ func createTemplateValues(settings settings.Settings) map[string]interface{} {
 		"ApplicationName": settings.ApplicationName(),
 		"RepositoryPath":  settings.RepositoryPath(),
 		"Commands":        settings.Commands(),
+		"UserSettings":    settings.UserSettings(),
 	}
 }
 
-func generateFile(path string, filename string, contents *template.Template, values map[string]interface{}) error {
+func generateFile(path string, filename string, contents *template.Template, values interface{}) error {
 	fullPath := filepath.Join(path, filename)
 	fmt.Println("Writing: ", fullPath)
 	os.MkdirAll(filepath.Dir(fullPath), 0755)
@@ -98,6 +105,8 @@ func generateFile(path string, filename string, contents *template.Template, val
 	if comment := getComment(filepath.Base(filename)); comment != "" {
 		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, time.Now().Format("2006-02-01"), pkg.Name, pkg.Version))
 	}
+	// DEBUG contents.Execute(os.Stdout, values)
+
 	if err = contents.Execute(writer, values); err != nil {
 		return err
 	}

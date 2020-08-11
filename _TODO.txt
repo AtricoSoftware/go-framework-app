@@ -1,0 +1,4 @@
+TODO
+~~~~
+Split out commands (to allow testing)
+Unit testing for cmdline

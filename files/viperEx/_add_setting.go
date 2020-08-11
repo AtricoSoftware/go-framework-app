@@ -23,6 +23,14 @@ func AddBoolSettingP(flagSet *pflag.FlagSet, name string, shorthand string, desc
 	addSetting(flagSet, name, func() { flagSet.BoolP(name, shorthand, false, description) })
 }
 
+func AddIntSetting(flagSet *pflag.FlagSet, name string, description string) {
+	AddIntSettingP(flagSet, name, "", description)
+}
+
+func AddIntSettingP(flagSet *pflag.FlagSet, name string, shorthand string, description string) {
+	addSetting(flagSet, name, func() { flagSet.Int32P(name, shorthand, 0, description) })
+}
+
 func AddStringSetting(flagSet *pflag.FlagSet, name string, description string) {
 	AddStringSettingP(flagSet, name, "", description)
 }
