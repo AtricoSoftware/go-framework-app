@@ -42,4 +42,4 @@ Git:
 ```
 
 ## <a name="pipeline"/> Build pipeline
-TODO 
+There is a sample pipeline.yml file for building your app on ADO<br>

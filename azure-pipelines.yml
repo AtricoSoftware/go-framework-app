@@ -25,12 +25,25 @@ stages:
         displayName: Build
         steps:
           - script: |
-              ./build.sh
-            displayName: Build go-framework-app
+              VERSION="$(git describe --tags --dirty)"
+              echo "##vso[task.setvariable variable=version]$VERSION"
+              echo Version = $VERSION
+            displayName: Set version
+          - script: |
+              ./build.sh $(version)
+            displayName: Build go-framework
           - task: ArtifactoryGenericUpload@1
             inputs:
               artifactoryService: 'Artifactory Cloud'
-              specSource: 'file'
-              file: './pattern.json'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "./release/*.zip",
+                      "target": "conditioninsight-dev-local/go-framework/$(version)/"
+                    }
+                  ]
+                }
               failNoOp: true
             displayName: Publish go-framework-app to Artifactory

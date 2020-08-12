@@ -3,18 +3,17 @@ export OUTPUT_NAME="go-framework-app"
 TARGET_DIR=release
 TARGET_PLATFORMS="darwin windows linux"
 
-# Caller can specify extra info in version
 if [[ ! -z "$1" ]]
 then
-  VERSION=$VERSION-$1
+  VERSION=$1
+else
+  VERSION=$(git describe --tags --dirty)
 fi
-echo Building Version $VERSION
 
 export CGO_ENABLED=0
 export GOARCH="amd64"
 
 # setup details
-VERSION=$(git describe --tags --dirty)
 # built
 BUILT_ON=$(date)
 BUILT_BY=$(whoami)
