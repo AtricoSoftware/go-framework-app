@@ -1,4 +1,3 @@
-templates/templates.go
 # Binaries for programs and plugins
 *.exe
 *.exe~

@@ -1,0 +1,49 @@
+trigger:
+  branches:
+    include:
+      - refs/tags/*
+pr: none
+
+resources:
+  containers:
+    - container: go-build-agent
+      image: mclaren-cloudplatform-docker-dev-local.jfrog.io/golang:1.13
+      endpoint: artifactory-cloud-mcp-docker
+
+variables:
+  - group: condition-insight-dev
+
+pool:
+  name: 'ConditionInsight-Dev'
+
+stages:
+  - stage: BUILD
+    displayName: Build
+    jobs:
+      - job: build_and_publish
+        container: go-build-agent
+        displayName: Build
+        steps:
+          - script: |
+              VERSION="$(git describe --tags --dirty)"
+              echo "##vso[task.setvariable variable=version]$VERSION"
+              echo Version = $VERSION
+            displayName: Set version
+          - script: |
+              ./build.sh $(version)
+            displayName: Build {{.ApplicationName}}
+          - task: ArtifactoryGenericUpload@1
+            inputs:
+              artifactoryService: 'Artifactory Cloud'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "./release/*.zip",
+                      "target": "conditioninsight-dev-local/{{.ApplicationName}}/$(version)/"
+                    }
+                  ]
+                }
+              failNoOp: true
+            displayName: Publish {{.ApplicationName}} to Artifactory

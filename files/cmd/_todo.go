@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/settings"
+	"{{.RepositoryPath}}/settings"
 )
 
 var exampleCmd = &cobra.Command{
@@ -14,7 +14,7 @@ var exampleCmd = &cobra.Command{
 	Run: func(*cobra.Command, []string) {
 		// Implementation here!
 		settings := settings.GetSettings() // Get the default settings
-		fmt.Printf("Example = %s\n", settings.Example())
+		fmt.Printf("Backup = %s\n", settings.Example())
 	},
 }
 

@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/viperEx"
+	"{{.RepositoryPath}}/viperEx"
 )
 
 // This is the name by which the setting is specified on the commandline

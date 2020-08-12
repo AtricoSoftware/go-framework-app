@@ -1,5 +1,5 @@
-MODULE="dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app"
-export OUTPUT_NAME="go-framework"
+MODULE="{{.RepositoryPath}}"
+export OUTPUT_NAME="{{.ApplicationName}}"
 TARGET_DIR=release
 TARGET_PLATFORMS="darwin windows linux"
 
@@ -27,7 +27,6 @@ LDFLAGS="-s -w"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Version=$VERSION'"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
 
-go generate
 
 mkdir -p $TARGET_DIR
 for GOOS in $TARGET_PLATFORMS; do
