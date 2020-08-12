@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/pkg"
 {{- $write := false}}
 {{- range .UserSettings}}
@@ -20,30 +21,33 @@ import (
 {{- end}}
 )
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
+func CreateCommands(api api.Api) *cobra.Command {
+	cobra.OnInitialize(initConfig)
+	rootCmd := CreateRootCommand()
+	rootCmd.AddCommand(CreateVersionCommand())
+	// Add commands
+{{- range .Commands}}
+	rootCmd.AddCommand(Create{{.ApiName}}Command(api))
+{{- end}}
+	return rootCmd
 }
 
-var rootCmd = &cobra.Command{
-	Use:   pkg.Name,
-	Short: pkg.Summary,
-	Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
+func CreateRootCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   pkg.Name,
+		Short: pkg.Summary,
+		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
+	}
+	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
+{{- range .UserSettings}}
+	{{- if .AppliesToCmd "root"}}
+	settings.Add{{.Name}}Flag(cmd.PersistentFlags())
+	{{- end}}
+{{- end}}
+	return cmd
 }
 
 var cfgFile string
-
-func init() {
-	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
-{{- range .UserSettings}}
-	{{- if .AppliesToCmd "root"}}
-	settings.Add{{.Name}}Flag(rootCmd.PersistentFlags())
-	{{- end}}
-{{- end}}
-}
 
 func initConfig() {
 	// Config file
