@@ -96,10 +96,12 @@ func validateFolder(path string) {
 
 func createTemplateValues(settings settings.Settings) map[string]interface{} {
 	return map[string]interface{}{
-		"ApplicationName": settings.ApplicationName(),
-		"RepositoryPath":  settings.RepositoryPath(),
-		"Commands":        settings.Commands(),
-		"UserSettings":    settings.UserSettings(),
+		"ApplicationName":        settings.ApplicationName(),
+		"ApplicationSummary":     settings.ApplicationSummary(),
+		"ApplicationDescription": settings.ApplicationDescription(),
+		"RepositoryPath":         settings.RepositoryPath(),
+		"Commands":               settings.Commands(),
+		"UserSettings":           settings.UserSettings(),
 	}
 }
 
