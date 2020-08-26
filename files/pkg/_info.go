@@ -1,8 +1,8 @@
 package pkg
 
 var Name = "{{.ApplicationName}}"
-var Summary = "TODO"
-var Description = "TODO"
+var Summary = "{{.ApplicationSummary}}"
+var Description = "{{.ApplicationDescription}}"
 
 // Set by build.sh
 var Version = "development-version"
