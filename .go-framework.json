@@ -1,73 +1,83 @@
 {
+  "name": "platform-importer",
+  "repository": "dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.platform.importer",
   "commands": [
     {
-      "name": "cmd1",
-      "description": "Command 1"
+      "name": "import",
+      "description": "Import files into the platform"
     },
     {
-      "name": "cmd2",
-      "description": "Command 2"
-    },
-    {
-      "name": "cmd3",
-      "description": "Command 3"
+      "name": "ingest",
+      "description": "Ingest files from S3 into the platform"
     }
   ],
   "settings": [
     {
-      "name": "String1",
-      "description": "This is setting 1 (string, shortcut)",
+      "name": "bucketName",
+      "description": "Name of bucket",
       "type": "string",
-      "cmdline": "setting1",
-      "cmdlineShortcut": "a",
-      "defaultVal": "hello1",
-      "appliesTo": [
-        "root",
-        "cmd1"
-      ]
-    },
-    {
-      "name": "String2",
-      "description": "This is setting 2 (string, no-shortcut)",
-      "type": "string",
-      "cmdline": "setting2",
-      "defaultVal": "hello2",
-      "appliesTo": [
-        "cmd2",
-        "cmd3"
-      ]
-    },
-    {
-      "name": "String3",
-      "description": "This is setting 3 (string, no-cmdline)",
-      "type": "string",
-      "defaultVal": "hello3"
-    },
-    {
-      "name": "Slice4",
-      "description": "This is setting 4 (string slice)",
-      "type": "[]string",
-      "cmdline": "setting4",
+      "cmdline": "bucketName",
       "appliesTo": [
         "root"
       ]
     },
     {
-      "name": "Bool5",
-      "description": "This is setting 5 (bool)",
+      "name": "bucketRole",
+      "description": "Role with permission to read bucket",
+      "type": "string",
+      "cmdline": "bucketRole",
+      "appliesTo": [
+        "root"
+      ]
+    },
+    {
+      "name": "namespace",
+      "description": "Kubernetes namespace",
+      "type": "string",
+      "cmdline": "namespace",
+      "appliesTo": [
+        "root"
+      ]
+    },
+    {
+      "name": "timeout",
+      "description": "Timeout whilst waiting for completion",
+      "type": "string",
+      "cmdline": "timeout",
+      "defaultVal": "5m",
+      "appliesTo": [
+        "root"
+      ]
+    },
+    {
+      "name": "verbose",
+      "description": "Verbose output",
       "type": "bool",
-      "cmdline": "setting5",
+      "cmdline": "verbose",
+      "cmdlineShortcut": "v",
       "appliesTo": [
         "root"
       ]
     },
     {
-      "name": "Int6",
-      "description": "This is setting 6 (int)",
-      "type": "int",
-      "cmdline": "setting6",
+      "name": "bucketFolder",
+      "description": "Folder (in S3 bucket) containing files to ingest",
+      "type": "string",
+      "cmdline": "bucketFolder",
+      "defaultVal": ".",
       "appliesTo": [
-        "root"
+        "ingest"
+      ]
+    },
+    {
+      "name": "inputFolder",
+      "description": "Folder containing files to import",
+      "type": "string",
+      "cmdline": "inputFolder",
+      "cmdlineShortcut": "f",
+      "defaultVal": ".",
+      "appliesTo": [
+        "import"
       ]
     }
   ]
