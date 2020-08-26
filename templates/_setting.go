@@ -14,6 +14,9 @@ import (
 )
 
 const {{.Setting.Id}}SettingName = "{{.Setting.Id}}"
+{{- if (ne .Setting.CmdlineShortcut "")}}
+const {{.Setting.Id}}SettingShortcut = "{{.Setting.CmdlineShortcut}}"
+{{- end}}
 
 // Fetch the setting
 func (theSettings) {{.Setting.Name}}() {{.Setting.Type}} {
@@ -23,6 +26,6 @@ func (theSettings) {{.Setting.Name}}() {{.Setting.Type}} {
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 
 func Add{{.Setting.Name}}Flag(flagSet *pflag.FlagSet) {
-	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}(flagSet, {{.Setting.Id}}SettingName, {{if (ne .Setting.CmdlineShortcut "")}}"{{.Setting.CmdlineShortcut}}", {{end}}"{{.Setting.Description}}")
+	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}(flagSet, {{.Setting.Id}}SettingName, {{if (ne .Setting.CmdlineShortcut "")}}{{.Setting.Id}}SettingShortcut, {{end}}"{{.Setting.Description}}")
 }
 {{- end}}
