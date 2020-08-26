@@ -3,12 +3,14 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"text/template"
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/common"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/pkg"
@@ -47,6 +49,13 @@ var generateCmd = &cobra.Command{
 		for _, setting := range settings.UserSettings() {
 			values["Setting"] = setting
 			generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), templates.Templates["setting"], values)
+		}
+		// Copy generator settings if found (for future reference)
+		data, err := ioutil.ReadFile(viper.ConfigFileUsed())
+		if err == nil {
+			configFile := filepath.Base(viper.ConfigFileUsed())
+			destination := filepath.Join(settings.TargetDirectory(), configFile)
+			ioutil.WriteFile(destination, data, 0644)
 		}
 		// Get the requirements
 		requirements.GetRequirements(settings.TargetDirectory())
