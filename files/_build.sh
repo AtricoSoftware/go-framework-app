@@ -21,7 +21,7 @@ BUILT_BY=$(whoami)
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GIT_COMMIT=$(git rev-parse HEAD)
 
-DETAILS="{\"Built\":{\"On\":\"$BUILT_ON\", \"By\":\"$BUILT_BY\"},\"Git\":{ \"Repository\":\"MODULE\",\"Branch\":\"$GIT_BRANCH\",\"Commit\":\"$GIT_COMMIT\"} }"
+DETAILS="{\"Built\":{\"On\":\"$BUILT_ON\", \"By\":\"$BUILT_BY\"},\"Git\":{ \"Repository\":\"$MODULE\",\"Branch\":\"$GIT_BRANCH\",\"Commit\":\"$GIT_COMMIT\"} }"
 # Setup ldflags
 LDFLAGS="-s -w"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Version=$VERSION'"
