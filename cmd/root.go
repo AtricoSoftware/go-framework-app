@@ -65,8 +65,6 @@ func tryReadConfig() error {
 	err := viper.ReadInConfig()
 	if err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		todo := viper.AllSettings()
-		println(todo)
 	}
 	return err
 }
