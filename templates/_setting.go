@@ -17,12 +17,12 @@ const {{.Setting.Id}}SettingName = "{{.Setting.Id}}"
 
 // Fetch the setting
 func (theSettings) {{.Setting.Name}}() {{.Setting.Type}} {
-	return {{.Setting.TypeGetter}}("{{.Setting.Id}}SettingName")
+	return {{.Setting.TypeGetter}}({{.Setting.Id}}SettingName)
 }
 
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 
 func Add{{.Setting.Name}}Flag(flagSet *pflag.FlagSet) {
-	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}(flagSet, "{{.Setting.Id}}SettingName", {{if (ne .Setting.CmdlineShortcut "")}}"{{.Setting.CmdlineShortcut}}", {{end}}"{{.Setting.Description}}")
+	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}(flagSet, {{.Setting.Id}}SettingName, {{if (ne .Setting.CmdlineShortcut "")}}"{{.Setting.CmdlineShortcut}}", {{end}}"{{.Setting.Description}}")
 }
 {{- end}}
