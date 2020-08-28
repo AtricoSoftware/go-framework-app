@@ -1,8 +1,6 @@
 WIP
 ~~~
-Default values for int
 
 TODO
 ~~~~
-Move viperEx to common
 Unit testing for cmdline

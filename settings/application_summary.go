@@ -2,8 +2,9 @@ package settings
 
 import (
 	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/viperEx"
+	"github.com/atrico-go/viperEx"
 )
 
 // This is the name by which the setting is specified on the commandline
@@ -12,9 +13,9 @@ const applicationSummarySettingDefault = "TODO"
 
 // Fetch the setting
 func (theSettings) ApplicationSummary() string {
-	return viperEx.GetStringOrDefault(applicationSummarySettingName, applicationSummarySettingDefault)
+	return viper.GetString(applicationSummarySettingName)
 }
 
 func AddApplicationSummaryFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSetting(flagSet, applicationSummarySettingName, "Summary of application")
+	viperEx.AddStringSettingD(flagSet, applicationSummarySettingName, applicationSummarySettingDefault, "Summary of application")
 }

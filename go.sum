@@ -23,6 +23,8 @@ github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmV
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/atrico-go/testing v0.4.3 h1:fXBFSAES5Vanbo6rB86xS0Fh+2I2TRiM3qfDkXhfGoc=
 github.com/atrico-go/testing v0.4.3/go.mod h1:tkIj9492kvx9sAkf0US+d360wdwYTN9TEIVOqE1f2a8=
+github.com/atrico-go/viperEx v1.0.0 h1:dhW0v4Vle3FJV+x7zyouVHfmPvEjJnvU4Zjx1ucLeyg=
+github.com/atrico-go/viperEx v1.0.0/go.mod h1:kE/2b1Mum7WbGMlszcoL2epns10zX00wa+rANqG4hqQ=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=

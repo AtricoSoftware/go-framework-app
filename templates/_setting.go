@@ -9,7 +9,7 @@ import (
 {{- end}}
 
 {{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
-	"{{.RepositoryPath}}/viperEx"
+	"github.com/atrico-go/viperEx"
 {{- end}}
 )
 

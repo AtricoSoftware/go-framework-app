@@ -3,6 +3,7 @@ module dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app
 go 1.14
 
 require (
+	github.com/atrico-go/viperEx v1.0.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/iancoleman/strcase v0.0.0-20191112232945-16388991a334
 	github.com/mitchellh/go-homedir v1.1.0
