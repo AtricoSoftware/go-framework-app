@@ -116,7 +116,7 @@ func generateFile(path string, filename string, contents *template.Template, val
 	defer file.Close()
 	writer := bufio.NewWriter(file)
 	if comment := getComment(filepath.Base(filename)); comment != "" {
-		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, time.Now().Format("2006-02-01"), pkg.Name, pkg.Version))
+		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, time.Now().Format("2006-01-02"), pkg.Name, pkg.Version))
 	}
 	// DEBUG contents.Execute(os.Stdout, values)
 
