@@ -15,12 +15,13 @@ func GetStringOrDefault(key string, defaultValue string) string {
 	return defaultValue
 }
 
-func GetStringSliceOrDefault(key string, defaultValue []string) []string {
-	value := GetStringSlice(key)
-	if value != nil {
-		return value
-	}
-	return defaultValue
+func GetIntOrDefault(key string, defaultValue int) int {
+	value := viper.GetInt(key)
+	return value
+	// if value != nil {
+	// 	return value
+	// }
+	//return defaultValue
 }
 
 // Get a string slice from viper
@@ -35,4 +36,12 @@ func GetStringSlice(name string) []string {
 		return strings.Split(result2, ",")
 	}
 	return result
+}
+
+func GetStringSliceOrDefault(key string, defaultValue []string) []string {
+	value := GetStringSlice(key)
+	if value != nil {
+		return value
+	}
+	return defaultValue
 }
