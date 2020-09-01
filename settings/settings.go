@@ -5,6 +5,10 @@ type Settings interface {
 	TargetDirectory() string
 	// Name of application (output will be name[.exe])
 	ApplicationName() string
+	// Summary of application
+	ApplicationSummary() string
+	// Description of application
+	ApplicationDescription() string
 	// Path to the repository
 	RepositoryPath() string
 	// Commands to add

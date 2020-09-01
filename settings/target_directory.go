@@ -2,8 +2,9 @@ package settings
 
 import (
 	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/viperEx"
+	"github.com/atrico-go/viperEx"
 )
 
 // This is the name by which the setting is specified on the commandline
@@ -13,9 +14,9 @@ const targetDirectorySettingDefault = "."
 
 // Fetch the setting
 func (theSettings) TargetDirectory() string {
-	return viperEx.GetStringOrDefault(targetDirectorySettingName, targetDirectorySettingDefault)
+	return viper.GetString(targetDirectorySettingName)
 }
 
 func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingP(flagSet, targetDirectorySettingName, targetDirectorySettingShortcut, "Target directory")
+	viperEx.AddStringSettingPD(flagSet, targetDirectorySettingName, targetDirectorySettingShortcut, targetDirectorySettingDefault, "Target directory")
 }

@@ -4,7 +4,7 @@ Framework for go application
 # Getting Started
 ## Run the generator
 ```none
-go-framework generate --name <application name> --repository <url to repo where app will be stored> --directory <dirlectory into which to write project> 
+go-framework generate --name <application name> --repository <url to repo where app will be stored> --directory <directory into which to write project> --summary "summary of app" --description "description of app"
 ```
 It is recommended that you perform a code cleanup to ensure the files conform to your project's guidelines.  Some files will contain extraneous newlines due to the templating library used ins generation (this will not affect function)
 
