@@ -1,15 +1,14 @@
 package settings
 
 import (
+{{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
+"github.com/atrico-go/viperEx"
+{{- end}}
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 	"github.com/spf13/pflag"
 {{- end}}
 {{- if .Setting.HasPrefix .Setting.TypeGetter "viper."}}
 	"github.com/spf13/viper"
-{{- end}}
-
-{{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
-	"github.com/atrico-go/viperEx"
 {{- end}}
 )
 
