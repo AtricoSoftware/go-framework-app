@@ -1,5 +1,7 @@
 package settings
 
+import "github.com/atrico-go/container"
+
 type Settings interface {
 {{- range .UserSettings}}
 	// {{.Description}}
@@ -7,9 +9,9 @@ type Settings interface {
 {{- end}}
 }
 
-// Get the settings for this run
-func GetSettings() Settings {
-	return theSettings{}
+// Register the settings
+func RegisterSettings(c container.Container) {
+	c.Singleton(func() Settings {return theSettings{}})
 }
 
 // Stub object for settings interface

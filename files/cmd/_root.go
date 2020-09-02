@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/atrico-go/container"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/pkg"
 {{- $write := false}}
 {{- range .UserSettings}}
@@ -21,13 +21,13 @@ import (
 {{- end}}
 )
 
-func CreateCommands(api api.Api) *cobra.Command {
+func CreateCommands(c container.Container) *cobra.Command {
 	cobra.OnInitialize(initConfig)
 	rootCmd := CreateRootCommand()
 	rootCmd.AddCommand(CreateVersionCommand())
 	// Add commands
 {{- range .Commands}}
-	rootCmd.AddCommand(Create{{.ApiName}}Command(api))
+	rootCmd.AddCommand(Create{{.ApiName}}Command(c))
 {{- end}}
 	return rootCmd
 }

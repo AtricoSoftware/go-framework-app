@@ -5,6 +5,7 @@ import (
 )
 
 var requirements = []string{
+	"github.com/atrico-go/container",
 	"github.com/atrico-go/viperEx",
 	"github.com/mitchellh/go-homedir",
 	"github.com/spf13/cobra",
