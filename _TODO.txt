@@ -4,5 +4,4 @@ WIP
 TODO
 ~~~~
 Handle existing mod file (do not force user to re-get libs)
-Backup overwritten files
 Unit testing for cmdline
