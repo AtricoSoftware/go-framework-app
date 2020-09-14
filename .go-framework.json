@@ -3,6 +3,9 @@
   "summary": "A small tool to import files into platform",
   "description": "Import a folder of csv files into platform",
   "repository": "dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.platform.importer",
+  "libraries": [
+    "github.com/segmentio/ksuid"
+  ],
   "commands": [
     {
       "name": "import",

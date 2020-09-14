@@ -15,7 +15,6 @@ import (
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/common"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/pkg"
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/requirements"
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/templates"
 
 	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/files"
@@ -33,6 +32,7 @@ var generateCmd = &cobra.Command{
 		validateFolder(settings.TargetDirectory())
 		// Create values for the template
 		values := createTemplateValues(settings)
+
 		// Create all standard files
 		for _, t := range files.Files {
 			generateFile(settings.TargetDirectory(), t.Name(), t, values)
@@ -59,7 +59,16 @@ var generateCmd = &cobra.Command{
 			ioutil.WriteFile(destination, data, 0644)
 		}
 		// Get the requirements
-		requirements.GetRequirements(settings.TargetDirectory())
+		for url, version := range settings.Libraries() {
+			var pkg string
+			if version == "" {
+				pkg = url
+			} else {
+				pkg = fmt.Sprintf("%s@%s", url, version)
+			}
+			println(pkg)
+			common.GoCommand(settings.TargetDirectory(), "get", pkg)
+		}
 		// Clean up the files
 		common.GoCommand("fmt", "./...")
 	},
@@ -105,6 +114,7 @@ func createTemplateValues(settings settings.Settings) map[string]interface{} {
 		"RepositoryPath":         settings.RepositoryPath(),
 		"Commands":               settings.Commands(),
 		"UserSettings":           settings.UserSettings(),
+		"Libraries":              settings.Libraries(),
 	}
 }
 

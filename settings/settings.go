@@ -15,6 +15,8 @@ type Settings interface {
 	Commands() []UserCommand
 	// Settings to add
 	UserSettings() []UserSetting
+	// Libraries to get
+	Libraries() map[string]string
 }
 
 // Get the settings for this run

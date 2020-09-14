@@ -3,5 +3,4 @@ WIP
 
 TODO
 ~~~~
-Handle existing mod file (do not force user to re-get libs)
 Unit testing for cmdline
