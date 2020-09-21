@@ -5,7 +5,15 @@ import (
 	"github.com/spf13/cobra"
 
 	"{{.RepositoryPath}}/api"
+{{- $write := false}}
+{{- range .UserSettings}}
+	{{- if .AppliesToCmd $.Command.UseName}}
+	{{- $write = true}}
+	{{- end}}
+{{- end}}
+{{- if $write}}
 	"{{.RepositoryPath}}/settings"
+{{- end}}
 )
 
 func Create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
