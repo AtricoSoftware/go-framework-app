@@ -14,6 +14,7 @@ type UserCommand interface {
 	Description() string
 
 	ApiName() string
+	UseName() string
 }
 
 // Fetch the setting
@@ -56,3 +57,4 @@ type userCommand struct {
 func (c userCommand) Name() string        { return strcase.ToLowerCamel(c.name) }
 func (c userCommand) Description() string { return c.description }
 func (c userCommand) ApiName() string     { return strcase.ToCamel(c.name) }
+func (c userCommand) UseName() string     { return strcase.ToKebab(c.name) }
