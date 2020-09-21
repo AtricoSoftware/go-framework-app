@@ -1,89 +1,58 @@
 {
-  "name": "platform-importer",
-  "summary": "A small tool to import files into platform",
-  "description": "Import a folder of csv files into platform",
-  "repository": "dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.platform.importer",
-  "libraries": [
-    "github.com/segmentio/ksuid"
-  ],
+  "name": "kube-tool",
+  "summary": "A small tool to automate some kubectl commands",
+  "description": "Helper for kubernetes",
+  "repository": "dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.tools.kube-tool",
   "commands": [
     {
-      "name": "import",
-      "description": "Import files into the platform"
-    },
-    {
-      "name": "ingest",
-      "description": "Ingest files from S3 into the platform"
+      "name": "pod-state",
+      "description": "Check that pods are ready"
     }
   ],
   "settings": [
-    {
-      "name": "bucketName",
-      "description": "Name of bucket",
-      "type": "string",
-      "cmdline": "bucketName",
-      "appliesTo": [
-        "root"
-      ]
-    },
-    {
-      "name": "bucketRole",
-      "description": "Role with permission to read bucket",
-      "type": "string",
-      "cmdline": "bucketRole",
-      "appliesTo": [
-        "root"
-      ]
-    },
     {
       "name": "namespace",
       "description": "Kubernetes namespace",
       "type": "string",
       "cmdline": "namespace",
+      "cmdlineShortcut": "n",
       "appliesTo": [
         "root"
       ]
     },
     {
-      "name": "timeout",
-      "description": "Timeout whilst waiting for completion",
+      "name": "podlist",
+      "description": "Text file containing list of pods to check",
       "type": "string",
-      "cmdline": "timeout",
-      "defaultVal": "5m",
-      "appliesTo": [
-        "root"
-      ]
-    },
-    {
-      "name": "verbose",
-      "description": "Verbose output",
-      "type": "bool",
-      "cmdline": "verbose",
-      "cmdlineShortcut": "v",
-      "appliesTo": [
-        "root"
-      ]
-    },
-    {
-      "name": "bucketFolder",
-      "description": "Folder (in S3 bucket) containing files to ingest",
-      "type": "string",
-      "cmdline": "bucketFolder",
-      "defaultVal": ".",
-      "appliesTo": [
-        "ingest"
-      ]
-    },
-    {
-      "name": "inputFolder",
-      "description": "Folder containing files to import",
-      "type": "string",
-      "cmdline": "inputFolder",
+      "cmdline": "pod-list",
       "cmdlineShortcut": "f",
-      "defaultVal": ".",
       "appliesTo": [
-        "import"
+        "pod-state"
+      ]
+    },
+    {
+      "name": "delay",
+      "description": "Delay between attempts (seconds)",
+      "type": "int",
+      "cmdline": "delay",
+      "cmdlineShortcut": "d",
+      "defaultVal": "60",
+      "appliesTo": [
+        "pod-state"
+      ]
+    },
+    {
+      "name": "maxtries",
+      "description": "Maximum number of attempts",
+      "type": "int",
+      "cmdline": "max-tries",
+      "cmdlineShortcut": "c",
+      "defaultVal": "10",
+      "appliesTo": [
+        "pod-state"
       ]
     }
+  ],
+  "libraries": [
   ]
 }

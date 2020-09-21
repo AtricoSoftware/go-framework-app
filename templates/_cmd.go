@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"{{.RepositoryPath}}/api"
+	"{{.RepositoryPath}}/settings"
 )
 
 func Create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
