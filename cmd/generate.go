@@ -66,7 +66,6 @@ var generateCmd = &cobra.Command{
 			} else {
 				pkg = fmt.Sprintf("%s@%s", url, version)
 			}
-			println(pkg)
 			common.GoCommand(settings.TargetDirectory(), "get", pkg)
 		}
 		// Clean up the files
