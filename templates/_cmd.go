@@ -9,7 +9,7 @@ import (
 
 func Create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "{{.Command.Name}}",
+		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
 		RunE: func(*cobra.Command, []string) error {
 			var {{.Command.Name}}Api api.{{.Command.ApiName}}Api
