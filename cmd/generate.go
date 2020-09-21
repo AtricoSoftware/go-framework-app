@@ -43,7 +43,8 @@ var generateCmd = &cobra.Command{
 		for _, command := range settings.Commands() {
 			values["Command"] = command
 			generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["cmd"], values)
-			generateFile(apiPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["api"], values)
+			// Do not overwrite existing api (this is what the user will change)
+			generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["api"], values)
 		}
 		// Create settings
 		settingsPath := filepath.Join(settings.TargetDirectory(), "settings")
@@ -118,10 +119,19 @@ func createTemplateValues(settings settings.Settings) map[string]interface{} {
 }
 
 func generateFile(path string, filename string, contents *template.Template, values interface{}) error {
+	return generateFileImpl(path, filename, true, contents, values)
+}
+func generateFileIfNotPresent(path string, filename string, contents *template.Template, values interface{}) error {
+	return generateFileImpl(path, filename, false, contents, values)
+}
+func generateFileImpl(path string, filename string, overwrite bool, contents *template.Template, values interface{}) error {
 	fullPath := filepath.Join(path, filename)
 	fmt.Println("Writing: ", fullPath)
 	os.MkdirAll(filepath.Dir(fullPath), 0755)
-	backupFile(fullPath)
+	if fileExists(fullPath) {
+		if !overwrite {return nil}
+		backupFile(fullPath)
+	}
 	file, err := os.Create(fullPath)
 	if err != nil {
 		return err
@@ -137,6 +147,11 @@ func generateFile(path string, filename string, contents *template.Template, val
 		return err
 	}
 	return writer.Flush()
+}
+
+func fileExists(fullPath string) bool {
+	_,err := os.Stat(fullPath)
+	return err == nil
 }
 
 // Backup file (if it already exists)
