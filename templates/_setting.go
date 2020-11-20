@@ -12,7 +12,7 @@ import (
 {{- end}}
 )
 
-const {{.Setting.Id}}SettingName = "{{.Setting.Id}}"
+const {{.Setting.Id}}SettingName = "{{.Setting.Cmdline}}"
 {{- if (ne .Setting.CmdlineShortcut "")}}
 const {{.Setting.Id}}SettingShortcut = "{{.Setting.CmdlineShortcut}}"
 {{- end}}
