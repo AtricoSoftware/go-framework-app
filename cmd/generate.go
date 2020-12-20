@@ -13,12 +13,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/common"
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/pkg"
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/templates"
+	"github.com/AtricoSoftware/go-framework-app/common"
+	"github.com/AtricoSoftware/go-framework-app/pkg"
+	"github.com/AtricoSoftware/go-framework-app/templates"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/files"
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/settings"
+	"github.com/AtricoSoftware/go-framework-app/files"
+	"github.com/AtricoSoftware/go-framework-app/settings"
 )
 
 var generateCmd = &cobra.Command{

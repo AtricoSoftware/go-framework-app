@@ -1,6 +1,6 @@
-module dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app
+module github.com/AtricoSoftware/go-framework-app
 
-go 1.14
+go 1.15
 
 require (
 	github.com/atrico-go/viperEx v1.0.0
