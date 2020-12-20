@@ -1,4 +1,4 @@
-MODULE="dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app"
+MODULE="github.com/AtricoSoftware/go-framework-app"
 export OUTPUT_NAME="go-framework"
 TARGET_DIR=release
 TARGET_PLATFORMS="darwin windows linux"

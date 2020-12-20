@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.go-framework-app/pkg"
+	"github.com/AtricoSoftware/go-framework-app/pkg"
 )
 
 var fullVersion bool

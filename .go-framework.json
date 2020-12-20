@@ -1,58 +1,39 @@
 {
-  "name": "kube-tool",
-  "summary": "A small tool to automate some kubectl commands",
-  "description": "Helper for kubernetes",
-  "repository": "dev.azure.com/MAT-OCS/ConditionInsight/_git/ma.ci.tools.kube-tool",
+  "name": "rubik-tool",
+  "summary": "A small tool for rubik's cube related stuff",
+  "description": "Rubik's cube tool",
+  "repository": "github.com/AtricoSoftware/rubik-tool",
   "commands": [
     {
-      "name": "pod-state",
-      "description": "Check that pods are ready"
+      "name": "show",
+      "description": "Show state of cube"
     }
   ],
   "settings": [
     {
-      "name": "namespace",
-      "description": "Kubernetes namespace",
+      "name": "position",
+      "description": "Current cube position",
       "type": "string",
-      "cmdline": "namespace",
-      "cmdlineShortcut": "n",
+      "cmdline": "position",
+      "cmdlineShortcut": "p",
       "appliesTo": [
         "root"
       ]
     },
     {
-      "name": "podlist",
-      "description": "Text file containing list of pods to check",
-      "type": "string",
-      "cmdline": "pod-list",
-      "cmdlineShortcut": "f",
+      "name": "verbose",
+      "description": "Output all stages of operation",
+      "type": "bool",
+      "cmdline": "verbose",
+      "cmdlineShortcut": "v",
       "appliesTo": [
-        "pod-state"
-      ]
-    },
-    {
-      "name": "delay",
-      "description": "Delay between attempts (seconds)",
-      "type": "int",
-      "cmdline": "delay",
-      "cmdlineShortcut": "d",
-      "defaultVal": "60",
-      "appliesTo": [
-        "pod-state"
-      ]
-    },
-    {
-      "name": "maxtries",
-      "description": "Maximum number of attempts",
-      "type": "int",
-      "cmdline": "max-tries",
-      "cmdlineShortcut": "c",
-      "defaultVal": "10",
-      "appliesTo": [
-        "pod-state"
+        "root"
       ]
     }
   ],
   "libraries": [
+    "github.com/atrico-go/core",
+    "github.com/atrico-go/console",
+    "github.com/atrico-go/display"
   ]
 }
