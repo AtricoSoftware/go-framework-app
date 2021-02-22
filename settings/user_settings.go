@@ -13,6 +13,8 @@ const settingsSettingName = "settings"
 
 type UserSetting interface {
 	Name() string
+	LowerName() string
+	Id() string
 	Description() string
 	Type() string
 	Cmdline() string
@@ -20,7 +22,6 @@ type UserSetting interface {
 	DefaultVal() string
 	AppliesTo() []string
 
-	Id() string
 	Filename() string
 	TypeGetter() string
 	TypeFlagAdder() string
@@ -33,7 +34,8 @@ func (theSettings) UserSettings() []UserSetting {
 	if set == nil {
 		return []UserSetting{
 			userSetting{
-				name:            "Example",
+				name:            "Example", // Name of setting - used in const
+				id:              "example", // viper ID, dotted values form groups
 				description:     "Add your own settings here",
 				settingType:     "string",
 				cmdline:         "example",
@@ -44,43 +46,34 @@ func (theSettings) UserSettings() []UserSetting {
 	}
 	results := make([]UserSetting, len(set.([]interface{})))
 	for i, item := range set.([]interface{}) {
-		name := ""
-		description := ""
-		settingType := "string"
-		cmdline := ""
-		cmdlineShortcut := ""
-		defaultVal := ""
-		appliesTo := make([]string, 0)
+		setting := userSetting{
+			settingType: "string",
+			appliesTo:   make([]string, 0),
+		}
 		for k, v := range item.(map[string]interface{}) {
 			val := fmt.Sprintf("%s", v)
 			switch k {
 			case "name":
-				name = val
+				setting.name = val
+			case "id":
+				setting.id = val
 			case "description":
-				description = val
+				setting.description = val
 			case "type":
-				settingType = val
+				setting.settingType = val
 			case "cmdline":
-				cmdline = val
+				setting.cmdline = val
 			case "cmdlineShortcut":
-				cmdlineShortcut = string(val[0])
+				setting.cmdlineShortcut = string(val[0])
 			case "defaultVal":
-				defaultVal = val
+				setting.defaultVal = val
 			case "appliesTo":
 				for _, c := range v.([]interface{}) {
-					appliesTo = append(appliesTo, c.(string))
+					setting.appliesTo = append(setting.appliesTo, c.(string))
 				}
 			}
 		}
-		results[i] = userSetting{
-			name:            name,
-			description:     description,
-			settingType:     settingType,
-			cmdline:         cmdline,
-			cmdlineShortcut: cmdlineShortcut,
-			defaultVal:      defaultVal,
-			appliesTo:       appliesTo,
-		}
+		results[i] = setting
 	}
 
 	return results
@@ -88,6 +81,7 @@ func (theSettings) UserSettings() []UserSetting {
 
 type userSetting struct {
 	name            string
+	id              string
 	description     string
 	settingType     string
 	cmdline         string
@@ -100,6 +94,14 @@ func (u userSetting) Name() string {
 	return strcase.ToCamel(u.name)
 }
 
+func (u userSetting) LowerName() string {
+	return strcase.ToLowerCamel(u.name)
+}
+
+func (u userSetting) Id() string {
+	return u.id
+}
+
 func (u userSetting) Description() string {
 	return u.description
 }
@@ -109,7 +111,7 @@ func (u userSetting) Type() string {
 }
 
 func (u userSetting) Cmdline() string {
-	return strcase.ToKebab(u.cmdline)
+	return u.cmdline
 }
 
 func (u userSetting) CmdlineShortcut() string {
@@ -122,10 +124,6 @@ func (u userSetting) DefaultVal() string {
 
 func (u userSetting) AppliesTo() []string {
 	return u.appliesTo
-}
-
-func (u userSetting) Id() string {
-	return strcase.ToLowerCamel(u.name)
 }
 
 func (u userSetting) Filename() string {
