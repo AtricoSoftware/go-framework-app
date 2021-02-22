@@ -1,39 +1,37 @@
 {
-  "name": "rubik-tool",
-  "summary": "A small tool for rubik's cube related stuff",
-  "description": "Rubik's cube tool",
-  "repository": "github.com/AtricoSoftware/rubik-tool",
+  "name": "test-app",
+  "summary": "App for testing framework generator",
+  "description": "App for testing framework generator",
+  "repository": "test-app",
   "commands": [
     {
-      "name": "show",
-      "description": "Show state of cube"
+      "name": "test",
+      "description": "Run test"
     }
   ],
   "settings": [
     {
-      "name": "position",
-      "description": "Current cube position",
+      "name": "First sub entry",
+      "id": "group.sub1",
+      "description": "Sub setting",
       "type": "string",
-      "cmdline": "position",
-      "cmdlineShortcut": "p",
+      "cmdline": "sub1",
       "appliesTo": [
-        "root"
+        "test"
       ]
     },
     {
-      "name": "verbose",
-      "description": "Output all stages of operation",
-      "type": "bool",
-      "cmdline": "verbose",
-      "cmdlineShortcut": "v",
+      "name": "Subgroup entry",
+      "id": "group.subgroup.sub2",
+      "description": "Sub setting",
+      "type": "string",
+      "cmdline": "sub2",
       "appliesTo": [
-        "root"
+        "test"
       ]
     }
   ],
   "libraries": [
-    "github.com/atrico-go/core",
-    "github.com/atrico-go/console",
-    "github.com/atrico-go/display"
+    "github.com/atrico-go/core"
   ]
 }

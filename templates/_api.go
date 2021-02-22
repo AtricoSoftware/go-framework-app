@@ -11,7 +11,7 @@ func Register{{.Command.ApiName}}(c container.Container) {
 }
 
 type {{.Command.Name}}Api struct {
-config settings.Settings
+	config settings.Settings
 }
 
 // {{.Command.Description}}
