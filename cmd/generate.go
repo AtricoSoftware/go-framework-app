@@ -76,6 +76,7 @@ var generateCmd = &cobra.Command{
 
 func init() {
 	settings.AddTargetDirectoryFlag(generateCmd.PersistentFlags())
+	settings.AddApplicationTitleFlag(generateCmd.PersistentFlags())
 	settings.AddApplicationNameFlag(generateCmd.PersistentFlags())
 	settings.AddRepositoryPathFlag(generateCmd.PersistentFlags())
 	rootCmd.AddCommand(generateCmd)
@@ -108,6 +109,7 @@ func validateFolder(path string) {
 
 func createTemplateValues(settings settings.Settings) map[string]interface{} {
 	return map[string]interface{}{
+		"ApplicationTitle":       settings.ApplicationTitle(),
 		"ApplicationName":        settings.ApplicationName(),
 		"ApplicationSummary":     settings.ApplicationSummary(),
 		"ApplicationDescription": settings.ApplicationDescription(),
@@ -129,7 +131,9 @@ func generateFileImpl(path string, filename string, overwrite bool, contents *te
 	fmt.Println("Writing: ", fullPath)
 	os.MkdirAll(filepath.Dir(fullPath), 0755)
 	if fileExists(fullPath) {
-		if !overwrite {return nil}
+		if !overwrite {
+			return nil
+		}
 		backupFile(fullPath)
 	}
 	file, err := os.Create(fullPath)
@@ -150,7 +154,7 @@ func generateFileImpl(path string, filename string, overwrite bool, contents *te
 }
 
 func fileExists(fullPath string) bool {
-	_,err := os.Stat(fullPath)
+	_, err := os.Stat(fullPath)
 	return err == nil
 }
 

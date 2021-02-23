@@ -3,6 +3,8 @@ package settings
 type Settings interface {
 	// Target directory (where to generate the app)
 	TargetDirectory() string
+	// Tile of application (used in readme)
+	ApplicationTitle() string
 	// Name of application (output will be name[.exe])
 	ApplicationName() string
 	// Summary of application

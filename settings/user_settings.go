@@ -26,6 +26,7 @@ type UserSetting interface {
 	TypeGetter() string
 	TypeFlagAdder() string
 	AppliesToCmd(cmd string) bool
+	AppliesToCSL() string
 }
 
 // Fetch the setting
@@ -73,10 +74,23 @@ func (theSettings) UserSettings() []UserSetting {
 				}
 			}
 		}
+		// If contains root, remove others
+		if sliceContains(setting.appliesTo, "root") {
+			setting.appliesTo = []string{"root"}
+		}
 		results[i] = setting
 	}
 
 	return results
+}
+
+func sliceContains(list []string, item string) bool {
+	for _,i := range list {
+		if i == item {
+			return true
+		}
+	}
+	return false
 }
 
 type userSetting struct {
@@ -89,6 +103,7 @@ type userSetting struct {
 	defaultVal      string
 	appliesTo       []string
 }
+
 
 func (u userSetting) Name() string {
 	return strcase.ToCamel(u.name)
@@ -175,4 +190,9 @@ func (u userSetting) AppliesToCmd(cmd string) bool {
 // For template
 func (u userSetting) HasPrefix(text string, prefix string) bool {
 	return strings.HasPrefix(text, prefix)
+}
+
+// Applies to as comma separated list
+func (u userSetting) AppliesToCSL() string {
+	return strings.Replace(strings.Join(u.appliesTo, ", "), "root", "all", 1)
 }

@@ -1,4 +1,5 @@
 {
+  "title": "Test App",
   "name": "test-app",
   "summary": "App for testing framework generator",
   "description": "App for testing framework generator",
@@ -7,6 +8,10 @@
     {
       "name": "test",
       "description": "Run test"
+    },
+    {
+      "name": "test2",
+      "description": "Run test2"
     }
   ],
   "settings": [
@@ -16,7 +21,9 @@
       "description": "Sub setting",
       "type": "string",
       "cmdline": "sub1",
+      "cmdlineShortcut": "s",
       "appliesTo": [
+        "root",
         "test"
       ]
     },
@@ -27,7 +34,7 @@
       "type": "string",
       "cmdline": "sub2",
       "appliesTo": [
-        "test"
+        "test","test2"
       ]
     }
   ],
