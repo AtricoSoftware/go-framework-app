@@ -13,6 +13,7 @@ const settingsSettingName = "settings"
 
 type UserSetting interface {
 	Name() string
+	NameCode() string
 	LowerName() string
 	Id() string
 	Description() string
@@ -106,6 +107,10 @@ type userSetting struct {
 
 
 func (u userSetting) Name() string {
+	return u.name
+}
+
+func (u userSetting) NameCode() string {
 	return strcase.ToCamel(u.name)
 }
 

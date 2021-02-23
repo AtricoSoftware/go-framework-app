@@ -59,7 +59,7 @@ func Create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
 	}
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd $.Command.UseName}}
-	settings.Add{{.Name}}Flag(cmd.PersistentFlags())
+	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
 	{{- end}}
 {{- end}}
 	return cmd
@@ -94,13 +94,13 @@ const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting
 {{- end}}
 
 // Fetch the setting
-func (theSettings) {{.Setting.Name}}() {{.Setting.Type}} {
+func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 	return {{.Setting.TypeGetter}}({{$settingVarName}})
 }
 
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 
-func Add{{.Setting.Name}}Flag(flagSet *pflag.FlagSet) {
+func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
 	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}{{if (ne .Setting.DefaultVal "")}}D{{end}}(flagSet, {{$settingVarName}}, {{$cmdlineVarName}}, {{if (ne .Setting.CmdlineShortcut "")}}{{$shortcutVarName}}, {{end}}{{if (ne .Setting.DefaultVal "")}}{{$defaultVarName}}, {{end}}"{{.Setting.Description}}")
 }
 {{- end}}`))
