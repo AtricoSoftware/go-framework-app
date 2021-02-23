@@ -28,7 +28,7 @@ func Create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
 	}
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd $.Command.UseName}}
-	settings.Add{{.Name}}Flag(cmd.PersistentFlags())
+	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
 	{{- end}}
 {{- end}}
 	return cmd

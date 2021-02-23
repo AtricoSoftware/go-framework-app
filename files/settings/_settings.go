@@ -5,7 +5,7 @@ import "github.com/atrico-go/container"
 type Settings interface {
 {{- range .UserSettings}}
 	// {{.Description}}
-	{{.Name}}() {{.Type}}
+	{{.NameCode}}() {{.Type}}
 {{- end}}
 }
 

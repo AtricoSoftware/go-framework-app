@@ -41,7 +41,7 @@ func CreateRootCommand() *cobra.Command {
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd "root"}}
-	settings.Add{{.Name}}Flag(cmd.PersistentFlags())
+	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
 	{{- end}}
 {{- end}}
 	return cmd
