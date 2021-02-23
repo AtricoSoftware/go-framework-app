@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -33,16 +33,22 @@ var generateCmd = &cobra.Command{
 		// Create values for the template
 		values := createTemplateValues(settings)
 
+		generatedFiles := make([]generatedFileInfo, 0)
+
 		// Create all standard files
 		for _, t := range files.Files {
-			generateFile(settings.TargetDirectory(), t.Name(), t, values)
+			if info, err := generateFile(settings.TargetDirectory(), t.Name(), t, values); err == nil {
+				generatedFiles = append(generatedFiles, info)
+			}
 		}
 		// Create commands/api
 		cmdPath := filepath.Join(settings.TargetDirectory(), "cmd")
 		apiPath := filepath.Join(settings.TargetDirectory(), "api")
 		for _, command := range settings.Commands() {
 			values["Command"] = command
-			generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["cmd"], values)
+			if info, err := generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["cmd"], values); err == nil {
+				generatedFiles = append(generatedFiles, info)
+			}
 			// Do not overwrite existing api (this is what the user will change)
 			generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["api"], values)
 		}
@@ -50,7 +56,9 @@ var generateCmd = &cobra.Command{
 		settingsPath := filepath.Join(settings.TargetDirectory(), "settings")
 		for _, setting := range settings.UserSettings() {
 			values["Setting"] = setting
-			generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), templates.Templates["setting"], values)
+			if info, err := generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), templates.Templates["setting"], values); err == nil {
+				generatedFiles = append(generatedFiles, info)
+			}
 		}
 		// Copy generator settings if found (for future reference)
 		data, err := ioutil.ReadFile(viper.ConfigFileUsed())
@@ -71,6 +79,15 @@ var generateCmd = &cobra.Command{
 		}
 		// Clean up the files
 		common.GoCommand("fmt", "./...")
+		// Remove backups with no changes
+		for _,info := range generatedFiles {
+			if info.backupPath != "" {
+				if filesEqual(info.originalPath,info.backupPath, info.comment) {
+					// Files equal, remove backup
+					os.Remove(info.backupPath)
+				}
+			}
+		}
 	},
 }
 
@@ -120,37 +137,45 @@ func createTemplateValues(settings settings.Settings) map[string]interface{} {
 	}
 }
 
-func generateFile(path string, filename string, contents *template.Template, values interface{}) error {
+type generatedFileInfo struct {
+	backupPath string
+	originalPath string
+	comment bool
+}
+
+func generateFile(path string, filename string, contents *template.Template, values interface{}) (generatedFileInfo, error) {
 	return generateFileImpl(path, filename, true, contents, values)
 }
-func generateFileIfNotPresent(path string, filename string, contents *template.Template, values interface{}) error {
+func generateFileIfNotPresent(path string, filename string, contents *template.Template, values interface{}) (generatedFileInfo, error) {
 	return generateFileImpl(path, filename, false, contents, values)
 }
-func generateFileImpl(path string, filename string, overwrite bool, contents *template.Template, values interface{}) error {
-	fullPath := filepath.Join(path, filename)
-	fmt.Println("Writing: ", fullPath)
-	os.MkdirAll(filepath.Dir(fullPath), 0755)
-	if fileExists(fullPath) {
+func generateFileImpl(path string, filename string, overwrite bool, contents *template.Template, values interface{}) (info generatedFileInfo, err error) {
+	info.originalPath = filepath.Join(path, filename)
+	fmt.Println("Writing: ", info.originalPath)
+	os.MkdirAll(filepath.Dir(info.originalPath), 0755)
+	if fileExists(info.originalPath) {
 		if !overwrite {
-			return nil
+			return info, errors.New("file already exists")
 		}
-		backupFile(fullPath)
+		info.backupPath = fmt.Sprintf("%s_%s.bak", info.originalPath, runTime.Format("2006-01-02_15-04-05"))
+		os.Rename(info.originalPath, info.backupPath)
 	}
-	file, err := os.Create(fullPath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	writer := bufio.NewWriter(file)
-	if comment := getComment(filepath.Base(filename)); comment != "" {
-		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, runTime.Format("2006-01-02 15:04:05"), pkg.Name, pkg.Version))
-	}
-	// DEBUG contents.Execute(os.Stdout, values)
+	var file *os.File
+	if file, err = os.Create(info.originalPath); err == nil {
+		defer file.Close()
+		writer := bufio.NewWriter(file)
+		comment := getComment(filepath.Base(filename))
+		if comment != "" {
+			info.comment = true
+			writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, runTime.Format("2006-01-02 15:04:05"), pkg.Name, pkg.Version))
+		}
+		// DEBUG contents.Execute(os.Stdout, values)
 
-	if err = contents.Execute(writer, values); err != nil {
-		return err
+		if err = contents.Execute(writer, values); err == nil {
+			err = writer.Flush()
+		}
 	}
-	return writer.Flush()
+	return info, err
 }
 
 func fileExists(fullPath string) bool {
@@ -158,18 +183,31 @@ func fileExists(fullPath string) bool {
 	return err == nil
 }
 
-// Backup file (if it already exists)
-func backupFile(fullPath string) {
-	source, err := os.Open(fullPath)
-	if !os.IsNotExist(err) {
-		defer source.Close()
-		// Copy to backup file
-		destination, err := os.Create(fmt.Sprintf("%s_%s.bak", fullPath, runTime.Format("2006-01-02_15-04-05")))
-		if err == nil {
-			defer destination.Close()
-			io.Copy(destination, source)
+// True if files are equal
+// False if error
+func filesEqual(path1,path2 string, skipComment bool)  bool {
+	if file1,err := os.Open(path1); err == nil {
+		defer file1.Close()
+		if file2,err := os.Open(path2); err == nil {
+			defer file2.Close()
+			scanner1 := bufio.NewScanner(file1)
+			scanner2 := bufio.NewScanner(file2)
+			// Read each line
+			for scanner1.Scan() && scanner2.Scan() {
+				// Skip first line?
+				if skipComment {
+					skipComment = false
+					continue
+				}
+				// Compare lines
+				if scanner1.Text() != scanner2.Text() {
+					return false
+				}
+			}
+			return true
 		}
 	}
+	return false
 }
 
 func getComment(filename string) string {
