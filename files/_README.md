@@ -16,9 +16,9 @@ TODO: Describe and show how to build your code and run the tests.
 
 # Configuration
 | Setting | Config file | Cmdline | Applies to | Description |
-| ------- | ----------- | ------- | ---------- | ----------- |
+| :------ | :---------- | :------ | :--------- | :---------- |
 {{- range .UserSettings}}
-| {{.Name}} ({{.Type}}) | {{.Id}} | {{if (ne .Cmdline "")}}{{.Cmdline}}{{if (ne .CmdlineShortcut "")}} ({{.CmdlineShortcut}}){{end}}{{end}} | {{.AppliesToCSL}} | {{.Description}} |
+| {{.Name}} ({{.Type}}) | {{.Id}} | {{if (ne .Cmdline "")}}--{{.Cmdline}}{{if (ne .CmdlineShortcut "")}} (-{{.CmdlineShortcut}}){{end}}{{end}} | {{.AppliesToCSL}} | {{.Description}} |
 {{- end}}
 
 
