@@ -85,7 +85,9 @@ import (
 )
 
 const {{$settingVarName}} = "{{.Setting.Id}}"
+{{- if (ne .Setting.Cmdline "")}}
 const {{$cmdlineVarName}} = "{{.Setting.Cmdline}}"
+{{- end}}
 {{- if (ne .Setting.CmdlineShortcut "")}}
 const {{$shortcutVarName}} = "{{.Setting.CmdlineShortcut}}"
 {{- end}}
@@ -101,8 +103,15 @@ func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 
 func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
-	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}{{if (ne .Setting.DefaultVal "")}}D{{end}}(flagSet, {{$settingVarName}}, {{$cmdlineVarName}}, {{if (ne .Setting.CmdlineShortcut "")}}{{$shortcutVarName}}, {{end}}{{if (ne .Setting.DefaultVal "")}}{{$defaultVarName}}, {{end}}"{{.Setting.Description}}")
+	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}(flagSet, {{$settingVarName}}, {{$cmdlineVarName}}, {{if (ne .Setting.CmdlineShortcut "")}}{{$shortcutVarName}}, {{end}}"{{.Setting.Description}}")
 }
-{{- end}}`))
+{{- end}}
+{{- if (ne .Setting.DefaultVal "")}}
+
+func init() {
+	viper.SetDefault({{$settingVarName}}, {{$defaultVarName}})
+}
+{{- end}}
+`))
 
 }
