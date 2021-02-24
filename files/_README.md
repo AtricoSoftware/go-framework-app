@@ -15,10 +15,33 @@ TODO: Guide users through getting your code up and running on their own system. 
 TODO: Describe and show how to build your code and run the tests.
 
 # Configuration
-| Setting | Config file | Cmdline | Applies to | Description |
-| :------ | :---------- | :------ | :--------- | :---------- |
+| Setting | Config file | Cmdline | Default Val | Applies to | Description |
+| :------ | :---------- | :------ | :---------- | :--------- | :---------- |
 {{- range .UserSettings}}
-| {{.Name}} ({{.Type}}) | {{.Id}} | {{if (ne .Cmdline "")}}--{{.Cmdline}}{{if (ne .CmdlineShortcut "")}} (-{{.CmdlineShortcut}}){{end}}{{end}} | {{.AppliesToCSL}} | {{.Description}} |
+| {{.Name}} ({{.Type}}) | {{.Id}} | {{if (ne .CmdlineShortcut "")}}-{{.CmdlineShortcut}}, {{end}}{{if (ne .Cmdline "")}}--{{.Cmdline}}{{end}} | {{.DefaultVal}} | {{.AppliesToCSL}} | {{.Description}} |
 {{- end}}
+<details>
+  <summary>Further details</summary>
+Config file ids with a dot can be "scoped"<br>
+e.g. "a.b.c" can be added to config file as:<br>
 
+### yaml
+
+```yaml
+a:
+  b:
+    c: "value"
+```
+### json
+
+```json
+{
+  "a": {
+    "b": {
+      "c": "value"
+    }
+  }
+}
+```
+</details>
 
