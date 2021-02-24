@@ -1,14 +1,14 @@
+// Generated 2021-02-24 17:16:41 by go-framework development-version
 package settings
 
 import (
+	"github.com/atrico-go/viperEx"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-
-	"github.com/atrico-go/viperEx"
 )
 
-// This is the name by which the setting is specified on the commandline
-const repositoryPathSettingName = "repository"
+const repositoryPathSettingName = "Application.Repository"
+const repositoryPathSettingCmdline = "repository"
 const repositoryPathSettingShortcut = "r"
 
 // Fetch the setting
@@ -17,5 +17,5 @@ func (theSettings) RepositoryPath() string {
 }
 
 func AddRepositoryPathFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingP(flagSet, repositoryPathSettingName, repositoryPathSettingShortcut, "Path to repository")
+	viperEx.AddStringSettingP(flagSet, repositoryPathSettingName, repositoryPathSettingCmdline, repositoryPathSettingShortcut, "Path to repository")
 }

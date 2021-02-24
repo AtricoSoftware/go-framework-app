@@ -1,15 +1,14 @@
+// Generated 2021-02-24 17:16:41 by go-framework development-version
 package settings
 
 import (
+	"github.com/atrico-go/viperEx"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-
-	"github.com/atrico-go/viperEx"
 )
 
-// This is the name by which the setting is specified on the commandline
-const applicationDescriptionSettingName = "description"
-const applicationDescriptionSettingDefault = "TODO"
+const applicationDescriptionSettingName = "Application.Description"
+const applicationDescriptionSettingCmdline = "description"
 
 // Fetch the setting
 func (theSettings) ApplicationDescription() string {
@@ -17,5 +16,5 @@ func (theSettings) ApplicationDescription() string {
 }
 
 func AddApplicationDescriptionFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingD(flagSet, applicationDescriptionSettingName, applicationDescriptionSettingDefault, "Description of application")
+	viperEx.AddStringSetting(flagSet, applicationDescriptionSettingName, applicationDescriptionSettingCmdline, "Description of application")
 }

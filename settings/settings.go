@@ -1,17 +1,20 @@
+// Generated 2021-02-24 17:16:41 by go-framework development-version
 package settings
 
+import "github.com/atrico-go/container"
+
 type Settings interface {
-	// Target directory (where to generate the app)
+	// Target directory
 	TargetDirectory() string
-	// Tile of application (used in readme)
+	// Name of application
 	ApplicationTitle() string
-	// Name of application (output will be name[.exe])
+	// Name of application
 	ApplicationName() string
-	// Summary of application
+	// Summary description of application
 	ApplicationSummary() string
 	// Description of application
 	ApplicationDescription() string
-	// Path to the repository
+	// Path to repository
 	RepositoryPath() string
 	// Commands to add
 	Commands() []UserCommand
@@ -21,9 +24,9 @@ type Settings interface {
 	Libraries() map[string]string
 }
 
-// Get the settings for this run
-func GetSettings() Settings {
-	return theSettings{}
+// Register the settings
+func RegisterSettings(c container.Container) {
+	c.Singleton(func() Settings {return theSettings{}})
 }
 
 // Stub object for settings interface

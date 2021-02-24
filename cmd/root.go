@@ -1,9 +1,11 @@
+// Generated 2021-02-24 17:16:41 by go-framework development-version
 package cmd
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/atrico-go/container"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,25 +13,26 @@ import (
 	"github.com/AtricoSoftware/go-framework-app/pkg"
 )
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
+func CreateCommands(c container.Container) *cobra.Command {
+	cobra.OnInitialize(initConfig)
+	rootCmd := CreateRootCommand()
+	rootCmd.AddCommand(CreateVersionCommand())
+	// Add commands
+	rootCmd.AddCommand(CreateGenerateCommand(c))
+	return rootCmd
 }
 
-var rootCmd = &cobra.Command{
-	Use:   pkg.Name,
-	Short: pkg.Summary,
-	Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
+func CreateRootCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   pkg.Name,
+		Short: pkg.Summary,
+		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
+	}
+	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
+	return cmd
 }
 
 var cfgFile string
-
-func init() {
-	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
-}
 
 func initConfig() {
 	// Config file
