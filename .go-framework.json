@@ -67,12 +67,39 @@
       ]
     },
     {
-      "name": "Repository",
+      "name": "RepositoryPath",
       "id": "Application.Repository",
       "description": "Path to repository",
       "type": "string",
       "cmdline": "repository",
       "cmdlineShortcut": "r",
+      "appliesTo": [
+        "generate"
+      ]
+    },
+    {
+      "name": "Commands",
+      "id": "Commands",
+      "description": "Commands to add",
+      "type": "[]UserCommand",
+      "appliesTo": [
+        "generate"
+      ]
+    },
+    {
+      "name": "UserSettings",
+      "id": "UserSettings",
+      "description": "Settings to add",
+      "type": "[]UserSetting",
+      "appliesTo": [
+        "generate"
+      ]
+    },
+    {
+      "name": "Libraries",
+      "id": "Libraries",
+      "description": "Libraries to get",
+      "type": "map[string]string",
       "appliesTo": [
         "generate"
       ]
