@@ -4,6 +4,7 @@ package settings
 {{- $cmdlineVarName := print .Setting.LowerName "SettingCmdline"}}
 {{- $shortcutVarName := print .Setting.LowerName "SettingShortcut"}}
 {{- $defaultVarName := print .Setting.LowerName "SettingDefaultVal"}}
+{{- $lazyVarName := print .Setting.LowerName "SettingLazy"}}
 
 import (
 {{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
@@ -27,14 +28,26 @@ const {{$shortcutVarName}} = "{{.Setting.CmdlineShortcut}}"
 {{- if (ne .Setting.DefaultVal "")}}
 const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting.DefaultVal}}{{if (eq .Setting.Type "string")}}"{{end}}
 {{- end}}
+{{- if (eq .Setting.TypeGetter "")}}
+
+// Lazy value
+var {{$lazyVarName}} struct {
+	theValue {{.Setting.Type}}
+	hasValue bool
+}
+{{- end}}
 
 // Fetch the setting
 func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 {{- if (ne .Setting.TypeGetter "")}}
 	return {{.Setting.TypeGetter}}({{$settingVarName}})
 {{- else}}
-	setting := viper.Get({{$settingVarName}})
-	return Parse{{.Setting.NameCode}}Setting(setting)
+	if !{{$lazyVarName}}.hasValue {
+		setting := viper.Get({{$settingVarName}})
+		{{$lazyVarName}}.theValue = Parse{{.Setting.NameCode}}Setting(setting)
+		{{$lazyVarName}}.hasValue = true
+	}
+	return {{$lazyVarName}}.theValue
 {{- end}}
 }
 
