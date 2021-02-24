@@ -59,6 +59,10 @@ var generateCmd = &cobra.Command{
 			if info, err := generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), templates.Templates["setting"], values); err == nil {
 				generatedFiles = append(generatedFiles, info)
 			}
+			if setting.TypeGetter() == "" {
+				// Custom setting (no overwrite)
+				generateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), templates.Templates["setting_impl"], setting)
+			}
 		}
 		// Copy generator settings if found (for future reference)
 		data, err := ioutil.ReadFile(viper.ConfigFileUsed())

@@ -79,7 +79,7 @@ import (
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 	"github.com/spf13/pflag"
 {{- end}}
-{{- if .Setting.HasPrefix .Setting.TypeGetter "viper."}}
+{{- if or (.Setting.HasPrefix .Setting.TypeGetter "viper.") (eq .Setting.TypeGetter "")}}
 	"github.com/spf13/viper"
 {{- end}}
 )
@@ -97,7 +97,12 @@ const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting
 
 // Fetch the setting
 func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
+{{- if (ne .Setting.TypeGetter "")}}
 	return {{.Setting.TypeGetter}}({{$settingVarName}})
+{{- else}}
+	setting := viper.Get({{$settingVarName}})
+	return Parse{{.Setting.NameCode}}Setting(setting)
+{{- end}}
 }
 
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
@@ -113,5 +118,10 @@ func init() {
 }
 {{- end}}
 `))
+Templates[`setting_impl`] = template.Must(template.New(`setting_impl`).Parse(`package settings
+
+func Parse{{.NameCode}}Setting(setting interface{}) {{.Type}} {
+	// TODO - Implementation here
+}`))
 
 }
