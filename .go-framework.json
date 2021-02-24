@@ -1,41 +1,80 @@
 {
+  "directory": "D:/temp/go-framework-app",
   "title": "Go app framework generator",
   "name": "go-framework",
-  "summary": "Framework generator",
-  "description": "Framework generator",
-  "repository": "test-app",
+  "summary": "Framework for go applications",
+  "description": "Tool for generating go applications",
+  "repository": "github.com/AtricoSoftware/go-framework-app",
   "commands": [
     {
-      "name": "test",
-      "description": "Run test"
-    },
-    {
-      "name": "test2",
-      "description": "Run test2"
+      "name": "generate",
+      "description": "Generate framework app"
     }
   ],
   "settings": [
     {
-      "name": "First sub entry",
-      "id": "group.sub1",
-      "description": "Sub setting",
+      "name": "Target directory",
+      "id": "directory",
+      "description": "Target directory",
       "type": "string",
-      "cmdline": "sub1",
-      "cmdlineShortcut": "s",
+      "defaultVal": ".",
+      "cmdline": "directory",
+      "cmdlineShortcut": "d",
       "appliesTo": [
-        "root",
-        "test"
+        "generate"
       ]
     },
     {
-      "name": "Subgroup entry",
-      "id": "group.subgroup.sub2",
-      "description": "Sub setting",
+      "name": "Application title",
+      "id": "Application.Title",
+      "description": "Name of application",
       "type": "string",
-      "cmdline": "sub2",
-      "defaultVal": "default",
+      "cmdline": "title",
+      "cmdlineShortcut": "t",
       "appliesTo": [
-        "test","test2"
+        "generate"
+      ]
+    },
+    {
+      "name": "Application name",
+      "id": "Application.Name",
+      "description": "Name of application",
+      "type": "string",
+      "cmdline": "name",
+      "cmdlineShortcut": "n",
+      "appliesTo": [
+        "generate"
+      ]
+    },
+    {
+      "name": "Application summary",
+      "id": "Application.Summary",
+      "description": "Summary description of application",
+      "type": "string",
+      "cmdline": "summary",
+      "appliesTo": [
+        "generate"
+      ]
+    },
+    {
+      "name": "Application description",
+      "id": "Application.Description",
+      "description": "Description of application",
+      "type": "string",
+      "cmdline": "description",
+      "appliesTo": [
+        "generate"
+      ]
+    },
+    {
+      "name": "Repository",
+      "id": "Application.Repository",
+      "description": "Path to repository",
+      "type": "string",
+      "cmdline": "repository",
+      "cmdlineShortcut": "r",
+      "appliesTo": [
+        "generate"
       ]
     }
   ],
