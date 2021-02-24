@@ -20,7 +20,7 @@ func main() {
 	createTemplates(templatesPkg, templatesHeader, templatesFooter, addTemplatesTemplate)
 }
 
-func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents []byte)string) {
+func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents string)string) {
 	// Create templates from files
 	tFile, err := os.Create(filepath.Join(pkg, "templates.go"))
 	if err != nil {
@@ -45,8 +45,9 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 			// Strip leading underscore and filesPkg
 			newName := strings.Replace(path, info.Name(), info.Name()[1:], 1)[len(pkg)+1:]
 			fmt.Println("Adding: ", newName)
-			// TODO - handle ` in file (readme)
-			tFile.WriteString(addTemplate(newName, contents))
+			// Handle ` in file (readme)
+			contentsStr := strings.ReplaceAll(string(contents), "`", "`+\"`\"+`")
+			tFile.WriteString(addTemplate(newName, contentsStr))
 		}
 		return nil
 	})
@@ -69,7 +70,7 @@ func init() {
 var fileFooter = `
 }`
 
-func addFilesTemplate(name string, contents []byte) string {
+func addFilesTemplate(name string, contents string) string {
 	return fmt.Sprintf("Files = append(Files, template.Must(template.New(`%s`).Parse(`%s`)))\n", name, contents)
 }
 
@@ -86,7 +87,7 @@ func init() {
 
 var templatesFooter = `
 }`
-func addTemplatesTemplate(name string, contents []byte) string {
+func addTemplatesTemplate(name string, contents string) string {
 	name2 := strings.Replace(filepath.Base(name), filepath.Ext(name), "", 1)
 	return fmt.Sprintf("Templates[`%s`] = template.Must(template.New(`%s`).Parse(`%s`))\n", name2, name2, contents)
 }

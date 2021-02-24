@@ -33,6 +33,7 @@
       "description": "Sub setting",
       "type": "string",
       "cmdline": "sub2",
+      "defaultVal": "default",
       "appliesTo": [
         "test","test2"
       ]
