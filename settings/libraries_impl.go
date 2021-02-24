@@ -2,22 +2,22 @@
 package settings
 
 import (
-	"github.com/AtricoSoftware/go-framework-app/requirements"
+	"github.com/AtricoSoftware/go-framework-app/resources"
 )
 
 type Library struct {
-	URL string
+	URL     string
 	Version string
 }
 
 func ParseLibrariesSetting(setting interface{}) map[string]string {
 	results := make(map[string]string, 0)
 	// Add standard requirements
-	for _,lib := range requirements.Requirements {
+	for _, lib := range resources.Requirements {
 		results[lib] = ""
 	}
 	// Read config requirements
-	for _,lib := range setting.([]interface{}) {
+	for _, lib := range setting.([]interface{}) {
 		results[lib.(string)] = ""
 	}
 	return results

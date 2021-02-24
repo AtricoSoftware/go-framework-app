@@ -1,4 +1,4 @@
-package requirements
+package resources
 
 var Requirements = []string{
 	"github.com/atrico-go/container",

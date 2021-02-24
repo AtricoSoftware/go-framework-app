@@ -22,7 +22,8 @@ func main() {
 
 func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents string)string) {
 	// Create templates from files
-	tFile, err := os.Create(filepath.Join(pkg, "templates.go"))
+	fileFolder := filepath.Join("resources", pkg)
+	tFile, err := os.Create(filepath.Join("resources", fmt.Sprintf("tmpl_%s.go",pkg)))
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +31,7 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 	// Write file header
 	tFile.WriteString(header)
 	// Find all files starting with underscore
-	filepath.Walk(pkg, func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(fileFolder, func(path string, info os.FileInfo, err error) error {
 		if info.Mode().IsRegular() && strings.HasPrefix(info.Name(), "_") {
 			// Read file contents
 			file, err := os.Open(path)
@@ -43,7 +44,7 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 				return err
 			}
 			// Strip leading underscore and filesPkg
-			newName := strings.Replace(path, info.Name(), info.Name()[1:], 1)[len(pkg)+1:]
+			newName := strings.Replace(path, info.Name(), info.Name()[1:], 1)[len(fileFolder)+1:]
 			fmt.Println("Adding: ", newName)
 			// Handle ` in file (readme)
 			contentsStr := strings.ReplaceAll(string(contents), "`", "`+\"`\"+`")
@@ -56,8 +57,7 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 	tFile.Sync()
 }
 
-var fileHeader = fmt.Sprintf(`
-package %s
+var fileHeader = `package resources
 
 import "text/template"
 
@@ -65,7 +65,7 @@ import "text/template"
 var Files = make([]*template.Template, 0)
 
 func init() {
-`, filesPkg)
+`
 
 var fileFooter = `
 }`
@@ -74,8 +74,7 @@ func addFilesTemplate(name string, contents string) string {
 	return fmt.Sprintf("Files = append(Files, template.Must(template.New(`%s`).Parse(`%s`)))\n", name, contents)
 }
 
-var templatesHeader = fmt.Sprintf(`
-package %s
+var templatesHeader = `package resources
 
 import "text/template"
 
@@ -83,7 +82,7 @@ import "text/template"
 var Templates = make(map[string]*template.Template)
 
 func init() {
-`, templatesPkg)
+`
 
 var templatesFooter = `
 }`

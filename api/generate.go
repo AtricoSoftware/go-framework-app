@@ -13,13 +13,12 @@ import (
 
 	"github.com/atrico-go/container"
 
+	"github.com/AtricoSoftware/go-framework-app/resources"
 	"github.com/AtricoSoftware/go-framework-app/settings"
 
 	"github.com/spf13/viper"
 
-	"github.com/AtricoSoftware/go-framework-app/files"
 	"github.com/AtricoSoftware/go-framework-app/pkg"
-	"github.com/AtricoSoftware/go-framework-app/templates"
 )
 
 func RegisterGenerate(c container.Container) {
@@ -42,7 +41,7 @@ func (svc generateApi) Run() error {
 	generatedFiles := make([]generatedFileInfo, 0)
 
 	// Create all standard files
-	for _, t := range files.Files {
+	for _, t := range resources.Files {
 		if info, err := generateFile(svc.config.TargetDirectory(), t.Name(), t, values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
@@ -52,22 +51,22 @@ func (svc generateApi) Run() error {
 	apiPath := filepath.Join(svc.config.TargetDirectory(), "api")
 	for _, command := range svc.config.Commands() {
 		values["Command"] = command
-		if info, err := generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["cmd"], values); err == nil {
+		if info, err := generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), resources.Templates["cmd"], values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 		// Do not overwrite existing api (this is what the user will change)
-		generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name()), templates.Templates["api"], values)
+		generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name()), resources.Templates["api"], values)
 	}
 	// Create settings
 	settingsPath := filepath.Join(svc.config.TargetDirectory(), "settings")
 	for _, setting := range svc.config.UserSettings() {
 		values["Setting"] = setting
-		if info, err := generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), templates.Templates["setting"], values); err == nil {
+		if info, err := generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), resources.Templates["setting"], values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 		if setting.TypeGetter() == "" {
 			// Custom setting (no overwrite)
-			generateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), templates.Templates["setting_impl"], setting)
+			generateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), resources.Templates["setting_impl"], setting)
 		}
 	}
 	// Copy generator settings if found (for future reference)
