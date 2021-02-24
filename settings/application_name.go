@@ -1,14 +1,14 @@
+// Generated 2021-02-24 17:16:41 by go-framework development-version
 package settings
 
 import (
+	"github.com/atrico-go/viperEx"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-
-	"github.com/atrico-go/viperEx"
 )
 
-// This is the name by which the setting is specified on the commandline
-const applicationNameSettingName = "name"
+const applicationNameSettingName = "Application.Name"
+const applicationNameSettingCmdline = "name"
 const applicationNameSettingShortcut = "n"
 
 // Fetch the setting
@@ -17,5 +17,5 @@ func (theSettings) ApplicationName() string {
 }
 
 func AddApplicationNameFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingP(flagSet, applicationNameSettingName, applicationNameSettingShortcut, "Name of application")
+	viperEx.AddStringSettingP(flagSet, applicationNameSettingName, applicationNameSettingCmdline, applicationNameSettingShortcut, "Name of application")
 }

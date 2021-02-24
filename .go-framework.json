@@ -1,17 +1,18 @@
 {
-  "directory": "D:/temp/go-framework-app",
-  "title": "Go app framework generator",
-  "name": "go-framework",
-  "summary": "Framework for go applications",
-  "description": "Tool for generating go applications",
-  "repository": "github.com/AtricoSoftware/go-framework-app",
-  "commands": [
+  "Application": {
+    "Title": "Go app framework generator",
+    "Name": "go-framework",
+    "Summary": "Framework for go applications",
+    "Description": "Tool for generating go applications",
+    "Repository": "github.com/AtricoSoftware/go-framework-app"
+  },
+  "Commands": [
     {
       "name": "generate",
       "description": "Generate framework app"
     }
   ],
-  "settings": [
+  "UserSettings": [
     {
       "name": "Target directory",
       "id": "directory",
@@ -105,7 +106,8 @@
       ]
     }
   ],
-  "libraries": [
-    "github.com/atrico-go/core"
+  "Libraries": [
+    "github.com/atrico-go/core",
+    "github.com/iancoleman/strcase"
   ]
 }

@@ -1,10 +1,12 @@
 {
-  "title": "Test App",
-  "name": "test-app",
-  "summary": "App for testing framework generator",
-  "description": "App for testing framework generator",
-  "repository": "test-app",
-  "commands": [
+  "Application": {
+    "Title": "Test App",
+    "Name": "test-app",
+    "Summary": "App for testing framework generator",
+    "Description": "App for testing framework generator",
+    "Repository": "test-app"
+  },
+  "Commands": [
     {
       "name": "test",
       "description": "Run test"
@@ -14,7 +16,7 @@
       "description": "Run test2"
     }
   ],
-  "settings": [
+  "UserSettings": [
     {
       "name": "First sub entry",
       "id": "group.sub1",
@@ -35,11 +37,12 @@
       "type": "string",
       "defaultVal": "default_sub2",
       "appliesTo": [
-        "test","test2"
+        "test",
+        "test2"
       ]
     }
   ],
-  "libraries": [
+  "Libraries": [
     "github.com/atrico-go/core"
   ]
 }

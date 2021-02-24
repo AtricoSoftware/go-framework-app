@@ -1,3 +1,4 @@
+// Generated 2021-02-24 17:16:41 by go-framework development-version
 package cmd
 
 import (
@@ -11,30 +12,33 @@ import (
 
 var fullVersion bool
 
-var showVersionCommand = &cobra.Command{
-	Use:   "version",
-	Short: "Shows version",
-	Run: func(*cobra.Command, []string) {
-		if fullVersion {
-			fmt.Println(pkg.Name)
-			fmt.Println(pkg.Description)
-		}
-		fmt.Println(pkg.Version)
-		if fullVersion {
-			fmt.Println()
-			var details map[string]interface{}
-			if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
-				fmt.Println("Details")
-				fmt.Println("-------")
-				displaySection(details, "")
-			}
-		}
-	},
+func CreateVersionCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "version",
+		Short: "Shows version",
+		Run: func(*cobra.Command, []string) {
+			showVersion(fullVersion)
+		},
+	}
+	cmd.PersistentFlags().BoolVarP(&fullVersion, "full", "f", false, "Full program information")
+	return cmd
 }
 
-func init() {
-	showVersionCommand.PersistentFlags().BoolVarP(&fullVersion, "full", "f", false, "Full program information")
-	rootCmd.AddCommand(showVersionCommand)
+func showVersion(fullVersion bool) {
+	if fullVersion {
+		fmt.Println(pkg.Name)
+		fmt.Println(pkg.Description)
+	}
+	fmt.Println(pkg.Version)
+	if fullVersion {
+		fmt.Println()
+		var details map[string]interface{}
+		if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
+			fmt.Println("Details")
+			fmt.Println("-------")
+			displaySection(details, "")
+		}
+	}
 }
 
 func displaySection(section map[string]interface{}, indent string) {
