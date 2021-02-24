@@ -63,8 +63,8 @@ var generateCmd = &cobra.Command{
 		// Copy generator settings if found (for future reference)
 		data, err := ioutil.ReadFile(viper.ConfigFileUsed())
 		if err == nil {
-			configFile := filepath.Base(viper.ConfigFileUsed())
-			destination := filepath.Join(settings.TargetDirectory(), configFile)
+			configExt := filepath.Ext(viper.ConfigFileUsed())
+			destination := filepath.Join(settings.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
 			ioutil.WriteFile(destination, data, 0644)
 		}
 		// Get the requirements

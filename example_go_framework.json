@@ -1,8 +1,8 @@
 {
-  "title": "Go app framework generator",
-  "name": "go-framework",
-  "summary": "Framework generator",
-  "description": "Framework generator",
+  "title": "Test App",
+  "name": "test-app",
+  "summary": "App for testing framework generator",
+  "description": "App for testing framework generator",
   "repository": "test-app",
   "commands": [
     {
@@ -20,6 +20,7 @@
       "id": "group.sub1",
       "description": "Sub setting",
       "type": "string",
+      "defaultVal": "default_sub1",
       "cmdline": "sub1",
       "cmdlineShortcut": "s",
       "appliesTo": [
@@ -32,8 +33,7 @@
       "id": "group.subgroup.sub2",
       "description": "Sub setting",
       "type": "string",
-      "cmdline": "sub2",
-      "defaultVal": "default",
+      "defaultVal": "default_sub2",
       "appliesTo": [
         "test","test2"
       ]
