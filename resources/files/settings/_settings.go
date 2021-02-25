@@ -11,7 +11,7 @@ type Settings interface {
 
 // Register the settings
 func RegisterSettings(c container.Container) {
-	c.Singleton(func() Settings {return theSettings{}})
+	c.Singleton(func() Settings { return theSettings{} })
 }
 
 // Stub object for settings interface

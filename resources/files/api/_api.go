@@ -9,7 +9,7 @@ type ApiCommand interface {
 	Run() error
 }
 
-{{range .Commands}}
+{{- range .Commands}}
 // {{.Description}}
 type {{.ApiName}}Api ApiCommand
 {{- end}}

@@ -1,4 +1,4 @@
-// Generated 2021-02-24 17:16:41 by go-framework development-version
+// Generated 2021-02-25 11:57:44 by go-framework development-version
 package settings
 
 import (
@@ -11,9 +11,19 @@ const applicationTitleSettingName = "Application.Title"
 const applicationTitleSettingCmdline = "title"
 const applicationTitleSettingShortcut = "t"
 
+// Lazy value
+var applicationTitleSettingLazy struct {
+	theValue string
+	hasValue bool
+}
+
 // Fetch the setting
 func (theSettings) ApplicationTitle() string {
-	return viper.GetString(applicationTitleSettingName)
+	if !applicationTitleSettingLazy.hasValue {
+		applicationTitleSettingLazy.theValue = viper.GetString(applicationTitleSettingName)
+		applicationTitleSettingLazy.hasValue = true
+	}
+	return applicationTitleSettingLazy.theValue
 }
 
 func AddApplicationTitleFlag(flagSet *pflag.FlagSet) {
