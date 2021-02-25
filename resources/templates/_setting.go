@@ -28,27 +28,25 @@ const {{$shortcutVarName}} = "{{.Setting.CmdlineShortcut}}"
 {{- if (ne .Setting.DefaultVal "")}}
 const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting.DefaultVal}}{{if (eq .Setting.Type "string")}}"{{end}}
 {{- end}}
-{{- if (eq .Setting.TypeGetter "")}}
 
 // Lazy value
 var {{$lazyVarName}} struct {
 	theValue {{.Setting.Type}}
 	hasValue bool
 }
-{{- end}}
 
 // Fetch the setting
 func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
-{{- if (ne .Setting.TypeGetter "")}}
-	return {{.Setting.TypeGetter}}({{$settingVarName}})
-{{- else}}
 	if !{{$lazyVarName}}.hasValue {
+{{- if (ne .Setting.TypeGetter "")}}
+		{{$lazyVarName}}.theValue = {{.Setting.TypeGetter}}({{$settingVarName}})
+{{- else}}
 		setting := viper.Get({{$settingVarName}})
 		{{$lazyVarName}}.theValue = Parse{{.Setting.NameCode}}Setting(setting)
+{{- end}}
 		{{$lazyVarName}}.hasValue = true
 	}
 	return {{$lazyVarName}}.theValue
-{{- end}}
 }
 
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}

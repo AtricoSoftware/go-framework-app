@@ -1,4 +1,4 @@
-// Generated 2021-02-24 17:16:41 by go-framework development-version
+// Generated 2021-02-25 11:57:44 by go-framework development-version
 package settings
 
 import (
@@ -10,9 +10,19 @@ import (
 const applicationDescriptionSettingName = "Application.Description"
 const applicationDescriptionSettingCmdline = "description"
 
+// Lazy value
+var applicationDescriptionSettingLazy struct {
+	theValue string
+	hasValue bool
+}
+
 // Fetch the setting
 func (theSettings) ApplicationDescription() string {
-	return viper.GetString(applicationDescriptionSettingName)
+	if !applicationDescriptionSettingLazy.hasValue {
+		applicationDescriptionSettingLazy.theValue = viper.GetString(applicationDescriptionSettingName)
+		applicationDescriptionSettingLazy.hasValue = true
+	}
+	return applicationDescriptionSettingLazy.theValue
 }
 
 func AddApplicationDescriptionFlag(flagSet *pflag.FlagSet) {

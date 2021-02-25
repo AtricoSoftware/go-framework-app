@@ -1,4 +1,4 @@
-// Generated 2021-02-24 17:16:41 by go-framework development-version
+// Generated 2021-02-25 11:57:44 by go-framework development-version
 package settings
 
 import (
@@ -11,9 +11,19 @@ const repositoryPathSettingName = "Application.Repository"
 const repositoryPathSettingCmdline = "repository"
 const repositoryPathSettingShortcut = "r"
 
+// Lazy value
+var repositoryPathSettingLazy struct {
+	theValue string
+	hasValue bool
+}
+
 // Fetch the setting
 func (theSettings) RepositoryPath() string {
-	return viper.GetString(repositoryPathSettingName)
+	if !repositoryPathSettingLazy.hasValue {
+		repositoryPathSettingLazy.theValue = viper.GetString(repositoryPathSettingName)
+		repositoryPathSettingLazy.hasValue = true
+	}
+	return repositoryPathSettingLazy.theValue
 }
 
 func AddRepositoryPathFlag(flagSet *pflag.FlagSet) {

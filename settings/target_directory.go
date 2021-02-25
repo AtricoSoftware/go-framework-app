@@ -1,4 +1,4 @@
-// Generated 2021-02-24 17:16:41 by go-framework development-version
+// Generated 2021-02-25 11:57:44 by go-framework development-version
 package settings
 
 import (
@@ -12,9 +12,19 @@ const targetDirectorySettingCmdline = "directory"
 const targetDirectorySettingShortcut = "d"
 const targetDirectorySettingDefaultVal = "."
 
+// Lazy value
+var targetDirectorySettingLazy struct {
+	theValue string
+	hasValue bool
+}
+
 // Fetch the setting
 func (theSettings) TargetDirectory() string {
-	return viper.GetString(targetDirectorySettingName)
+	if !targetDirectorySettingLazy.hasValue {
+		targetDirectorySettingLazy.theValue = viper.GetString(targetDirectorySettingName)
+		targetDirectorySettingLazy.hasValue = true
+	}
+	return targetDirectorySettingLazy.theValue
 }
 
 func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
