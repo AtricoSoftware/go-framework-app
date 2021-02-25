@@ -1,4 +1,4 @@
-// Generated 2021-02-25 11:57:44 by go-framework development-version
+// Generated 2021-02-25 13:40:05 by go-framework development-version
 package settings
 
 import (
@@ -10,11 +10,6 @@ import (
 const applicationSummarySettingName = "Application.Summary"
 const applicationSummarySettingCmdline = "summary"
 
-// Lazy value
-var applicationSummarySettingLazy struct {
-	theValue string
-	hasValue bool
-}
 
 // Fetch the setting
 func (theSettings) ApplicationSummary() string {
@@ -27,4 +22,9 @@ func (theSettings) ApplicationSummary() string {
 
 func AddApplicationSummaryFlag(flagSet *pflag.FlagSet) {
 	viperEx.AddStringSetting(flagSet, applicationSummarySettingName, applicationSummarySettingCmdline, "Summary description of application")
+}
+// Lazy value
+var applicationSummarySettingLazy struct {
+	theValue string
+	hasValue bool
 }

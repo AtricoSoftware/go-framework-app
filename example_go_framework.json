@@ -1,4 +1,7 @@
 {
+  "Config": {
+    "SingleReadConfig": "true"
+  },
   "Application": {
     "Title": "Test App",
     "Name": "test-app",

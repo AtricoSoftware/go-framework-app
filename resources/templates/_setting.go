@@ -29,14 +29,9 @@ const {{$shortcutVarName}} = "{{.Setting.CmdlineShortcut}}"
 const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting.DefaultVal}}{{if (eq .Setting.Type "string")}}"{{end}}
 {{- end}}
 
-// Lazy value
-var {{$lazyVarName}} struct {
-	theValue {{.Setting.Type}}
-	hasValue bool
-}
-
 // Fetch the setting
 func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
+{{- if .SingleReadConfiguration}}
 	if !{{$lazyVarName}}.hasValue {
 {{- if (ne .Setting.TypeGetter "")}}
 		{{$lazyVarName}}.theValue = {{.Setting.TypeGetter}}({{$settingVarName}})
@@ -47,6 +42,14 @@ func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 		{{$lazyVarName}}.hasValue = true
 	}
 	return {{$lazyVarName}}.theValue
+{{- else}}
+{{- if (ne .Setting.TypeGetter "")}}
+	return {{.Setting.TypeGetter}}({{$settingVarName}})
+{{- else}}
+	return viper.Get({{$settingVarName}})
+{{$lazyVarName}}.theValue = Parse{{.Setting.NameCode}}Setting(setting)
+{{- end}}
+{{- end}}
 }
 
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
@@ -59,5 +62,13 @@ func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
 
 func init() {
 	viper.SetDefault({{$settingVarName}}, {{$defaultVarName}})
+}
+{{- end}}
+{{- if .SingleReadConfiguration}}
+
+// Lazy value
+var {{$lazyVarName}} struct {
+	theValue {{.Setting.Type}}
+	hasValue bool
 }
 {{- end}}

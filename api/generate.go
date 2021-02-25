@@ -122,14 +122,15 @@ func validateFolder(path string) {
 
 func createTemplateValues(settings settings.Settings) map[string]interface{} {
 	return map[string]interface{}{
-		"ApplicationTitle":       settings.ApplicationTitle(),
-		"ApplicationName":        settings.ApplicationName(),
-		"ApplicationSummary":     settings.ApplicationSummary(),
-		"ApplicationDescription": settings.ApplicationDescription(),
-		"RepositoryPath":         settings.RepositoryPath(),
-		"Commands":               settings.Commands(),
-		"UserSettings":           settings.UserSettings(),
-		"Libraries":              settings.Libraries(),
+		"SingleReadConfiguration": settings.SingleReadConfiguration(),
+		"ApplicationTitle":        settings.ApplicationTitle(),
+		"ApplicationName":         settings.ApplicationName(),
+		"ApplicationSummary":      settings.ApplicationSummary(),
+		"ApplicationDescription":  settings.ApplicationDescription(),
+		"RepositoryPath":          settings.RepositoryPath(),
+		"Commands":                settings.Commands(),
+		"UserSettings":            settings.UserSettings(),
+		"Libraries":               settings.Libraries(),
 	}
 }
 
@@ -257,17 +258,4 @@ func mergeUrlVersion(urlVersions map[string]string) []string {
 		urls = append(urls, newUrl)
 	}
 	return urls
-}
-
-func ParseLibrariesSetting(setting interface{}) map[string]string {
-	results := make(map[string]string, 0)
-	// Add standard requirements
-	for _, lib := range resources.Requirements {
-		results[lib] = ""
-	}
-	// Read config requirements
-	for _, lib := range setting.([]interface{}) {
-		results[lib.(string)] = ""
-	}
-	return results
 }
