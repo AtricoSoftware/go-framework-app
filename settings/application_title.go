@@ -1,6 +1,5 @@
-// Generated 2021-02-25 15:41:38 by go-framework development-version
+// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
 package settings
-
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -13,7 +12,7 @@ const applicationTitleSettingCmdline = "title"
 const applicationTitleSettingShortcut = "t"
 
 // Lazy value
-var applicationTitleSettingLazy = NewLazyStringValue(func () string { return viper.GetString(applicationTitleSettingName) })
+var applicationTitleSettingLazy = NewLazyStringValue(func() string { return viper.GetString(applicationTitleSettingName) })
 
 // Fetch the setting
 func (theSettings) ApplicationTitle() string {

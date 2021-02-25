@@ -1,6 +1,5 @@
-// Generated 2021-02-25 15:41:38 by go-framework development-version
+// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
 package settings
-
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -12,7 +11,7 @@ const applicationDescriptionSettingName = "Application.Description"
 const applicationDescriptionSettingCmdline = "description"
 
 // Lazy value
-var applicationDescriptionSettingLazy = NewLazyStringValue(func () string { return viper.GetString(applicationDescriptionSettingName) })
+var applicationDescriptionSettingLazy = NewLazyStringValue(func() string { return viper.GetString(applicationDescriptionSettingName) })
 
 // Fetch the setting
 func (theSettings) ApplicationDescription() string {

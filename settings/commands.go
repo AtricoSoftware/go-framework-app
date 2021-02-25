@@ -1,6 +1,5 @@
-// Generated 2021-02-25 15:41:38 by go-framework development-version
+// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
 package settings
-
 
 import (
 	"github.com/spf13/viper"
@@ -9,7 +8,7 @@ import (
 const commandsSettingName = "Commands"
 
 // Lazy value
-var commandsSettingLazy = NewLazyUserCommandSliceValue(func () []UserCommand { return ParseCommandsSetting(viper.Get(commandsSettingName)) })
+var commandsSettingLazy = NewLazyUserCommandSliceValue(func() []UserCommand { return ParseCommandsSetting(viper.Get(commandsSettingName)) })
 
 // Fetch the setting
 func (theSettings) Commands() []UserCommand {

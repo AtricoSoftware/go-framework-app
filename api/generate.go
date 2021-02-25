@@ -1,4 +1,4 @@
-// Generated 2021-02-24 16:58:12 by go-framework development-version
+// Generated 2021-02-24 16:58:12 by go-framework v1.5.0
 package api
 
 import (
@@ -76,8 +76,8 @@ func (svc generateApi) Run() error {
 	}
 	// lazy implementations
 	if len(lazyTypes) > 0 {
-		settings := make([]settings.UserSetting,0, len(lazyTypes))
-		for _,st := range lazyTypes {
+		settings := make([]settings.UserSetting, 0, len(lazyTypes))
+		for _, st := range lazyTypes {
 			settings = append(settings, st)
 		}
 		if info, err := generateFile(settingsPath, "lazy_implementations.go", resources.Templates["lazy_implementations"], settings); err == nil {

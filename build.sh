@@ -1,4 +1,4 @@
-# Generated 2021-02-24 16:58:12 by go-framework development-version
+# Generated 2021-02-25 16:45:33 by go-framework v1.5.0
 MODULE="github.com/AtricoSoftware/go-framework-app"
 export OUTPUT_NAME="go-framework"
 TARGET_DIR=release

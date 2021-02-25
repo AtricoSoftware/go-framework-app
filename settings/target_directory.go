@@ -1,6 +1,5 @@
-// Generated 2021-02-25 15:41:38 by go-framework development-version
+// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
 package settings
-
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -14,7 +13,7 @@ const targetDirectorySettingShortcut = "d"
 const targetDirectorySettingDefaultVal = "."
 
 // Lazy value
-var targetDirectorySettingLazy = NewLazyStringValue(func () string { return viper.GetString(targetDirectorySettingName) })
+var targetDirectorySettingLazy = NewLazyStringValue(func() string { return viper.GetString(targetDirectorySettingName) })
 
 // Fetch the setting
 func (theSettings) TargetDirectory() string {

@@ -2,7 +2,7 @@ package settings
 
 type lazyValue struct {
 	theValue interface{}
-	creator func() interface{}
+	creator  func() interface{}
 	hasValue bool
 }
 
@@ -25,10 +25,12 @@ type {{$lazyValueLow}} lazyValue
 type {{$lazyValue}} interface {
 	GetValue() {{.Type}}
 }
+
 func New{{$lazyValue}}(creator func() {{.Type}}) {{$lazyValue}} {
-	lz := {{$lazyValueLow}}(lazyValue{creator:func() interface{} {return creator()}})
+	lz := {{$lazyValueLow}}(lazyValue{creator: func() interface{} { return creator() }})
 	return &lz
 }
+
 func (v *{{$lazyValueLow}}) GetValue() {{.Type}} {
 	return ((*lazyValue)(v).getValue()).({{.Type}})
 }
