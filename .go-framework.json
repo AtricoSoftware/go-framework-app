@@ -8,106 +8,107 @@
   },
   "Commands": [
     {
-      "name": "generate",
-      "description": "Generate framework app"
+      "Name": "generate",
+      "Description": "Generate framework app"
     }
   ],
   "UserSettings": [
     {
-      "name": "Target directory",
-      "id": "directory",
-      "description": "Target directory",
-      "type": "string",
-      "defaultVal": ".",
-      "cmdline": "directory",
-      "cmdlineShortcut": "d",
-      "appliesTo": [
+      "Name": "Target directory",
+      "Id": "directory",
+      "Description": "Target directory",
+      "Type": "string",
+      "DefaultVal": ".",
+      "Cmdline": "directory",
+      "CmdlineShortcut": "d",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "Application title",
-      "id": "Application.Title",
-      "description": "Name of application",
-      "type": "string",
-      "cmdline": "title",
-      "cmdlineShortcut": "t",
-      "appliesTo": [
+      "Name": "Application title",
+      "Id": "Application.Title",
+      "Description": "Name of application",
+      "Type": "string",
+      "Cmdline": "title",
+      "CmdlineShortcut": "t",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "Application name",
-      "id": "Application.Name",
-      "description": "Name of application",
-      "type": "string",
-      "cmdline": "name",
-      "cmdlineShortcut": "n",
-      "appliesTo": [
+      "Name": "Application name",
+      "Id": "Application.Name",
+      "Description": "Name of application",
+      "Type": "string",
+      "Cmdline": "name",
+      "CmdlineShortcut": "n",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "Application summary",
-      "id": "Application.Summary",
-      "description": "Summary description of application",
-      "type": "string",
-      "cmdline": "summary",
-      "appliesTo": [
+      "Name": "Application summary",
+      "Id": "Application.Summary",
+      "Description": "Summary description of application",
+      "Type": "string",
+      "Cmdline": "summary",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "Application description",
-      "id": "Application.Description",
-      "description": "Description of application",
-      "type": "string",
-      "cmdline": "description",
-      "appliesTo": [
+      "Name": "Application description",
+      "Id": "Application.Description",
+      "Description": "Description of application",
+      "Type": "string",
+      "Cmdline": "description",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "RepositoryPath",
-      "id": "Application.Repository",
-      "description": "Path to repository",
-      "type": "string",
-      "cmdline": "repository",
-      "cmdlineShortcut": "r",
-      "appliesTo": [
+      "Name": "RepositoryPath",
+      "Id": "Application.Repository",
+      "Description": "Path to repository",
+      "Type": "string",
+      "Cmdline": "repository",
+      "CmdlineShortcut": "r",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "Commands",
-      "id": "Commands",
-      "description": "Commands to add",
-      "type": "[]UserCommand",
-      "appliesTo": [
+      "Name": "Commands",
+      "Id": "Commands",
+      "Description": "Commands to add",
+      "Type": "[]UserCommand",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "UserSettings",
-      "id": "UserSettings",
-      "description": "Settings to add",
-      "type": "[]UserSetting",
-      "appliesTo": [
+      "Name": "UserSettings",
+      "Id": "UserSettings",
+      "Description": "Settings to add",
+      "Type": "[]UserSetting",
+      "AppliesTo": [
         "generate"
       ]
     },
     {
-      "name": "Libraries",
-      "id": "Libraries",
-      "description": "Libraries to get",
-      "type": "map[string]string",
-      "appliesTo": [
+      "Name": "Libraries",
+      "Id": "Libraries",
+      "Description": "Libraries to get",
+      "Type": "[]string",
+      "AppliesTo": [
         "generate"
       ]
     }
   ],
   "Libraries": [
     "github.com/atrico-go/core",
-    "github.com/iancoleman/strcase"
+    "github.com/iancoleman/strcase",
+    "github.com/mitchellh/mapstructure"
   ]
 }

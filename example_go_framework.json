@@ -8,41 +8,42 @@
   },
   "Commands": [
     {
-      "name": "test",
-      "description": "Run test"
+      "Name": "test",
+      "Description": "Run test"
     },
     {
-      "name": "test2",
-      "description": "Run test2"
+      "Name": "test2",
+      "Description": "Run test2"
     }
   ],
   "UserSettings": [
     {
-      "name": "First sub entry",
-      "id": "group.sub1",
-      "description": "Sub setting",
-      "type": "string",
-      "defaultVal": "default_sub1",
-      "cmdline": "sub1",
-      "cmdlineShortcut": "s",
-      "appliesTo": [
+      "Name": "First sub entry",
+      "Id": "group.sub1",
+      "Description": "Sub setting",
+      "Type": "string",
+      "DefaultVal": "default_sub1",
+      "Cmdline": "sub1",
+      "CmdlineShortcut": "s",
+      "AppliesTo": [
         "root",
         "test"
       ]
     },
     {
-      "name": "Subgroup entry",
-      "id": "group.subgroup.sub2",
-      "description": "Sub setting",
-      "type": "string",
-      "defaultVal": "default_sub2",
-      "appliesTo": [
+      "Name": "Subgroup entry",
+      "Id": "group.subgroup.sub2",
+      "Description": "Sub setting",
+      "Type": "string",
+      "DefaultVal": "default_sub2",
+      "AppliesTo": [
         "test",
         "test2"
       ]
     }
   ],
   "Libraries": [
-    "github.com/atrico-go/core"
+    "github.com/atrico-go/core",
+    "github.com/mitchellh/go-homedir@v1.1.0"
   ]
 }

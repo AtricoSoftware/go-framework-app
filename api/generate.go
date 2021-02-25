@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 
@@ -51,11 +52,11 @@ func (svc generateApi) Run() error {
 	apiPath := filepath.Join(svc.config.TargetDirectory(), "api")
 	for _, command := range svc.config.Commands() {
 		values["Command"] = command
-		if info, err := generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name()), resources.Templates["cmd"], values); err == nil {
+		if info, err := generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["cmd"], values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 		// Do not overwrite existing api (this is what the user will change)
-		generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name()), resources.Templates["api"], values)
+		generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["api"], values)
 	}
 	// Create settings
 	settingsPath := filepath.Join(svc.config.TargetDirectory(), "settings")
@@ -77,14 +78,8 @@ func (svc generateApi) Run() error {
 		ioutil.WriteFile(destination, data, 0644)
 	}
 	// Get the requirements
-	for url, version := range svc.config.Libraries() {
-		var pkg string
-		if version == "" {
-			pkg = url
-		} else {
-			pkg = fmt.Sprintf("%s@%s", url, version)
-		}
-		GoCommand(svc.config.TargetDirectory(), "get", pkg)
+	for _,url := range getRequirements(svc.config.Libraries()) {
+		GoCommand(svc.config.TargetDirectory(), "get", url)
 	}
 	// Clean up the files
 	GoCommand("fmt", "./...")
@@ -226,4 +221,53 @@ func getComment(filename string) string {
 		return "#"
 	}
 	return ""
+}
+
+func getRequirements(userLibraries []string) []string {
+	libs := make(map[string]string, len(resources.Requirements)+len(userLibraries))
+	// System requirements, then user libraries
+	for _,entry := range append(resources.Requirements, userLibraries...) {
+		url,ver := splitUrlVersion(entry)
+		libs[url] = ver
+	}
+	return mergeUrlVersion(libs)
+}
+
+func splitUrlVersion(raw string) (url,version string) {
+	parts := strings.Split(raw, "@")
+	l := len(parts)
+	if l > 0 {
+		url = parts[0]
+	}
+	if l > 1 {
+		version = parts[1]
+	}
+	return url,version
+}
+
+func mergeUrlVersion(urlVersions map[string]string) []string {
+	urls := make([]string, 0, len(urlVersions))
+	for url,ver := range urlVersions {
+		var newUrl string
+		if ver != "" {
+			newUrl = fmt.Sprintf("%s@%s", url, ver)
+		} else {
+			newUrl = url
+		}
+		urls = append(urls, newUrl)
+	}
+	return urls
+}
+
+func ParseLibrariesSetting(setting interface{}) map[string]string {
+	results := make(map[string]string, 0)
+	// Add standard requirements
+	for _, lib := range resources.Requirements {
+		results[lib] = ""
+	}
+	// Read config requirements
+	for _, lib := range setting.([]interface{}) {
+		results[lib.(string)] = ""
+	}
+	return results
 }

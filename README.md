@@ -25,7 +25,7 @@ TODO: Describe and show how to build your code and run the tests.
 | RepositoryPath (string) | Application.Repository | -r, --repository |  | generate | Path to repository |
 | Commands ([]UserCommand) | Commands |  |  | generate | Commands to add |
 | UserSettings ([]UserSetting) | UserSettings |  |  | generate | Settings to add |
-| Libraries (map[string]string) | Libraries |  |  | generate | Libraries to get |
+| Libraries ([]string) | Libraries |  |  | generate | Libraries to get |
 <details>
   <summary>Further details</summary>
 Config file ids with a dot can be "scoped"<br>

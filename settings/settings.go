@@ -21,7 +21,7 @@ type Settings interface {
 	// Settings to add
 	UserSettings() []UserSetting
 	// Libraries to get
-	Libraries() map[string]string
+	Libraries() []string
 }
 
 // Register the settings
