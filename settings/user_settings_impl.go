@@ -7,82 +7,52 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
+	"github.com/mitchellh/mapstructure"
 )
 
-type UserSetting interface {
-	Name() string
-	NameCode() string
-	LowerName() string
-	Id() string
-	Description() string
-	Type() string
-	Cmdline() string
-	CmdlineShortcut() string
-	DefaultVal() string
-	AppliesTo() []string
-
-	Filename() string
-	TypeGetter() string
-	TypeFlagAdder() string
-	AppliesToCmd(cmd string) bool
-	AppliesToCSL() string
+type UserSetting struct {
+	Name            string
+	Id              string
+	Description     string
+	Type            string
+	Cmdline         string
+	CmdlineShortcut string
+	DefaultVal      string
+	AppliesTo       []string
 }
 
 func ParseUserSettingsSetting(setting interface{}) []UserSetting {
 	if setting == nil {
 		return []UserSetting{
-			userSetting{
-				name:            "Example", // Name of setting - used in const
-				id:              "example", // viper ID, dotted values form groups
-				description:     "Add your own settings here",
-				settingType:     "string",
-				cmdline:         "example",
-				cmdlineShortcut: "e",
-				defaultVal:      "hello",
-				appliesTo:       []string{"root"},
+			UserSetting{
+				Name:            "Example", // Name of setting - used in const
+				Id:              "example", // viper ID, dotted values form groups
+				Description:     "Add your own settings here",
+				Type:            "string",
+				Cmdline:         "example",
+				CmdlineShortcut: "e",
+				DefaultVal:      "hello",
+				AppliesTo:       []string{"root"},
 			}}
 	}
 	results := make([]UserSetting, len(setting.([]interface{})))
 	for i, item := range setting.([]interface{}) {
-		setting := userSetting{
-			settingType: "string",
-			appliesTo:   make([]string, 0),
-		}
-		for k, v := range item.(map[string]interface{}) {
-			val := fmt.Sprintf("%s", v)
-			switch k {
-			case "name":
-				setting.name = val
-			case "id":
-				setting.id = val
-			case "description":
-				setting.description = val
-			case "type":
-				setting.settingType = val
-			case "cmdline":
-				setting.cmdline = val
-			case "cmdlineShortcut":
-				setting.cmdlineShortcut = string(val[0])
-			case "defaultVal":
-				setting.defaultVal = val
-			case "appliesTo":
-				for _, c := range v.([]interface{}) {
-					setting.appliesTo = append(setting.appliesTo, c.(string))
-				}
-			}
-		}
-		// If contains root, remove others
-		if sliceContains(setting.appliesTo, "root") {
-			setting.appliesTo = []string{"root"}
-		}
-		results[i] = setting
+		mapstructure.Decode(item, &(results[i]))
+		results[i].appliesToRootOnly()
 	}
 
 	return results
 }
 
+func (u *UserSetting) appliesToRootOnly() {
+	// If contains root, remove others
+	if len(u.AppliesTo) > 1 && sliceContains(u.AppliesTo, "root") {
+		u.AppliesTo = []string{"root"}
+	}
+}
+
 func sliceContains(list []string, item string) bool {
-	for _,i := range list {
+	for _, i := range list {
 		if i == item {
 			return true
 		}
@@ -90,64 +60,19 @@ func sliceContains(list []string, item string) bool {
 	return false
 }
 
-type userSetting struct {
-	name            string
-	id              string
-	description     string
-	settingType     string
-	cmdline         string
-	cmdlineShortcut string
-	defaultVal      string
-	appliesTo       []string
+func (u UserSetting) NameCode() string {
+	return strcase.ToCamel(u.Name)
 }
 
-
-func (u userSetting) Name() string {
-	return u.name
+func (u UserSetting) LowerName() string {
+	return strcase.ToLowerCamel(u.Name)
+}
+func (u UserSetting) Filename() string {
+	return strcase.ToSnake(u.Name)
 }
 
-func (u userSetting) NameCode() string {
-	return strcase.ToCamel(u.name)
-}
-
-func (u userSetting) LowerName() string {
-	return strcase.ToLowerCamel(u.name)
-}
-
-func (u userSetting) Id() string {
-	return u.id
-}
-
-func (u userSetting) Description() string {
-	return u.description
-}
-
-func (u userSetting) Type() string {
-	return u.settingType
-}
-
-func (u userSetting) Cmdline() string {
-	return u.cmdline
-}
-
-func (u userSetting) CmdlineShortcut() string {
-	return u.cmdlineShortcut
-}
-
-func (u userSetting) DefaultVal() string {
-	return u.defaultVal
-}
-
-func (u userSetting) AppliesTo() []string {
-	return u.appliesTo
-}
-
-func (u userSetting) Filename() string {
-	return strcase.ToSnake(u.name)
-}
-
-func (u userSetting) TypeGetter() string {
-	switch u.settingType {
+func (u UserSetting) TypeGetter() string {
+	switch u.Type {
 	case "string":
 		return "viper.GetString"
 	case "[]string":
@@ -160,8 +85,8 @@ func (u userSetting) TypeGetter() string {
 	return ""
 }
 
-func (u userSetting) TypeFlagAdder() string {
-	switch u.settingType {
+func (u UserSetting) TypeFlagAdder() string {
+	switch u.Type {
 	case "string":
 		return "viperEx.AddStringSetting"
 	case "[]string":
@@ -172,15 +97,15 @@ func (u userSetting) TypeFlagAdder() string {
 		return "viperEx.AddIntSetting"
 	}
 
-	panic(errors.New(fmt.Sprintf("type '%s' is not supported as a setting type", u.settingType)))
+	panic(errors.New(fmt.Sprintf("type '%s' is not supported as a setting type", u.Type)))
 }
 
-func (u userSetting) AppliesToCmd(cmd string) bool {
+func (u UserSetting) AppliesToCmd(cmd string) bool {
 	// No commandline, do not apply to any command
-	if u.cmdline == "" {
+	if u.Cmdline == "" {
 		return false
 	}
-	for _, c := range u.appliesTo {
+	for _, c := range u.AppliesTo {
 		if c == cmd {
 			return true
 		}
@@ -189,11 +114,11 @@ func (u userSetting) AppliesToCmd(cmd string) bool {
 }
 
 // For template
-func (u userSetting) HasPrefix(text string, prefix string) bool {
+func (u UserSetting) HasPrefix(text string, prefix string) bool {
 	return strings.HasPrefix(text, prefix)
 }
 
 // Applies to as comma separated list
-func (u userSetting) AppliesToCSL() string {
-	return strings.Replace(strings.Join(u.appliesTo, ", "), "root", "all", 1)
+func (u UserSetting) AppliesToCSL() string {
+	return strings.Replace(strings.Join(u.AppliesTo, ", "), "root", "all", 1)
 }
