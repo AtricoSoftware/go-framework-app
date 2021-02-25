@@ -1,5 +1,6 @@
-// Generated 2021-02-25 13:40:05 by go-framework development-version
+// Generated 2021-02-25 15:41:38 by go-framework development-version
 package settings
+
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -10,21 +11,14 @@ import (
 const applicationSummarySettingName = "Application.Summary"
 const applicationSummarySettingCmdline = "summary"
 
+// Lazy value
+var applicationSummarySettingLazy = NewLazyStringValue(func () string { return viper.GetString(applicationSummarySettingName) })
 
 // Fetch the setting
 func (theSettings) ApplicationSummary() string {
-	if !applicationSummarySettingLazy.hasValue {
-		applicationSummarySettingLazy.theValue = viper.GetString(applicationSummarySettingName)
-		applicationSummarySettingLazy.hasValue = true
-	}
-	return applicationSummarySettingLazy.theValue
+	return applicationSummarySettingLazy.GetValue()
 }
 
 func AddApplicationSummaryFlag(flagSet *pflag.FlagSet) {
 	viperEx.AddStringSetting(flagSet, applicationSummarySettingName, applicationSummarySettingCmdline, "Summary description of application")
-}
-// Lazy value
-var applicationSummarySettingLazy struct {
-	theValue string
-	hasValue bool
 }

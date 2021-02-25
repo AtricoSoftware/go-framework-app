@@ -60,6 +60,7 @@ func (svc generateApi) Run() error {
 	}
 	// Create settings
 	settingsPath := filepath.Join(svc.config.TargetDirectory(), "settings")
+	lazyTypes := make(map[string]settings.UserSetting, 0)
 	for _, setting := range svc.config.UserSettings() {
 		values["Setting"] = setting
 		if info, err := generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), resources.Templates["setting"], values); err == nil {
@@ -68,6 +69,19 @@ func (svc generateApi) Run() error {
 		if setting.TypeGetter() == "" {
 			// Custom setting (no overwrite)
 			generateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), resources.Templates["setting_impl"], setting)
+		}
+		if svc.config.SingleReadConfiguration() {
+			lazyTypes[setting.Type] = setting
+		}
+	}
+	// lazy implementations
+	if len(lazyTypes) > 0 {
+		settings := make([]settings.UserSetting,0, len(lazyTypes))
+		for _,st := range lazyTypes {
+			settings = append(settings, st)
+		}
+		if info, err := generateFile(settingsPath, "lazy_implementations.go", resources.Templates["lazy_implementations"], settings); err == nil {
+			generatedFiles = append(generatedFiles, info)
 		}
 	}
 	// Copy generator settings if found (for future reference)
