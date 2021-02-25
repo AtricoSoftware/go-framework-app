@@ -10,7 +10,6 @@ type ApiCommand interface {
 	Run() error
 }
 
-
 // Generate framework app
 type GenerateApi ApiCommand
 

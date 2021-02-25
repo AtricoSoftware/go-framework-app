@@ -78,7 +78,7 @@ func (svc generateApi) Run() error {
 		ioutil.WriteFile(destination, data, 0644)
 	}
 	// Get the requirements
-	for _,url := range getRequirements(svc.config.Libraries()) {
+	for _, url := range getRequirements(svc.config.Libraries()) {
 		GoCommand(svc.config.TargetDirectory(), "get", url)
 	}
 	// Clean up the files
@@ -226,14 +226,14 @@ func getComment(filename string) string {
 func getRequirements(userLibraries []string) []string {
 	libs := make(map[string]string, len(resources.Requirements)+len(userLibraries))
 	// System requirements, then user libraries
-	for _,entry := range append(resources.Requirements, userLibraries...) {
-		url,ver := splitUrlVersion(entry)
+	for _, entry := range append(resources.Requirements, userLibraries...) {
+		url, ver := splitUrlVersion(entry)
 		libs[url] = ver
 	}
 	return mergeUrlVersion(libs)
 }
 
-func splitUrlVersion(raw string) (url,version string) {
+func splitUrlVersion(raw string) (url, version string) {
 	parts := strings.Split(raw, "@")
 	l := len(parts)
 	if l > 0 {
@@ -242,12 +242,12 @@ func splitUrlVersion(raw string) (url,version string) {
 	if l > 1 {
 		version = parts[1]
 	}
-	return url,version
+	return url, version
 }
 
 func mergeUrlVersion(urlVersions map[string]string) []string {
 	urls := make([]string, 0, len(urlVersions))
-	for url,ver := range urlVersions {
+	for url, ver := range urlVersions {
 		var newUrl string
 		if ver != "" {
 			newUrl = fmt.Sprintf("%s@%s", url, ver)
