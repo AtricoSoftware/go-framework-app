@@ -11,5 +11,4 @@ func GoCommand(targetDirectory string, args ...string) error {
 	cmd.Stderr = os.Stderr
 	cmd.Dir = targetDirectory
 	return cmd.Run()
-
 }

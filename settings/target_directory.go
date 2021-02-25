@@ -1,5 +1,6 @@
-// Generated 2021-02-25 13:40:05 by go-framework development-version
+// Generated 2021-02-25 15:41:38 by go-framework development-version
 package settings
+
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -12,14 +13,12 @@ const targetDirectorySettingCmdline = "directory"
 const targetDirectorySettingShortcut = "d"
 const targetDirectorySettingDefaultVal = "."
 
+// Lazy value
+var targetDirectorySettingLazy = NewLazyStringValue(func () string { return viper.GetString(targetDirectorySettingName) })
 
 // Fetch the setting
 func (theSettings) TargetDirectory() string {
-	if !targetDirectorySettingLazy.hasValue {
-		targetDirectorySettingLazy.theValue = viper.GetString(targetDirectorySettingName)
-		targetDirectorySettingLazy.hasValue = true
-	}
-	return targetDirectorySettingLazy.theValue
+	return targetDirectorySettingLazy.GetValue()
 }
 
 func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
@@ -28,9 +27,4 @@ func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
 
 func init() {
 	viper.SetDefault(targetDirectorySettingName, targetDirectorySettingDefaultVal)
-}
-// Lazy value
-var targetDirectorySettingLazy struct {
-	theValue string
-	hasValue bool
 }

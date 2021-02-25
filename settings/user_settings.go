@@ -1,5 +1,6 @@
-// Generated 2021-02-25 13:40:05 by go-framework development-version
+// Generated 2021-02-25 15:41:38 by go-framework development-version
 package settings
+
 
 import (
 	"github.com/spf13/viper"
@@ -7,18 +8,10 @@ import (
 
 const userSettingsSettingName = "UserSettings"
 
+// Lazy value
+var userSettingsSettingLazy = NewLazyUserSettingSliceValue(func () []UserSetting { return ParseUserSettingsSetting(viper.Get(userSettingsSettingName)) })
 
 // Fetch the setting
 func (theSettings) UserSettings() []UserSetting {
-	if !userSettingsSettingLazy.hasValue {
-		setting := viper.Get(userSettingsSettingName)
-		userSettingsSettingLazy.theValue = ParseUserSettingsSetting(setting)
-		userSettingsSettingLazy.hasValue = true
-	}
-	return userSettingsSettingLazy.theValue
-}
-// Lazy value
-var userSettingsSettingLazy struct {
-	theValue []UserSetting
-	hasValue bool
+	return userSettingsSettingLazy.GetValue()
 }

@@ -1,5 +1,6 @@
-// Generated 2021-02-25 13:40:05 by go-framework development-version
+// Generated 2021-02-25 15:41:38 by go-framework development-version
 package settings
+
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -11,21 +12,14 @@ const applicationNameSettingName = "Application.Name"
 const applicationNameSettingCmdline = "name"
 const applicationNameSettingShortcut = "n"
 
+// Lazy value
+var applicationNameSettingLazy = NewLazyStringValue(func () string { return viper.GetString(applicationNameSettingName) })
 
 // Fetch the setting
 func (theSettings) ApplicationName() string {
-	if !applicationNameSettingLazy.hasValue {
-		applicationNameSettingLazy.theValue = viper.GetString(applicationNameSettingName)
-		applicationNameSettingLazy.hasValue = true
-	}
-	return applicationNameSettingLazy.theValue
+	return applicationNameSettingLazy.GetValue()
 }
 
 func AddApplicationNameFlag(flagSet *pflag.FlagSet) {
 	viperEx.AddStringSettingP(flagSet, applicationNameSettingName, applicationNameSettingCmdline, applicationNameSettingShortcut, "Name of application")
-}
-// Lazy value
-var applicationNameSettingLazy struct {
-	theValue string
-	hasValue bool
 }

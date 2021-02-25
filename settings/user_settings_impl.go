@@ -85,6 +85,17 @@ func (u UserSetting) TypeGetter() string {
 	return ""
 }
 
+func (u UserSetting) TypeNameAsCode() string {
+	return getTypeNameAsCode(u.Type)
+}
+
+func getTypeNameAsCode(str string) string {
+	if strings.HasPrefix(str, "[]") {
+		return getTypeNameAsCode(str[2:]) + "Slice"
+	}
+	return strcase.ToCamel(str)
+}
+
 func (u UserSetting) TypeFlagAdder() string {
 	switch u.Type {
 	case "string":

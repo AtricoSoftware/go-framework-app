@@ -1,5 +1,6 @@
-// Generated 2021-02-25 13:40:05 by go-framework development-version
+// Generated 2021-02-25 15:41:38 by go-framework development-version
 package settings
+
 
 import (
 	"github.com/atrico-go/viperEx"
@@ -7,17 +8,10 @@ import (
 
 const librariesSettingName = "Libraries"
 
+// Lazy value
+var librariesSettingLazy = NewLazyStringSliceValue(func () []string { return viperEx.GetStringSlice(librariesSettingName) })
 
 // Fetch the setting
 func (theSettings) Libraries() []string {
-	if !librariesSettingLazy.hasValue {
-		librariesSettingLazy.theValue = viperEx.GetStringSlice(librariesSettingName)
-		librariesSettingLazy.hasValue = true
-	}
-	return librariesSettingLazy.theValue
-}
-// Lazy value
-var librariesSettingLazy struct {
-	theValue []string
-	hasValue bool
+	return librariesSettingLazy.GetValue()
 }

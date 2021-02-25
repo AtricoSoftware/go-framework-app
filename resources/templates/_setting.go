@@ -6,6 +6,14 @@ package settings
 {{- $defaultVarName := print .Setting.LowerName "SettingDefaultVal"}}
 {{- $lazyVarName := print .Setting.LowerName "SettingLazy"}}
 
+{{- $getTheValue := ""}}
+{{- if (ne .Setting.TypeGetter "")}}
+{{- $getTheValue = print .Setting.TypeGetter "(" $settingVarName ")"}}
+{{- else}}
+{{- $getTheValue = print "Parse" .Setting.NameCode "Setting(viper.Get(" $settingVarName "))"}}
+{{- end}}
+
+
 import (
 {{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
 	"github.com/atrico-go/viperEx"
@@ -29,26 +37,18 @@ const {{$shortcutVarName}} = "{{.Setting.CmdlineShortcut}}"
 const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting.DefaultVal}}{{if (eq .Setting.Type "string")}}"{{end}}
 {{- end}}
 
+{{- if .SingleReadConfiguration}}
+
+// Lazy value
+var {{$lazyVarName}} = NewLazy{{.Setting.TypeNameAsCode}}Value(func () {{.Setting.Type}} { return {{$getTheValue}} })
+{{- end}}
+
 // Fetch the setting
 func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 {{- if .SingleReadConfiguration}}
-	if !{{$lazyVarName}}.hasValue {
-{{- if (ne .Setting.TypeGetter "")}}
-		{{$lazyVarName}}.theValue = {{.Setting.TypeGetter}}({{$settingVarName}})
+	return {{$lazyVarName}}.GetValue()
 {{- else}}
-		setting := viper.Get({{$settingVarName}})
-		{{$lazyVarName}}.theValue = Parse{{.Setting.NameCode}}Setting(setting)
-{{- end}}
-		{{$lazyVarName}}.hasValue = true
-	}
-	return {{$lazyVarName}}.theValue
-{{- else}}
-{{- if (ne .Setting.TypeGetter "")}}
-	return {{.Setting.TypeGetter}}({{$settingVarName}})
-{{- else}}
-	return viper.Get({{$settingVarName}})
-{{$lazyVarName}}.theValue = Parse{{.Setting.NameCode}}Setting(setting)
-{{- end}}
+	return {{$getTheValue}})
 {{- end}}
 }
 
@@ -62,13 +62,5 @@ func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
 
 func init() {
 	viper.SetDefault({{$settingVarName}}, {{$defaultVarName}})
-}
-{{- end}}
-{{- if .SingleReadConfiguration}}
-
-// Lazy value
-var {{$lazyVarName}} struct {
-	theValue {{.Setting.Type}}
-	hasValue bool
 }
 {{- end}}

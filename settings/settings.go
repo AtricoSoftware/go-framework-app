@@ -1,10 +1,10 @@
-// Generated 2021-02-25 13:40:05 by go-framework development-version
+// Generated 2021-02-25 15:41:38 by go-framework development-version
 package settings
 
 import "github.com/atrico-go/container"
 
 type Settings interface {
-	// Configuration is only read once (at start)
+	// Configuration is only read once (at startup)
 	SingleReadConfiguration() bool
 	// Target directory
 	TargetDirectory() string

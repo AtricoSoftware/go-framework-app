@@ -43,6 +43,15 @@
         "test",
         "test2"
       ]
+    },
+    {
+      "Name": "Custom setting",
+      "Id": "custom",
+      "Description": "Custom setting",
+      "Type": "[][]ArrayOfArrays",
+      "AppliesTo": [
+        "root"
+      ]
     }
   ],
   "Libraries": [
