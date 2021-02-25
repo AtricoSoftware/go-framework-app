@@ -1,4 +1,4 @@
-// Generated 2021-02-24 16:31:35 by go-framework development-version
+// Generated 2021-02-24 16:31:35 by go-framework v1.5.0
 package settings
 
 import (

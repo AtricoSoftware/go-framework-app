@@ -1,8 +1,9 @@
+// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
 package settings
 
 type lazyValue struct {
 	theValue interface{}
-	creator func() interface{}
+	creator  func() interface{}
 	hasValue bool
 }
 
@@ -15,81 +16,91 @@ func (v *lazyValue) getValue() interface{} {
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
-// String
-// ----------------------------------------------------------------------------------------------------------------------------
-
-type LazyStringValue interface {
-	GetValue() string
-}
-type lazyStringValue lazyValue
-func NewLazyStringValue(creator func() string) LazyStringValue {
-	lz := lazyStringValue(lazyValue{creator:func() interface{} {return creator()}})
-	return &lz
-}
-func (v *lazyStringValue) GetValue() string {
-	return ((*lazyValue)(v).getValue()).(string)
-}
-
-// ----------------------------------------------------------------------------------------------------------------------------
 // Bool
 // ----------------------------------------------------------------------------------------------------------------------------
+type lazyBoolValue lazyValue
 
 type LazyBoolValue interface {
 	GetValue() bool
 }
-type lazyBoolValue lazyValue
+
 func NewLazyBoolValue(creator func() bool) LazyBoolValue {
-	lz := lazyBoolValue(lazyValue{creator:func() interface{} {return creator()}})
+	lz := lazyBoolValue(lazyValue{creator: func() interface{} { return creator() }})
 	return &lz
 }
+
 func (v *lazyBoolValue) GetValue() bool {
 	return ((*lazyValue)(v).getValue()).(bool)
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
-// String Slice
+// String
 // ----------------------------------------------------------------------------------------------------------------------------
+type lazyStringValue lazyValue
 
-type LazyStringSliceValue interface {
-	GetValue() []string
+type LazyStringValue interface {
+	GetValue() string
 }
-type lazyStringSliceValue lazyValue
-func NewLazyStringSliceValue(creator func() []string) LazyStringSliceValue {
-	lz := lazyStringSliceValue(lazyValue{creator:func() interface{} {return creator()}})
+
+func NewLazyStringValue(creator func() string) LazyStringValue {
+	lz := lazyStringValue(lazyValue{creator: func() interface{} { return creator() }})
 	return &lz
 }
-func (v *lazyStringSliceValue) GetValue() []string {
-	return ((*lazyValue)(v).getValue()).([]string)
+
+func (v *lazyStringValue) GetValue() string {
+	return ((*lazyValue)(v).getValue()).(string)
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
-// UserCommand Slice
+// UserCommandSlice
 // ----------------------------------------------------------------------------------------------------------------------------
+type lazyUserCommandSliceValue lazyValue
 
 type LazyUserCommandSliceValue interface {
 	GetValue() []UserCommand
 }
-type lazyUserCommandSliceValue lazyValue
+
 func NewLazyUserCommandSliceValue(creator func() []UserCommand) LazyUserCommandSliceValue {
-	lz := lazyUserCommandSliceValue(lazyValue{creator:func() interface{} {return creator()}})
+	lz := lazyUserCommandSliceValue(lazyValue{creator: func() interface{} { return creator() }})
 	return &lz
 }
+
 func (v *lazyUserCommandSliceValue) GetValue() []UserCommand {
 	return ((*lazyValue)(v).getValue()).([]UserCommand)
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
-// UserSetting Slice
+// UserSettingSlice
 // ----------------------------------------------------------------------------------------------------------------------------
+type lazyUserSettingSliceValue lazyValue
 
 type LazyUserSettingSliceValue interface {
 	GetValue() []UserSetting
 }
-type lazyUserSettingSliceValue lazyValue
+
 func NewLazyUserSettingSliceValue(creator func() []UserSetting) LazyUserSettingSliceValue {
-	lz := lazyUserSettingSliceValue(lazyValue{creator:func() interface{} {return creator()}})
+	lz := lazyUserSettingSliceValue(lazyValue{creator: func() interface{} { return creator() }})
 	return &lz
 }
+
 func (v *lazyUserSettingSliceValue) GetValue() []UserSetting {
 	return ((*lazyValue)(v).getValue()).([]UserSetting)
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------
+// StringSlice
+// ----------------------------------------------------------------------------------------------------------------------------
+type lazyStringSliceValue lazyValue
+
+type LazyStringSliceValue interface {
+	GetValue() []string
+}
+
+func NewLazyStringSliceValue(creator func() []string) LazyStringSliceValue {
+	lz := lazyStringSliceValue(lazyValue{creator: func() interface{} { return creator() }})
+	return &lz
+}
+
+func (v *lazyStringSliceValue) GetValue() []string {
+	return ((*lazyValue)(v).getValue()).([]string)
 }

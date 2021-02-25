@@ -8,8 +8,8 @@ import (
 type ApiCommand interface {
 	Run() error
 }
-
 {{- range .Commands}}
+
 // {{.Description}}
 type {{.ApiName}}Api ApiCommand
 {{- end}}

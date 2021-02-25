@@ -13,7 +13,6 @@ package settings
 {{- $getTheValue = print "Parse" .Setting.NameCode "Setting(viper.Get(" $settingVarName "))"}}
 {{- end}}
 
-
 import (
 {{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
 	"github.com/atrico-go/viperEx"
@@ -40,7 +39,7 @@ const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting
 {{- if .SingleReadConfiguration}}
 
 // Lazy value
-var {{$lazyVarName}} = NewLazy{{.Setting.TypeNameAsCode}}Value(func () {{.Setting.Type}} { return {{$getTheValue}} })
+var {{$lazyVarName}} = NewLazy{{.Setting.TypeNameAsCode}}Value(func() {{.Setting.Type}} { return {{$getTheValue}} })
 {{- end}}
 
 // Fetch the setting
