@@ -20,10 +20,10 @@ func main() {
 	createTemplates(templatesPkg, templatesHeader, templatesFooter, addTemplatesTemplate)
 }
 
-func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents string)string) {
+func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents string) string) {
 	// Create templates from files
 	fileFolder := filepath.Join("resources", pkg)
-	tFile, err := os.Create(filepath.Join("resources", fmt.Sprintf("tmpl_%s.go",pkg)))
+	tFile, err := os.Create(filepath.Join("resources", fmt.Sprintf("tmpl_%s.go", pkg)))
 	if err != nil {
 		panic(err)
 	}
@@ -86,6 +86,7 @@ func init() {
 
 var templatesFooter = `
 }`
+
 func addTemplatesTemplate(name string, contents string) string {
 	name2 := strings.Replace(filepath.Base(name), filepath.Ext(name), "", 1)
 	return fmt.Sprintf("Templates[`%s`] = template.Must(template.New(`%s`).Parse(`%s`))\n", name2, name2, contents)
