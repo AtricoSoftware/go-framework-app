@@ -14,8 +14,18 @@
   ],
   "UserSettings": [
     {
+      "Name": "Single read configuration",
+      "Id": "Config.SingleReadConfig",
+      "Description": "Configuration is only read once (at startup)",
+      "Type": "bool",
+      "DefaultVal": "true",
+      "AppliesTo": [
+        "root"
+      ]
+    },
+    {
       "Name": "Target directory",
-      "Id": "directory",
+      "Id": "Config.TargetDirectory",
       "Description": "Target directory",
       "Type": "string",
       "DefaultVal": ".",

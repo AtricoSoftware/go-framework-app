@@ -1,4 +1,4 @@
-// Generated 2021-02-25 11:57:44 by go-framework development-version
+// Generated 2021-02-25 13:40:05 by go-framework development-version
 package settings
 
 import (
@@ -7,11 +7,6 @@ import (
 
 const librariesSettingName = "Libraries"
 
-// Lazy value
-var librariesSettingLazy struct {
-	theValue []string
-	hasValue bool
-}
 
 // Fetch the setting
 func (theSettings) Libraries() []string {
@@ -20,4 +15,9 @@ func (theSettings) Libraries() []string {
 		librariesSettingLazy.hasValue = true
 	}
 	return librariesSettingLazy.theValue
+}
+// Lazy value
+var librariesSettingLazy struct {
+	theValue []string
+	hasValue bool
 }

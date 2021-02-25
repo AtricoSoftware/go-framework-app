@@ -1,4 +1,4 @@
-// Generated 2021-02-25 11:57:44 by go-framework development-version
+// Generated 2021-02-25 13:40:05 by go-framework development-version
 package settings
 
 import (
@@ -7,16 +7,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-const targetDirectorySettingName = "directory"
+const targetDirectorySettingName = "Config.TargetDirectory"
 const targetDirectorySettingCmdline = "directory"
 const targetDirectorySettingShortcut = "d"
 const targetDirectorySettingDefaultVal = "."
 
-// Lazy value
-var targetDirectorySettingLazy struct {
-	theValue string
-	hasValue bool
-}
 
 // Fetch the setting
 func (theSettings) TargetDirectory() string {
@@ -33,4 +28,9 @@ func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
 
 func init() {
 	viper.SetDefault(targetDirectorySettingName, targetDirectorySettingDefaultVal)
+}
+// Lazy value
+var targetDirectorySettingLazy struct {
+	theValue string
+	hasValue bool
 }
