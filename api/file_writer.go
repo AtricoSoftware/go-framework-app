@@ -57,7 +57,9 @@ func generateFileImpl(path string, filename string, overwrite bool, contents *te
 		comment := getComment(filepath.Base(filename))
 		if comment != "" {
 			info.comment = true
-			writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, runTime.Format("2006-01-02 15:04:05"), pkg.Name, pkg.Version))
+			commentStr := fmt.Sprintf("Generated %s by %s %s", runTime.Format("2006-01-02 15:04:05"), pkg.Name, pkg.Version)
+			writer.WriteString(fmt.Sprintf(comment, commentStr))
+			writer.WriteString("\n")
 		}
 		// DEBUG contents.Execute(os.Stdout, values)
 
@@ -102,16 +104,18 @@ func filesEqual(path1, path2 string, skipComment bool) bool {
 
 func getComment(filename string) string {
 	if filename == ".gitignore" {
-		return "#"
+		return "# %s"
 	}
 	if filename == "go.mod" {
-		return "//"
+		return "// %s"
 	}
 	switch filepath.Ext(filename) {
 	case ".go":
-		return "//"
+		return "// %s"
 	case ".sh", ".yaml", ".yml":
-		return "#"
+		return "# %s"
+	case ".md":
+		return "[comment]: <> ( %s )"
 	}
 	return ""
 }
