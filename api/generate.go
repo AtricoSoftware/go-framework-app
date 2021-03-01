@@ -7,10 +7,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/atrico-go/container"
 
+	"github.com/AtricoSoftware/go-framework-app/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
 	"github.com/AtricoSoftware/go-framework-app/settings"
 
@@ -32,13 +32,13 @@ func (svc generateApi) Run() error {
 	// Ensure target folder exists
 	validateFolder(svc.config.TargetDirectory())
 	// Create values for the template
-	values := createTemplateValues(svc.config)
+	values := file_writer.CreateTemplateValues(svc.config)
 
-	generatedFiles := make([]generatedFileInfo, 0)
+	generatedFiles := make([]file_writer.GeneratedFileInfo, 0)
 
 	// Create all standard files
 	for _, t := range resources.Files {
-		if info, err := generateFile(svc.config.TargetDirectory(), t.Name(), t, values); err == nil {
+		if info, err := file_writer.GenerateFile(svc.config.TargetDirectory(), t.Name(), t, values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 	}
@@ -47,23 +47,23 @@ func (svc generateApi) Run() error {
 	apiPath := filepath.Join(svc.config.TargetDirectory(), "api")
 	for _, command := range svc.config.Commands() {
 		values["Command"] = command
-		if info, err := generateFile(cmdPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["cmd"], values); err == nil {
+		if info, err := file_writer.GenerateFile(cmdPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["cmd"], values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 		// Do not overwrite existing api (this is what the user will change)
-		generateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["api"], values)
+		file_writer.GenerateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["api"], values)
 	}
 	// Create settings
 	settingsPath := filepath.Join(svc.config.TargetDirectory(), "settings")
 	lazyTypes := make(map[string]settings.UserSetting, 0)
 	for _, setting := range svc.config.UserSettings() {
 		values["Setting"] = setting
-		if info, err := generateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), resources.Templates["setting"], values); err == nil {
+		if info, err := file_writer.GenerateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), resources.Templates["setting"], values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 		if setting.TypeGetter() == "" {
 			// Custom setting (no overwrite)
-			generateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), resources.Templates["setting_impl"], setting)
+			file_writer.GenerateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), resources.Templates["setting_impl"], setting)
 		}
 		if svc.config.SingleReadConfiguration() {
 			lazyTypes[setting.Type] = setting
@@ -75,7 +75,7 @@ func (svc generateApi) Run() error {
 		for _, st := range lazyTypes {
 			settings = append(settings, st)
 		}
-		if info, err := generateFile(settingsPath, "lazy_implementations.go", resources.Templates["lazy_implementations"], settings); err == nil {
+		if info, err := file_writer.GenerateFile(settingsPath, "lazy_implementations.go", resources.Templates["lazy_implementations"], settings); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 	}
@@ -93,18 +93,9 @@ func (svc generateApi) Run() error {
 	// Clean up the files
 	GoCommand("fmt", "./...")
 	// Remove backups with no changes
-	for _, info := range generatedFiles {
-		if info.backupPath != "" {
-			if filesEqual(info.originalPath, info.backupPath, info.comment) {
-				// Files equal, remove backup
-				os.Remove(info.backupPath)
-			}
-		}
-	}
+	file_writer.CleanupBackups(generatedFiles)
 	return nil
 }
-
-var runTime = time.Now()
 
 func validateMandatorySetting(setting string, name string) {
 	if setting == "" {
