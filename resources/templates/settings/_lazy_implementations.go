@@ -1,3 +1,4 @@
+// {{.Comment}}
 package settings
 
 type lazyValue struct {
@@ -13,7 +14,7 @@ func (v *lazyValue) getValue() interface{} {
 	}
 	return v.theValue
 }
-{{- range .}}
+{{- range .LazySettings}}
 
 // ----------------------------------------------------------------------------------------------------------------------------
 // {{.TypeNameAsCode}}

@@ -1,3 +1,4 @@
+// {{.Comment}}
 package pkg
 
 var Name = "{{.ApplicationName}}"

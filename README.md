@@ -1,3 +1,4 @@
+[comment]: <> ( Generated 2021-03-04 17:50:38 by go-framework v1.6.0 )
 # Go app framework generator
 
 Tool for generating go applications
@@ -20,6 +21,8 @@ TODO: Guide users through getting your code up and running on their own system. 
 TODO: Describe and show how to build your code and run the tests.
 
 # Configuration
+
+[comment]: <> ( SECTION-START: ConfigTable )
 
 | Setting | Config file | Cmdline | Default Val | Applies to | Description |
 | :------ | :---------- | :------ | :---------- | :--------- | :---------- |
@@ -61,3 +64,4 @@ a:
 
 </details>
 
+[comment]: <> ( SECTION-END )

@@ -1,3 +1,4 @@
+// {{.Comment}}
 package cmd
 
 import (

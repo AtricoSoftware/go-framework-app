@@ -1,3 +1,4 @@
+// {{.Comment}}
 package settings
 
 import "github.com/atrico-go/container"

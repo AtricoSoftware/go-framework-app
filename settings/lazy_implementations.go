@@ -1,4 +1,4 @@
-// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
+// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
 package settings
 
 type lazyValue struct {
@@ -52,6 +52,24 @@ func (v *lazyStringValue) GetValue() string {
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
+// StringSlice
+// ----------------------------------------------------------------------------------------------------------------------------
+type lazyStringSliceValue lazyValue
+
+type LazyStringSliceValue interface {
+	GetValue() []string
+}
+
+func NewLazyStringSliceValue(creator func() []string) LazyStringSliceValue {
+	lz := lazyStringSliceValue(lazyValue{creator: func() interface{} { return creator() }})
+	return &lz
+}
+
+func (v *lazyStringSliceValue) GetValue() []string {
+	return ((*lazyValue)(v).getValue()).([]string)
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------
 // UserCommandSlice
 // ----------------------------------------------------------------------------------------------------------------------------
 type lazyUserCommandSliceValue lazyValue
@@ -85,22 +103,4 @@ func NewLazyUserSettingSliceValue(creator func() []UserSetting) LazyUserSettingS
 
 func (v *lazyUserSettingSliceValue) GetValue() []UserSetting {
 	return ((*lazyValue)(v).getValue()).([]UserSetting)
-}
-
-// ----------------------------------------------------------------------------------------------------------------------------
-// StringSlice
-// ----------------------------------------------------------------------------------------------------------------------------
-type lazyStringSliceValue lazyValue
-
-type LazyStringSliceValue interface {
-	GetValue() []string
-}
-
-func NewLazyStringSliceValue(creator func() []string) LazyStringSliceValue {
-	lz := lazyStringSliceValue(lazyValue{creator: func() interface{} { return creator() }})
-	return &lz
-}
-
-func (v *lazyStringSliceValue) GetValue() []string {
-	return ((*lazyValue)(v).getValue()).([]string)
 }

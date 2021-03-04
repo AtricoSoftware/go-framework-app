@@ -1,3 +1,6 @@
+{"Type":"Mixed", "Name":"%s"}
+// {{.Comment}}
+// SECTION-START: Framework
 package settings
 
 {{- $settingVarName := print .Setting.LowerName "SettingName"}}
@@ -61,5 +64,12 @@ func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
 
 func init() {
 	viper.SetDefault({{$settingVarName}}, {{$defaultVarName}})
+}
+{{- end}}
+// SECTION-END
+{{- if (eq .Setting.TypeGetter "")}}
+
+func Parse{{.Setting.NameCode}}Setting(setting interface{}) {{.Setting.Type}} {
+// TODO - Implementation here
 }
 {{- end}}
