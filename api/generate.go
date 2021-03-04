@@ -1,4 +1,5 @@
-// Generated 2021-02-24 16:58:12 by go-framework v1.5.0
+// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// SECTION-START: Framework
 package api
 
 import (
@@ -6,16 +7,18 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
-
-	"github.com/atrico-go/container"
+	"time"
 
 	"github.com/AtricoSoftware/go-framework-app/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
 	"github.com/AtricoSoftware/go-framework-app/settings"
-
+	"github.com/atrico-go/container"
 	"github.com/spf13/viper"
 )
+
+// SECTION-END
 
 func RegisterGenerate(c container.Container) {
 	c.Singleton(func(config settings.Settings) GenerateApi { return generateApi{config: config} })
@@ -33,37 +36,36 @@ func (svc generateApi) Run() error {
 	validateFolder(svc.config.TargetDirectory())
 	// Create values for the template
 	values := file_writer.CreateTemplateValues(svc.config)
+	// Add comment string/backup suffix to values
+	now := time.Now()
+	values["Comment"] = file_writer.FileComment(now)
+	values["BackupSuffix"] = now.Format("2006-01-02_15-04-05")
 
 	generatedFiles := make([]file_writer.GeneratedFileInfo, 0)
 
+	var info file_writer.GeneratedFileInfo
+	var err error
 	// Create all standard files
 	for _, t := range resources.Files {
-		if info, err := file_writer.GenerateFile(svc.config.TargetDirectory(), t.Name(), t, values); err == nil {
+		if info, err = file_writer.GenerateFile(svc.config.TargetDirectory(), t, values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 	}
 	// Create commands/api
-	cmdPath := filepath.Join(svc.config.TargetDirectory(), "cmd")
-	apiPath := filepath.Join(svc.config.TargetDirectory(), "api")
 	for _, command := range svc.config.Commands() {
 		values["Command"] = command
-		if info, err := file_writer.GenerateFile(cmdPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["cmd"], values); err == nil {
-			generatedFiles = append(generatedFiles, info)
+		for _, pkg := range []string{"cmd", "api"} {
+			if info, err = file_writer.GenerateNamedFile(svc.config.TargetDirectory(), resources.Templates[pkg], command.Name, values); err == nil {
+				generatedFiles = append(generatedFiles, info)
+			}
 		}
-		// Do not overwrite existing api (this is what the user will change)
-		file_writer.GenerateFileIfNotPresent(apiPath, fmt.Sprintf("%s.go", command.Name), resources.Templates["api"], values)
 	}
 	// Create settings
-	settingsPath := filepath.Join(svc.config.TargetDirectory(), "settings")
 	lazyTypes := make(map[string]settings.UserSetting, 0)
 	for _, setting := range svc.config.UserSettings() {
 		values["Setting"] = setting
-		if info, err := file_writer.GenerateFile(settingsPath, fmt.Sprintf("%s.go", setting.Filename()), resources.Templates["setting"], values); err == nil {
+		if info, err = file_writer.GenerateNamedFile(svc.config.TargetDirectory(), resources.Templates["setting"], setting.Filename(), values); err == nil {
 			generatedFiles = append(generatedFiles, info)
-		}
-		if setting.TypeGetter() == "" {
-			// Custom setting (no overwrite)
-			file_writer.GenerateFileIfNotPresent(settingsPath, fmt.Sprintf("%s_impl.go", setting.Filename()), resources.Templates["setting_impl"], setting)
 		}
 		if svc.config.SingleReadConfiguration() {
 			lazyTypes[setting.Type] = setting
@@ -75,7 +77,9 @@ func (svc generateApi) Run() error {
 		for _, st := range lazyTypes {
 			settings = append(settings, st)
 		}
-		if info, err := file_writer.GenerateFile(settingsPath, "lazy_implementations.go", resources.Templates["lazy_implementations"], settings); err == nil {
+		sort.Slice(settings, func(i, j int) bool { return settings[i].TypeNameAsCode() < settings[j].TypeNameAsCode() })
+		values["LazySettings"] = settings
+		if info, err = file_writer.GenerateFile(svc.config.TargetDirectory(), resources.Templates["lazy_implementations"], values); err == nil {
 			generatedFiles = append(generatedFiles, info)
 		}
 	}
@@ -91,9 +95,9 @@ func (svc generateApi) Run() error {
 		GoCommand(svc.config.TargetDirectory(), "get", url)
 	}
 	// Clean up the files
-	GoCommand("fmt", "./...")
+	file_writer.CleanupFiles(generatedFiles)
 	// Remove backups with no changes
-	file_writer.CleanupBackups(generatedFiles)
+	file_writer.RemoveObsoleteBackups(generatedFiles)
 	return nil
 }
 

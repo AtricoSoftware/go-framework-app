@@ -1,3 +1,6 @@
+{"Type":"Mixed"}
+# {{.Comment}}
+# SECTION-START: Definitions
 MODULE="{{.RepositoryPath}}"
 export OUTPUT_NAME="{{.ApplicationName}}"
 TARGET_DIR=release
@@ -26,8 +29,9 @@ DETAILS="{\"Built\":{\"On\":\"$BUILT_ON\", \"By\":\"$BUILT_BY\"},\"Git\":{ \"Rep
 LDFLAGS="-s -w"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Version=$VERSION'"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
+# SECTION-END
 
-
+# SECTION-START: Build
 mkdir -p $TARGET_DIR
 for GOOS in $TARGET_PLATFORMS; do
     export GOOS
@@ -45,4 +49,5 @@ done
 cd $TARGET_DIR
 find . ! -path . -type d |  cut -d "/" -f2 | awk -v name="$OUTPUT_NAME" '{ print name "_" $1 ".zip -r ./" $1 "/"  }' | xargs -L1 zip -j
 #find . ! -path . -type d | xargs -L1 rm -rf
+# SECTION-END
 

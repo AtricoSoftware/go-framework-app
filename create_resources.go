@@ -3,11 +3,15 @@
 package main
 
 import (
+	"bufio"
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
+
+	"github.com/AtricoSoftware/go-framework-app/file_writer"
 )
 
 const filesPkg = "files"
@@ -20,7 +24,7 @@ func main() {
 	createTemplates(templatesPkg, templatesHeader, templatesFooter, addTemplatesTemplate)
 }
 
-func createTemplates(pkg string, header string, footer string, addTemplate func(name string, contents string) string) {
+func createTemplates(pkg string, header string, footer string, addTemplate func(templateName string, fileTemplateType file_writer.FileTemplateType, path string, content string) string) {
 	// Create templates from files
 	fileFolder := filepath.Join("resources", pkg)
 	tFile, err := os.Create(filepath.Join("resources", fmt.Sprintf("tmpl_%s.go", pkg)))
@@ -30,7 +34,7 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 	defer tFile.Close()
 	// Write file header
 	tFile.WriteString(header)
-	// Find all files starting with underscore
+	// Find all files
 	filepath.Walk(fileFolder, func(path string, info os.FileInfo, err error) error {
 		if info.Mode().IsRegular() && strings.HasPrefix(info.Name(), "_") {
 			// Read file contents
@@ -39,16 +43,18 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 				return err
 			}
 			defer file.Close()
-			contents, err := ioutil.ReadAll(file)
-			if err != nil {
-				return err
+			// Read main content
+			header, contents := readToSeparator(file)
+			var fileTemplateType file_writer.FileTemplateType
+			var ok bool
+			if fileTemplateType, ok = file_writer.ParseTemplateType(header["Type"]); !ok {
+				fileTemplateType = file_writer.FrameworkTemplate
 			}
-			// Strip leading underscore and filesPkg
-			newName := strings.Replace(path, info.Name(), info.Name()[1:], 1)[len(fileFolder)+1:]
-			fmt.Println("Adding: ", newName)
-			// Handle ` in file (readme)
-			contentsStr := strings.ReplaceAll(string(contents), "`", "`+\"`\"+`")
-			tFile.WriteString(addTemplate(newName, contentsStr))
+			if _, err = template.New("").Parse(contents); err == nil {
+				// Strip resource path and correct filename (deps on header)
+				templateName, newPath := calculateFilename(path[len(fileFolder)+1:], header["Name"])
+				tFile.WriteString(addTemplate(templateName, fileTemplateType, newPath, strings.ReplaceAll(contents, "`", "`+\"`\"+`")))
+			}
 		}
 		return nil
 	})
@@ -57,12 +63,39 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 	tFile.Sync()
 }
 
+type Header map[string]string
+
+// Read upto next separator
+// Discard separator
+// If EOF reached treat as separator
+func readToSeparator(file *os.File) (header Header, content string) {
+	header = make(Header)
+	headerRead := false
+	contentBuilder := strings.Builder{}
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if scanner.Text() == "---" {
+			return header, contentBuilder.String()
+		}
+		if headerRead || json.Unmarshal([]byte(scanner.Text()), &header) != nil {
+			contentBuilder.WriteString(scanner.Text())
+			contentBuilder.WriteString("\n")
+		}
+		headerRead = true
+	}
+	return header, contentBuilder.String()
+}
+
 var fileHeader = `package resources
 
-import "text/template"
+import (
+	"text/template"
 
-// All the simple files
-var Files = make([]*template.Template, 0)
+	"github.com/AtricoSoftware/go-framework-app/file_writer"
+)
+
+// All the "static" files
+var Files = make([]file_writer.FileTemplate, 0)
 
 func init() {
 `
@@ -70,16 +103,25 @@ func init() {
 var fileFooter = `
 }`
 
-func addFilesTemplate(name string, contents string) string {
-	return fmt.Sprintf("Files = append(Files, template.Must(template.New(`%s`).Parse(`%s`)))\n", name, contents)
+func createTemplateInit(fileTemplateType file_writer.FileTemplateType, path string, content string) string {
+	return fmt.Sprintf("file_writer.FileTemplate{FileTemplateType: file_writer.%s, Path: `%s`,MainFile: template.Must(template.New(`mainFile`).Parse(`%s`))}", fileTemplateType.String(), path, content)
+
+}
+
+func addFilesTemplate(_ string, fileTemplateType file_writer.FileTemplateType, path string, content string) string {
+	return fmt.Sprintf("Files = append(Files, %s)\n", createTemplateInit(fileTemplateType, path, content))
 }
 
 var templatesHeader = `package resources
 
-import "text/template"
+import (
+	"text/template"
+
+	"github.com/AtricoSoftware/go-framework-app/file_writer"
+)
 
 // Specific file templates
-var Templates = make(map[string]*template.Template)
+var Templates = make(map[string]file_writer.FileTemplate)
 
 func init() {
 `
@@ -87,7 +129,29 @@ func init() {
 var templatesFooter = `
 }`
 
-func addTemplatesTemplate(name string, contents string) string {
-	name2 := strings.Replace(filepath.Base(name), filepath.Ext(name), "", 1)
-	return fmt.Sprintf("Templates[`%s`] = template.Must(template.New(`%s`).Parse(`%s`))\n", name2, name2, contents)
+func addTemplatesTemplate(templateName string, fileTemplateType file_writer.FileTemplateType, path string, content string) string {
+	return fmt.Sprintf("Templates[`%s`] = %s\n", templateName, createTemplateInit(fileTemplateType, path, content))
+}
+
+func calculateFilename(original string, name string) (templateName, path string) {
+	originalBase := filepath.Base(original)
+	var base string
+	if name == "" {
+		// No name specified, simply strip leading underscore
+		base = originalBase[1:]
+	} else {
+		// Name specified...
+		if filepath.Ext(name) != "" {
+			// Specified name has extension, use it "as is"
+			base = name
+		} else {
+			// Use existing extension
+			base = name + filepath.Ext(originalBase)
+		}
+	}
+	templateName = originalBase[1:]
+	if ext := filepath.Ext(templateName); ext != "" {
+		templateName = strings.Replace(templateName, ext, "", 1)
+	}
+	return templateName, strings.Replace(original, originalBase, base, 1)
 }

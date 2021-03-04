@@ -1,3 +1,5 @@
+{"Type":"Framework", "Name":"%s"}
+// {{.Comment}}
 package cmd
 
 import (

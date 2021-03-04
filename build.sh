@@ -1,4 +1,5 @@
-# Generated 2021-02-25 16:45:33 by go-framework v1.5.0
+# Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+# SECTION-START: Definitions
 MODULE="github.com/AtricoSoftware/go-framework-app"
 export OUTPUT_NAME="go-framework"
 TARGET_DIR=release
@@ -27,9 +28,11 @@ DETAILS="{\"Built\":{\"On\":\"$BUILT_ON\", \"By\":\"$BUILT_BY\"},\"Git\":{ \"Rep
 LDFLAGS="-s -w"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Version=$VERSION'"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
+# SECTION-END
 
 go generate
 
+# SECTION-START: Build
 mkdir -p $TARGET_DIR
 for GOOS in $TARGET_PLATFORMS; do
     export GOOS
@@ -47,4 +50,5 @@ done
 cd $TARGET_DIR
 find . ! -path . -type d |  cut -d "/" -f2 | awk -v name="$OUTPUT_NAME" '{ print name "_" $1 ".zip -r ./" $1 "/"  }' | xargs -L1 zip -j
 #find . ! -path . -type d | xargs -L1 rm -rf
+# SECTION-END
 

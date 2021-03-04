@@ -1,3 +1,5 @@
+{"Type":"Mixed"}
+[comment]: <> ( {{.Comment}} )
 # {{.ApplicationTitle}}
 
 {{.ApplicationDescription}}
@@ -20,6 +22,8 @@ TODO: Guide users through getting your code up and running on their own system. 
 TODO: Describe and show how to build your code and run the tests.
 
 # Configuration
+
+[comment]: <> ( SECTION-START: ConfigTable )
 
 | Setting | Config file | Cmdline | Default Val | Applies to | Description |
 | :------ | :---------- | :------ | :---------- | :--------- | :---------- |
@@ -53,4 +57,6 @@ a:
 ```
 
 </details>
+
+[comment]: <> ( SECTION-END )
 

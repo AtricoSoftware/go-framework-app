@@ -1,3 +1,4 @@
+// {{.Comment}}
 package api
 
 import (

@@ -2,25 +2,40 @@ package file_writer
 
 import (
 	"bufio"
+	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
-	"time"
+	"strings"
 )
 
-func CleanupBackups(generatedFiles []GeneratedFileInfo) {
+func RemoveObsoleteBackups(generatedFiles []GeneratedFileInfo) {
 	// Remove backups with no changes
 	for _, info := range generatedFiles {
-		if info.backupPath != "" {
-			if filesEqual(info.originalPath, info.backupPath, info.comment) {
+		if info.FullBackupPath() != "" {
+			if filesEqual(info.FullOriginalPath(), info.FullBackupPath()) {
 				// Files equal, remove backup
-				os.Remove(info.backupPath)
+				os.Remove(info.FullBackupPath())
 			}
 		}
 	}
 }
 
-// Time of run (used for comments)
-var runTime = time.Now()
+func CleanupFiles(generatedFiles []GeneratedFileInfo) {
+	for _, file := range generatedFiles {
+		if filepath.Ext(file.OriginalPath()) == ".go" {
+			goImports(file.BaseDir(), file.OriginalPath())
+		}
+	}
+}
+
+func goImports(baseDir string, file string) error  {
+	cmd := exec.Command("goimports", "-w", file)
+	cmd.Dir = baseDir
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
 
 func fileExists(fullPath string) bool {
 	_, err := os.Stat(fullPath)
@@ -29,7 +44,7 @@ func fileExists(fullPath string) bool {
 
 // True if files are equal
 // False if error
-func filesEqual(path1, path2 string, skipComment bool) bool {
+func filesEqual(path1, path2 string) bool {
 	if file1, err := os.Open(path1); err == nil {
 		defer file1.Close()
 		if file2, err := os.Open(path2); err == nil {
@@ -38,9 +53,8 @@ func filesEqual(path1, path2 string, skipComment bool) bool {
 			scanner2 := bufio.NewScanner(file2)
 			// Read each line
 			for scanner1.Scan() && scanner2.Scan() {
-				// Skip first line?
-				if skipComment {
-					skipComment = false
+				// Skip comment if present
+				if FileCommentRegexp.MatchString(scanner1.Text()) &&  FileCommentRegexp.MatchString(scanner2.Text()) {
 					continue
 				}
 				// Compare lines
@@ -54,20 +68,7 @@ func filesEqual(path1, path2 string, skipComment bool) bool {
 	return false
 }
 
-func getComment(filename string) string {
-	if filename == ".gitignore" {
-		return "# %s"
-	}
-	if filename == "go.mod" {
-		return "// %s"
-	}
-	switch filepath.Ext(filename) {
-	case ".go":
-		return "// %s"
-	case ".sh", ".yaml", ".yml":
-		return "# %s"
-	case ".md":
-		return "[comment]: <> ( %s )"
-	}
-	return ""
+// Sprintf but extra/missing warnings stripped
+func safeSprintf(format string, args ...interface{}) string {
+	return strings.Split(fmt.Sprintf(format, args...), "%!")[0]
 }

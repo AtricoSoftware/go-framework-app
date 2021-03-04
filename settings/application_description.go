@@ -1,4 +1,5 @@
-// Generated 2021-02-25 16:45:33 by go-framework v1.5.0
+// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// SECTION-START: Framework
 package settings
 
 import (
@@ -21,3 +22,5 @@ func (theSettings) ApplicationDescription() string {
 func AddApplicationDescriptionFlag(flagSet *pflag.FlagSet) {
 	viperEx.AddStringSetting(flagSet, applicationDescriptionSettingName, applicationDescriptionSettingCmdline, "Description of application")
 }
+
+// SECTION-END
