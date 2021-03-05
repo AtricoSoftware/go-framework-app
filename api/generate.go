@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/atrico-go/container"
@@ -91,10 +90,6 @@ func (svc generateApi) Run() error {
 		destination := filepath.Join(svc.config.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
 		ioutil.WriteFile(destination, data, 0644)
 	}
-	// Get the requirements
-	for _, url := range getRequirements(svc.config.Libraries()) {
-		GoCommand(svc.config.TargetDirectory(), "get", url)
-	}
 	// Clean up the files
 	file_writer.CleanupFiles(svc.config.RepositoryPath(), generatedFiles)
 	// Remove backups with no changes
@@ -123,40 +118,4 @@ func validateFolder(path string) {
 			os.Exit(-1)
 		}
 	}
-}
-
-func getRequirements(userLibraries []string) []string {
-	libs := make(map[string]string, len(resources.Requirements)+len(userLibraries))
-	// System requirements, then user libraries
-	for _, entry := range append(resources.Requirements, userLibraries...) {
-		url, ver := splitUrlVersion(entry)
-		libs[url] = ver
-	}
-	return mergeUrlVersion(libs)
-}
-
-func splitUrlVersion(raw string) (url, version string) {
-	parts := strings.Split(raw, "@")
-	l := len(parts)
-	if l > 0 {
-		url = parts[0]
-	}
-	if l > 1 {
-		version = parts[1]
-	}
-	return url, version
-}
-
-func mergeUrlVersion(urlVersions map[string]string) []string {
-	urls := make([]string, 0, len(urlVersions))
-	for url, ver := range urlVersions {
-		var newUrl string
-		if ver != "" {
-			newUrl = fmt.Sprintf("%s@%s", url, ver)
-		} else {
-			newUrl = url
-		}
-		urls = append(urls, newUrl)
-	}
-	return urls
 }

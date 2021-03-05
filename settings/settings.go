@@ -22,8 +22,6 @@ type Settings interface {
 	Commands() []UserCommand
 	// Settings to add
 	UserSettings() []UserSetting
-	// Libraries to get
-	Libraries() []string
 }
 
 // Register the settings

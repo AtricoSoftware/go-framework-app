@@ -105,20 +105,6 @@
       "AppliesTo": [
         "generate"
       ]
-    },
-    {
-      "Name": "Libraries",
-      "Id": "Libraries",
-      "Description": "Libraries to get",
-      "Type": "[]string",
-      "AppliesTo": [
-        "generate"
-      ]
     }
-  ],
-  "Libraries": [
-    "github.com/atrico-go/core",
-    "github.com/iancoleman/strcase",
-    "github.com/mitchellh/mapstructure"
   ]
 }

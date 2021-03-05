@@ -1,4 +1,4 @@
-// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// Generated 2021-03-05 15:39:45 by go-framework development-version
 package settings
 
 type lazyValue struct {
@@ -49,24 +49,6 @@ func NewLazyStringValue(creator func() string) LazyStringValue {
 
 func (v *lazyStringValue) GetValue() string {
 	return ((*lazyValue)(v).getValue()).(string)
-}
-
-// ----------------------------------------------------------------------------------------------------------------------------
-// StringSlice
-// ----------------------------------------------------------------------------------------------------------------------------
-type lazyStringSliceValue lazyValue
-
-type LazyStringSliceValue interface {
-	GetValue() []string
-}
-
-func NewLazyStringSliceValue(creator func() []string) LazyStringSliceValue {
-	lz := lazyStringSliceValue(lazyValue{creator: func() interface{} { return creator() }})
-	return &lz
-}
-
-func (v *lazyStringSliceValue) GetValue() []string {
-	return ((*lazyValue)(v).getValue()).([]string)
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------

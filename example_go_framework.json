@@ -53,9 +53,5 @@
         "root"
       ]
     }
-  ],
-  "Libraries": [
-    "github.com/atrico-go/core",
-    "github.com/mitchellh/go-homedir@v1.1.0"
   ]
 }
