@@ -1,4 +1,4 @@
-// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// Generated 2021-03-05 09:21:54 by go-framework development-version
 // SECTION-START: Framework
 package api
 
@@ -11,11 +11,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/atrico-go/container"
+	"github.com/spf13/viper"
+
 	"github.com/AtricoSoftware/go-framework-app/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
 	"github.com/AtricoSoftware/go-framework-app/settings"
-	"github.com/atrico-go/container"
-	"github.com/spf13/viper"
 )
 
 // SECTION-END
@@ -95,7 +96,7 @@ func (svc generateApi) Run() error {
 		GoCommand(svc.config.TargetDirectory(), "get", url)
 	}
 	// Clean up the files
-	file_writer.CleanupFiles(generatedFiles)
+	file_writer.CleanupFiles(svc.config.RepositoryPath(), generatedFiles)
 	// Remove backups with no changes
 	file_writer.RemoveObsoleteBackups(generatedFiles)
 	return nil

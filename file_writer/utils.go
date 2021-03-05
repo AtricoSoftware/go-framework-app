@@ -21,17 +21,16 @@ func RemoveObsoleteBackups(generatedFiles []GeneratedFileInfo) {
 	}
 }
 
-func CleanupFiles(generatedFiles []GeneratedFileInfo) {
+func CleanupFiles(local string, generatedFiles []GeneratedFileInfo) {
 	for _, file := range generatedFiles {
 		if filepath.Ext(file.OriginalPath()) == ".go" {
-			goImports(file.BaseDir(), file.OriginalPath())
+			goImports(local, file.FullOriginalPath())
 		}
 	}
 }
 
-func goImports(baseDir string, file string) error  {
-	cmd := exec.Command("goimports", "-w", file)
-	cmd.Dir = baseDir
+func goImports(local string, file string) error  {
+	cmd := exec.Command("goimports", "-w", "--local", local, file)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
