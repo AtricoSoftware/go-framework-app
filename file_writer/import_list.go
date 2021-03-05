@@ -21,10 +21,6 @@ func (i ImportItem) String() string {
 	return str.String()
 }
 
-func GetImports(contents []byte) []ImportItem {
-	return AddImports(contents, make([]ImportItem, 0))
-}
-
 func AddImports(contents []byte, imports []ImportItem) []ImportItem {
 	importsSet := make(map[ImportItem]interface{}, len(imports))
 	for _, item := range imports {
@@ -41,7 +37,7 @@ func AddImports(contents []byte, imports []ImportItem) []ImportItem {
 			}
 			// Read next import
 			if line != "" {
-				item := createImportItem(line)
+				item := parseImportItem(line)
 				if _, ok := importsSet[item]; !ok {
 					importsSet[item] = nil
 					imports = append(imports, item)
@@ -53,11 +49,12 @@ func AddImports(contents []byte, imports []ImportItem) []ImportItem {
 				if strings.Contains(line, "(") {
 					inImports = true
 				} else {
-					imports = append(imports, createImportItem(strings.TrimSpace(line[6:])))
+					imports = append(imports, parseImportItem(strings.TrimSpace(line[6:])))
 				}
 			}
 		}
 	}
+	// Imports will be sorted later (by goimports)
 	return imports
 }
 
@@ -65,13 +62,13 @@ func FormatImports(imports []ImportItem) string {
 	str := strings.Builder{}
 	str.WriteString("import (\n")
 	for _,item := range imports {
-		str.WriteString(fmt.Sprintf("%s\n", item.String()))
+		str.WriteString(fmt.Sprintf("\t%s\n", item.String()))
 	}
 	str.WriteString(")\n")
 	return str.String()
 }
 
-func createImportItem(line string) (item ImportItem) {
+func parseImportItem(line string) (item ImportItem) {
 	parts := strings.Split(line, " ")
 	lenParts := len(parts)
 	url := strings.Trim(parts[lenParts-1], `"`)
