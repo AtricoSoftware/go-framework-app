@@ -52,11 +52,17 @@ func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string,
 	if err = fileTemplate.MainFile.Execute(buffer, values); err == nil {
 		newfileContents := buffer.Bytes()
 		if fileTemplate.FileTemplateType == MixedTemplate && fileExists {
-			// Get required imports
+			// Get imports
 			isGoFile := filepath.Ext(info.OriginalPath()) == ".go"
 			importList := make([]ImportItem, 0)
 			if isGoFile {
 				importList = AddImports(newfileContents, importList)
+			}
+			// Get requirements
+			isModFile := filepath.Base(info.OriginalPath()) == "go.mod"
+			requirementsList := make([]RequireItem, 0)
+			if isModFile {
+				requirementsList = AddRequirements(newfileContents, requirementsList)
 			}
 			// Strip buffer into sections
 			newFile := make(map[string]string)
@@ -73,6 +79,11 @@ func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string,
 				importList = AddImports(existContents, importList)
 				unusedSections[ImportsSection] = nil
 				newFile[ImportsSection] = FormatImports(importList)
+			}
+			if isModFile {
+				requirementsList = AddRequirements(existContents, requirementsList)
+				unusedSections[RequiresSection] = nil
+				newFile[RequiresSection] = FormatRequirements(requirementsList)
 			}
 			existingFile := StripSections(existContents)
 			// Write file, replacing sections

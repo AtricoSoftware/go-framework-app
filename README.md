@@ -1,4 +1,4 @@
-[comment]: <> ( Generated 2021-03-04 17:50:38 by go-framework v1.6.0 )
+[comment]: <> ( Generated 2021-03-05 15:39:45 by go-framework development-version )
 # Go app framework generator
 
 Tool for generating go applications
@@ -35,7 +35,6 @@ TODO: Describe and show how to build your code and run the tests.
 | RepositoryPath (string) | Application.Repository | -r, --repository |  | generate | Path to repository |
 | Commands ([]UserCommand) | Commands |  |  | generate | Commands to add |
 | UserSettings ([]UserSetting) | UserSettings |  |  | generate | Settings to add |
-| Libraries ([]string) | Libraries |  |  | generate | Libraries to get |
 
 <details>
   <summary>Further details</summary>

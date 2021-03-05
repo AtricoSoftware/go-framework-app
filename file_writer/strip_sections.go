@@ -23,6 +23,7 @@ func StripSections(contents []byte) []FilePart {
 
 var CommentSection = "-comment"
 var ImportsSection = "-imports"
+var RequiresSection = "-requires"
 
 // ----------------------------------------------------------------------------------------------------------------------------
 // State
@@ -55,7 +56,7 @@ func (s noPart) AddLine(line string) state {
 		line,
 	}
 	switch stype {
-	case normal, endImports:
+	case normal, endMergeBlock:
 		return notInSection{
 			s,
 			newPart,
@@ -65,8 +66,9 @@ func (s noPart) AddLine(line string) state {
 			s,
 			newPart,
 		}
-	case startImports:
-		return inImports{
+	case startMergeBlock:
+		return inMergeBlock{
+		name,
 			s,
 			"",
 		}
@@ -84,6 +86,7 @@ func (s noPart) AddLine(line string) state {
 func (s noPart) GetParts() []FilePart {
 	return s
 }
+
 // ----------------------------------------------------------------------------------------------------------------------------
 // In Section
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -91,21 +94,22 @@ func (s noPart) GetParts() []FilePart {
 type inSection partDetails
 
 func (s inSection) AddLine(line string) state {
-	stype, _ := getLineType(line)
+	stype, name := getLineType(line)
 	newPart := FilePart{
 		s.current.Section,
 		s.current.Contents + line,
 	}
 	switch stype {
-	case normal, endImports:
+	case normal, endMergeBlock:
 		return inSection{
 			s.parts,
 			newPart,
 		}
 	case comment:
 		panic("Comment within section")
-	case startImports:
-		return inImports{
+	case startMergeBlock:
+		return inMergeBlock{
+		name,
 			append(s.parts, s.current),
 			s.current.Section,
 		}
@@ -120,6 +124,7 @@ func (s inSection) AddLine(line string) state {
 func (s inSection) GetParts() []FilePart {
 	panic("Missing Section end")
 }
+
 // ----------------------------------------------------------------------------------------------------------------------------
 // Not in a section
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -133,7 +138,7 @@ func (s notInSection) AddLine(line string) state {
 		line,
 	}
 	switch stype {
-	case normal, endImports:
+	case normal, endMergeBlock:
 		return notInSection{
 			s.parts,
 			FilePart{
@@ -146,9 +151,10 @@ func (s notInSection) AddLine(line string) state {
 			append(s.parts, s.current),
 			newPart,
 		}
-	case startImports:
-		return inImports{
-			s.parts,
+	case startMergeBlock:
+		return inMergeBlock{
+		name,
+			append(s.parts, s.current),
 			"",
 		}
 	case startSection:
@@ -165,6 +171,7 @@ func (s notInSection) AddLine(line string) state {
 func (s notInSection) GetParts() []FilePart {
 	return append(s.parts, s.current)
 }
+
 // ----------------------------------------------------------------------------------------------------------------------------
 // In a comment
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -178,7 +185,7 @@ func (s commentSection) AddLine(line string) state {
 		line,
 	}
 	switch stype {
-	case normal, endImports:
+	case normal, endMergeBlock:
 		return notInSection{
 			append(s.parts, s.current),
 			newPart,
@@ -191,9 +198,10 @@ func (s commentSection) AddLine(line string) state {
 				s.current.Contents + line,
 			},
 		}
-	case startImports:
-		return inImports{
-			s.parts,
+	case startMergeBlock:
+		return inMergeBlock{
+		name,
+			append(s.parts, s.current),
 			"",
 		}
 	case startSection:
@@ -215,33 +223,34 @@ func (s commentSection) GetParts() []FilePart {
 // Imports block
 // ----------------------------------------------------------------------------------------------------------------------------
 
-type inImports struct {
-	parts   []FilePart
+type inMergeBlock struct {
+	blockType string
+	parts  []FilePart
 	parent string
 }
 
-func (s inImports) AddLine(line string) state {
+func (s inMergeBlock) AddLine(line string) state {
 	stype, _ := getLineType(line)
 	switch stype {
-	case normal, startImports:
+	case normal, startMergeBlock:
 		return s
-	case  comment:
+	case comment:
 		panic("Comment within imports")
 	case startSection, endSection:
 		panic("Section within imports")
-	case endImports:
+	case endMergeBlock:
 		// Return to parent
 		parts := append(s.parts, FilePart{
-			Section:  ImportsSection,
+			Section:  s.blockType,
 			Contents: "",
 		})
 		if s.parent == "" {
 			return noPart(parts)
 		} else {
 			return inSection{
-				parts:   parts,
+				parts: parts,
 				current: FilePart{
-					Section:  s.parent+"_extra",
+					Section:  s.parent + "_extra",
 					Contents: "",
 				},
 			}
@@ -250,19 +259,19 @@ func (s inImports) AddLine(line string) state {
 	panic("invalid section type")
 }
 
-func (s inImports) GetParts() []FilePart {
+func (s inMergeBlock) GetParts() []FilePart {
 	return s.parts
 }
 
 type lineType = int
 
 const (
-	normal       lineType = iota
-	comment      lineType = iota
-	startImports lineType = iota
-	endImports   lineType = iota
-	startSection lineType = iota
-	endSection   lineType = iota
+	normal          lineType = iota
+	comment         lineType = iota
+	startSection    lineType = iota
+	endSection      lineType = iota
+	startMergeBlock lineType = iota
+	endMergeBlock   lineType = iota
 )
 
 var sectionRegex = regexp.MustCompile(`SECTION-(START|END)(: (\w+))*`)
@@ -272,10 +281,13 @@ func getLineType(line string) (stype lineType, name string) {
 		return comment, CommentSection
 	}
 	if strings.HasPrefix(strings.TrimSpace(line), "import") {
-		return startImports, ImportsSection
+		return startMergeBlock, ImportsSection
+	}
+	if strings.HasPrefix(strings.TrimSpace(line), "require") {
+		return startMergeBlock, RequiresSection
 	}
 	if strings.HasPrefix(strings.TrimSpace(line), ")") {
-		return endImports, ""
+		return endMergeBlock, ""
 	}
 	if match := sectionRegex.FindStringSubmatch(line); match != nil {
 		if match[1] == "START" {
