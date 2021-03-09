@@ -1,4 +1,4 @@
-// Generated 2021-03-05 09:21:54 by go-framework development-version
+// Generated 2021-03-09 17:48:01 by go-framework development-version
 // SECTION-START: Framework
 package api
 
@@ -17,11 +17,15 @@ import (
 	"github.com/AtricoSoftware/go-framework-app/settings"
 )
 
+type GenerateApi Runnable
+
 // SECTION-END
 
-func RegisterGenerate(c container.Container) {
+func RegisterApiGenerate(c container.Container) {
 	file_writer.RegisterFileWriter(c)
-	c.Singleton(func(config settings.Settings, fileWriter file_writer.FileWriter) GenerateApi { return generateApi{config, fileWriter} })
+	c.Singleton(func(config settings.Settings, fileWriter file_writer.FileWriter) GenerateApi {
+		return generateApi{config, fileWriter}
+	})
 }
 
 type generateApi struct {

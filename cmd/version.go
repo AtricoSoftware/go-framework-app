@@ -1,4 +1,4 @@
-// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// Generated 2021-03-09 17:48:01 by go-framework development-version
 package cmd
 
 import (
@@ -12,7 +12,7 @@ import (
 
 var fullVersion bool
 
-func CreateVersionCommand() *cobra.Command {
+func createVersionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Shows version",

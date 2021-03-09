@@ -22,18 +22,7 @@ import (
 {{- end}}
 )
 
-func CreateCommands(c container.Container) *cobra.Command {
-	cobra.OnInitialize(initConfig)
-	rootCmd := CreateRootCommand()
-	rootCmd.AddCommand(CreateVersionCommand())
-	// Add commands
-{{- range .Commands}}
-	rootCmd.AddCommand(Create{{.ApiName}}Command(c))
-{{- end}}
-	return rootCmd
-}
-
-func CreateRootCommand() *cobra.Command {
+func createRootCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   pkg.Name,
 		Short: pkg.Summary,

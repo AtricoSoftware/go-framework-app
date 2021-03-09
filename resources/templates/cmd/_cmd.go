@@ -18,14 +18,18 @@ import (
 {{- end}}
 )
 
-func Create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
+type {{.Command.ApiName}}Cmd *cobra.Command
+
+func RegisterCmd{{.Command.ApiName}}(c container.Container) {
+	c.Singleton(func(api api.{{.Command.ApiName}}Api) {{.Command.ApiName}}Cmd { return create{{.Command.ApiName}}Command(api) })
+}
+
+func create{{.Command.ApiName}}Command(api api.Runnable) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
 		RunE: func(*cobra.Command, []string) error {
-			var {{.Command.Name}}Api api.{{.Command.ApiName}}Api
-			c.Make(&{{.Command.Name}}Api)
-			return {{.Command.Name}}Api.Run()
+			return api.Run()
 		},
 	}
 {{- range .UserSettings}}
