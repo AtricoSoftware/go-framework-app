@@ -42,12 +42,9 @@ for GOOS in $TARGET_PLATFORMS; do
     fi
     export TARGET="$TARGET_DIR/$VERSION-$GOOS-$GOARCH"
     mkdir -p $TARGET
+    echo Building $TARGET
     go build -v -ldflags="$LDFLAGS" -o $TARGET/$OUTPUT_NAME$EXT
-
+    echo Packaging $TARGET.zip
+    zip -j1 $TARGET.zip $TARGET/$OUTPUT_NAME$EXT
 done
-
-cd $TARGET_DIR
-find . ! -path . -type d |  cut -d "/" -f2 | awk -v name="$OUTPUT_NAME" '{ print name "_" $1 ".zip -r ./" $1 "/"  }' | xargs -L1 zip -j
-#find . ! -path . -type d | xargs -L1 rm -rf
 # SECTION-END
-
