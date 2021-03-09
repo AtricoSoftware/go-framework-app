@@ -9,27 +9,27 @@ import (
 	"strings"
 )
 
-func RemoveObsoleteBackups(generatedFiles []GeneratedFileInfo) {
+func (f fileWriter) RemoveObsoleteBackups() {
 	// Remove backups with no changes
-	for _, info := range generatedFiles {
-		if info.FullBackupPath() != "" {
-			if filesEqual(info.FullOriginalPath(), info.FullBackupPath()) {
+	for _, info := range *f.generatedFiles {
+		if info.fullBackupPath() != "" {
+			if filesEqual(info.fullOriginalPath(), info.fullBackupPath()) {
 				// Files equal, remove backup
-				os.Remove(info.FullBackupPath())
+				os.Remove(info.fullBackupPath())
 			}
 		}
 	}
 }
 
-func CleanupFiles(local string, generatedFiles []GeneratedFileInfo) {
-	for _, file := range generatedFiles {
-		if filepath.Ext(file.OriginalPath()) == ".go" {
-			goImports(local, file.FullOriginalPath())
+func (f fileWriter) CleanupFiles() {
+	for _, file := range *f.generatedFiles {
+		if filepath.Ext(file.originalPath) == ".go" {
+			goImports(f.config.RepositoryPath(), file.fullOriginalPath())
 		}
 	}
 }
 
-func goImports(local string, file string) error  {
+func goImports(local string, file string) error {
 	cmd := exec.Command("goimports", "-w", "--local", local, file)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -53,7 +53,7 @@ func filesEqual(path1, path2 string) bool {
 			// Read each line
 			for scanner1.Scan() && scanner2.Scan() {
 				// Skip comment if present
-				if FileCommentRegexp.MatchString(scanner1.Text()) &&  FileCommentRegexp.MatchString(scanner2.Text()) {
+				if FileCommentRegexp.MatchString(scanner1.Text()) && FileCommentRegexp.MatchString(scanner2.Text()) {
 					continue
 				}
 				// Compare lines

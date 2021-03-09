@@ -87,18 +87,18 @@ func higherVersion(lhs, rhs string) bool {
 	rValues, _ := getNamedCaptureGroups(versionRegex, rhs)
 	var l uint64 = 0
 	var r uint64 = 0
-	for _,val := range []string{"maj","min","patch"} {
+	for _, val := range []string{"maj", "min", "patch"} {
 		l <<= 16
 		l += uint64(AtoiOrDefault(lValues[val], 0))
 		r <<= 16
 		r += uint64(AtoiOrDefault(rValues[val], 0xffff))
 	}
 	l <<= 16
-	if lValues["label"] != ""{
+	if lValues["label"] != "" {
 		l++
 	}
 	r <<= 16
-	if rValues["label"] != ""{
+	if rValues["label"] != "" {
 		r++
 	}
 	return l > r

@@ -8,42 +8,31 @@ import (
 	"path/filepath"
 )
 
-type GeneratedFileInfo interface {
-	BaseDir() string
-	OriginalPath() string
-	BackupPath() string
-	FullOriginalPath() string
-	FullBackupPath() string
-}
-
 type generatedFileInfo struct {
 	baseDir      string
 	backupPath   string
 	originalPath string
 }
 
-func (i generatedFileInfo) BaseDir() string          { return i.baseDir }
-func (i generatedFileInfo) OriginalPath() string     { return i.originalPath }
-func (i generatedFileInfo) BackupPath() string       { return i.backupPath }
-func (i generatedFileInfo) FullOriginalPath() string { return filepath.Join(i.baseDir, i.originalPath) }
-func (i generatedFileInfo) FullBackupPath() string   { return filepath.Join(i.baseDir, i.backupPath) }
+func (i generatedFileInfo) fullOriginalPath() string { return filepath.Join(i.baseDir, i.originalPath) }
+func (i generatedFileInfo) fullBackupPath() string   { return filepath.Join(i.baseDir, i.backupPath) }
 
-func GenerateFile(targetDir string, fileTemplate FileTemplate, values TemplateValues) (GeneratedFileInfo, error) {
-	return GenerateNamedFile(targetDir, fileTemplate, "", values)
+func (f fileWriter) GenerateFile(fileTemplate FileTemplate, values TemplateValues) error {
+	return f.GenerateNamedFile(fileTemplate, "", values)
 }
 
-func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string, values TemplateValues) (GeneratedFileInfo, error) {
+func (f fileWriter) GenerateNamedFile(fileTemplate FileTemplate, name string, values TemplateValues) error {
 	var info generatedFileInfo
-	info.baseDir = targetDir
+	info.baseDir = f.config.TargetDirectory()
 	info.originalPath = safeSprintf(fileTemplate.Path, name)
-	os.MkdirAll(filepath.Dir(info.FullOriginalPath()), 0755)
-	fmt.Println("Writing: ", info.FullOriginalPath())
-	fileExists := fileExists(info.FullOriginalPath())
+	os.MkdirAll(filepath.Dir(info.fullOriginalPath()), 0755)
+	fmt.Println("Writing: ", info.fullOriginalPath())
+	fileExists := fileExists(info.fullOriginalPath())
 	// Backup existing file
 	if fileExists {
 		// Backup
-		info.backupPath = fmt.Sprintf("%s_%s.bak", info.OriginalPath(), values["BackupSuffix"])
-		os.Rename(info.FullOriginalPath(), info.FullBackupPath())
+		info.backupPath = fmt.Sprintf("%s_%s.bak", info.originalPath, values["BackupSuffix"])
+		os.Rename(info.fullOriginalPath(), info.fullBackupPath())
 	}
 	// DEBUG contents.Execute(os.Stdout, values)
 	// Write to buffer first
@@ -53,13 +42,13 @@ func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string,
 		newfileContents := buffer.Bytes()
 		if fileTemplate.FileTemplateType == MixedTemplate && fileExists {
 			// Get imports
-			isGoFile := filepath.Ext(info.OriginalPath()) == ".go"
+			isGoFile := filepath.Ext(info.originalPath) == ".go"
 			importList := make([]ImportItem, 0)
 			if isGoFile {
 				importList = AddImports(newfileContents, importList)
 			}
 			// Get requirements
-			isModFile := filepath.Base(info.OriginalPath()) == "go.mod"
+			isModFile := filepath.Base(info.originalPath) == "go.mod"
 			requirementsList := make([]RequireItem, 0)
 			if isModFile {
 				requirementsList = AddRequirements(newfileContents, requirementsList)
@@ -74,7 +63,7 @@ func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string,
 				}
 			}
 			// Read existing file
-			existContents, _ := ioutil.ReadFile(info.FullBackupPath())
+			existContents, _ := ioutil.ReadFile(info.fullBackupPath())
 			if isGoFile {
 				importList = AddImports(existContents, importList)
 				unusedSections[ImportsSection] = nil
@@ -88,7 +77,7 @@ func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string,
 			existingFile := StripSections(existContents)
 			// Write file, replacing sections
 			var file *os.File
-			if file, err = os.Create(info.FullOriginalPath()); err == nil {
+			if file, err = os.Create(info.fullOriginalPath()); err == nil {
 				defer file.Close()
 				for _, part := range existingFile {
 					if cont, ok := newFile[part.Section]; ok {
@@ -104,8 +93,11 @@ func GenerateNamedFile(targetDir string, fileTemplate FileTemplate, name string,
 			}
 		} else {
 			// Simply copy to file
-			err = ioutil.WriteFile(info.FullOriginalPath(), buffer.Bytes(), 0644)
+			err = ioutil.WriteFile(info.fullOriginalPath(), buffer.Bytes(), 0644)
 		}
 	}
-	return info, err
+	if err == nil {
+		*f.generatedFiles = append(*f.generatedFiles, info)
+	}
+	return err
 }

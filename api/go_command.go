@@ -6,7 +6,7 @@ import (
 )
 
 func GoCommand(targetDirectory string, args ...string) error {
-	return executeCommand(targetDirectory ,"go", args...)
+	return executeCommand(targetDirectory, "go", args...)
 }
 
 func executeCommand(targetDirectory string, exe string, args ...string) error {

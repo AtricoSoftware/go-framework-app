@@ -61,7 +61,7 @@ func AddImports(contents []byte, imports []ImportItem) []ImportItem {
 func FormatImports(imports []ImportItem) string {
 	str := strings.Builder{}
 	str.WriteString("import (\n")
-	for _,item := range imports {
+	for _, item := range imports {
 		str.WriteString(fmt.Sprintf("\t%s\n", item.String()))
 	}
 	str.WriteString(")\n")
