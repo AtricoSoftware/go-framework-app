@@ -1,11 +1,10 @@
-// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// Generated 2021-03-09 17:48:01 by go-framework development-version
 package cmd
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/atrico-go/container"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -13,16 +12,7 @@ import (
 	"github.com/AtricoSoftware/go-framework-app/pkg"
 )
 
-func CreateCommands(c container.Container) *cobra.Command {
-	cobra.OnInitialize(initConfig)
-	rootCmd := CreateRootCommand()
-	rootCmd.AddCommand(CreateVersionCommand())
-	// Add commands
-	rootCmd.AddCommand(CreateGenerateCommand(c))
-	return rootCmd
-}
-
-func CreateRootCommand() *cobra.Command {
+func createRootCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   pkg.Name,
 		Short: pkg.Summary,

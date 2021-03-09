@@ -12,7 +12,7 @@ import (
 
 var fullVersion bool
 
-func CreateVersionCommand() *cobra.Command {
+func createVersionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Shows version",

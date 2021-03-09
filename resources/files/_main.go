@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/atrico-go/container"
-
 	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/cmd"
 	"{{.RepositoryPath}}/settings"
@@ -14,7 +13,9 @@ import (
 
 func main() {
 	c := register()
-	cmd := cmd.CreateCommands(c)
+	var cmdFactory cmd.CommandFactory
+	c.Make(&cmdFactory)
+	cmd := cmdFactory.Create()
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
@@ -25,6 +26,7 @@ func main() {
 func register() container.Container {
 	c := container.NewContainer()
 	settings.RegisterSettings(c)
+	cmd.RegisterCmd(c)
 	api.RegisterApi(c)
 	return c
 }

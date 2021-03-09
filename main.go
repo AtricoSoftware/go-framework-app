@@ -1,4 +1,4 @@
-// Generated 2021-03-04 17:50:38 by go-framework v1.6.0
+// Generated 2021-03-09 17:48:01 by go-framework development-version
 package main
 
 import (
@@ -14,7 +14,9 @@ import (
 
 func main() {
 	c := register()
-	cmd := cmd.CreateCommands(c)
+	var cmdFactory cmd.CommandFactory
+	c.Make(&cmdFactory)
+	cmd := cmdFactory.Create()
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
@@ -25,6 +27,7 @@ func main() {
 func register() container.Container {
 	c := container.NewContainer()
 	settings.RegisterSettings(c)
+	cmd.RegisterCmd(c)
 	api.RegisterApi(c)
 	return c
 }
