@@ -68,7 +68,7 @@ func (s noPart) AddLine(line string) state {
 		}
 	case startMergeBlock:
 		return inMergeBlock{
-		name,
+			name,
 			s,
 			"",
 		}
@@ -109,7 +109,7 @@ func (s inSection) AddLine(line string) state {
 		panic("Comment within section")
 	case startMergeBlock:
 		return inMergeBlock{
-		name,
+			name,
 			append(s.parts, s.current),
 			s.current.Section,
 		}
@@ -153,7 +153,7 @@ func (s notInSection) AddLine(line string) state {
 		}
 	case startMergeBlock:
 		return inMergeBlock{
-		name,
+			name,
 			append(s.parts, s.current),
 			"",
 		}
@@ -200,7 +200,7 @@ func (s commentSection) AddLine(line string) state {
 		}
 	case startMergeBlock:
 		return inMergeBlock{
-		name,
+			name,
 			append(s.parts, s.current),
 			"",
 		}
@@ -225,8 +225,8 @@ func (s commentSection) GetParts() []FilePart {
 
 type inMergeBlock struct {
 	blockType string
-	parts  []FilePart
-	parent string
+	parts     []FilePart
+	parent    string
 }
 
 func (s inMergeBlock) AddLine(line string) state {

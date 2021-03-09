@@ -8,12 +8,11 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"time"
 
 	"github.com/atrico-go/container"
 	"github.com/spf13/viper"
 
-	"github.com/AtricoSoftware/go-framework-app/file_writer"
+	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
 	"github.com/AtricoSoftware/go-framework-app/settings"
 )
@@ -21,11 +20,13 @@ import (
 // SECTION-END
 
 func RegisterGenerate(c container.Container) {
-	c.Singleton(func(config settings.Settings) GenerateApi { return generateApi{config: config} })
+	file_writer.RegisterFileWriter(c)
+	c.Singleton(func(config settings.Settings, fileWriter file_writer.FileWriter) GenerateApi { return generateApi{config, fileWriter} })
 }
 
 type generateApi struct {
-	config settings.Settings
+	config     settings.Settings
+	fileWriter file_writer.FileWriter
 }
 
 // Generate framework app
@@ -35,38 +36,25 @@ func (svc generateApi) Run() error {
 	// Ensure target folder exists
 	validateFolder(svc.config.TargetDirectory())
 	// Create values for the template
-	values := file_writer.CreateTemplateValues(svc.config)
-	// Add comment string/backup suffix to values
-	now := time.Now()
-	values["Comment"] = file_writer.FileComment(now)
-	values["BackupSuffix"] = now.Format("2006-01-02_15-04-05")
+	values := svc.fileWriter.CreateTemplateValues()
 
-	generatedFiles := make([]file_writer.GeneratedFileInfo, 0)
-
-	var info file_writer.GeneratedFileInfo
 	var err error
 	// Create all standard files
 	for _, t := range resources.Files {
-		if info, err = file_writer.GenerateFile(svc.config.TargetDirectory(), t, values); err == nil {
-			generatedFiles = append(generatedFiles, info)
-		}
+		svc.fileWriter.GenerateFile(t, values)
 	}
 	// Create commands/api
 	for _, command := range svc.config.Commands() {
 		values["Command"] = command
 		for _, pkg := range []string{"cmd", "api"} {
-			if info, err = file_writer.GenerateNamedFile(svc.config.TargetDirectory(), resources.Templates[pkg], command.Name, values); err == nil {
-				generatedFiles = append(generatedFiles, info)
-			}
+			svc.fileWriter.GenerateNamedFile(resources.Templates[pkg], command.Name, values)
 		}
 	}
 	// Create settings
 	lazyTypes := make(map[string]settings.UserSetting, 0)
 	for _, setting := range svc.config.UserSettings() {
 		values["Setting"] = setting
-		if info, err = file_writer.GenerateNamedFile(svc.config.TargetDirectory(), resources.Templates["setting"], setting.Filename(), values); err == nil {
-			generatedFiles = append(generatedFiles, info)
-		}
+		svc.fileWriter.GenerateNamedFile(resources.Templates["setting"], setting.Filename(), values)
 		if svc.config.SingleReadConfiguration() {
 			lazyTypes[setting.Type] = setting
 		}
@@ -79,9 +67,7 @@ func (svc generateApi) Run() error {
 		}
 		sort.Slice(settings, func(i, j int) bool { return settings[i].TypeNameAsCode() < settings[j].TypeNameAsCode() })
 		values["LazySettings"] = settings
-		if info, err = file_writer.GenerateFile(svc.config.TargetDirectory(), resources.Templates["lazy_implementations"], values); err == nil {
-			generatedFiles = append(generatedFiles, info)
-		}
+		svc.fileWriter.GenerateFile(resources.Templates["lazy_implementations"], values)
 	}
 	// Copy generator settings if found (for future reference)
 	data, err := ioutil.ReadFile(viper.ConfigFileUsed())
@@ -91,9 +77,9 @@ func (svc generateApi) Run() error {
 		ioutil.WriteFile(destination, data, 0644)
 	}
 	// Clean up the files
-	file_writer.CleanupFiles(svc.config.RepositoryPath(), generatedFiles)
+	svc.fileWriter.CleanupFiles()
 	// Remove backups with no changes
-	file_writer.RemoveObsoleteBackups(generatedFiles)
+	svc.fileWriter.RemoveObsoleteBackups()
 	return nil
 }
 

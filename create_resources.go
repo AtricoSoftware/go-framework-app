@@ -1,4 +1,4 @@
-// +build ignore
+// +build ignore (Used to create resources only)
 
 package main
 
@@ -11,7 +11,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/AtricoSoftware/go-framework-app/file_writer"
+	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 )
 
 const filesPkg = "files"
@@ -54,6 +54,8 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 				// Strip resource path and correct filename (deps on header)
 				templateName, newPath := calculateFilename(path[len(fileFolder)+1:], header["Name"])
 				tFile.WriteString(addTemplate(templateName, fileTemplateType, newPath, strings.ReplaceAll(contents, "`", "`+\"`\"+`")))
+			} else {
+				fmt.Fprintln(os.Stderr, "Failed to parse template: %s\n", info.Name())
 			}
 		}
 		return nil
@@ -91,7 +93,7 @@ var fileHeader = `package resources
 import (
 	"text/template"
 
-	"github.com/AtricoSoftware/go-framework-app/file_writer"
+	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 )
 
 // All the "static" files
@@ -117,7 +119,7 @@ var templatesHeader = `package resources
 import (
 	"text/template"
 
-	"github.com/AtricoSoftware/go-framework-app/file_writer"
+	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 )
 
 // Specific file templates

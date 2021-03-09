@@ -1,4 +1,5 @@
 [comment]: <> ( Generated 2021-03-05 15:39:45 by go-framework development-version )
+
 # Go app framework generator
 
 Tool for generating go applications
