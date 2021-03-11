@@ -7,7 +7,7 @@ package settings
 {{- $cmdlineVarName := print .Setting.LowerName "SettingCmdline"}}
 {{- $shortcutVarName := print .Setting.LowerName "SettingShortcut"}}
 {{- $defaultVarName := print .Setting.LowerName "SettingDefaultVal"}}
-{{- $lazyVarName := print .Setting.LowerName "SettingLazy"}}
+{{- $cachedVarName := print .Setting.LowerName "SettingCache"}}
 
 {{- $getTheValue := ""}}
 {{- if (ne .Setting.TypeGetter "")}}
@@ -41,14 +41,14 @@ const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting
 
 {{- if .SingleReadConfiguration}}
 
-// Lazy value
-var {{$lazyVarName}} = NewLazy{{.Setting.TypeNameAsCode}}Value(func() {{.Setting.Type}} { return {{$getTheValue}} })
+// Cached value
+var {{$cachedVarName}} = NewCached{{.Setting.TypeNameAsCode}}Value(func() {{.Setting.Type}} { return {{$getTheValue}} })
 {{- end}}
 
 // Fetch the setting
 func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 {{- if .SingleReadConfiguration}}
-	return {{$lazyVarName}}.GetValue()
+	return {{$cachedVarName}}.GetValue()
 {{- else}}
 	return {{$getTheValue}})
 {{- end}}

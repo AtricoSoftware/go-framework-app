@@ -55,23 +55,23 @@ func (svc generateApi) Run() error {
 		}
 	}
 	// Create settings
-	lazyTypes := make(map[string]settings.UserSetting, 0)
+	cachedTypes := make(map[string]settings.UserSetting, 0)
 	for _, setting := range svc.config.UserSettings() {
 		values["Setting"] = setting
 		svc.fileWriter.GenerateNamedFile(resources.Templates["setting"], setting.Filename(), values)
 		if svc.config.SingleReadConfiguration() {
-			lazyTypes[setting.Type] = setting
+			cachedTypes[setting.Type] = setting
 		}
 	}
-	// lazy implementations
-	if len(lazyTypes) > 0 {
-		settings := make([]settings.UserSetting, 0, len(lazyTypes))
-		for _, st := range lazyTypes {
+	// Cache implementations
+	if len(cachedTypes) > 0 {
+		settings := make([]settings.UserSetting, 0, len(cachedTypes))
+		for _, st := range cachedTypes {
 			settings = append(settings, st)
 		}
 		sort.Slice(settings, func(i, j int) bool { return settings[i].TypeNameAsCode() < settings[j].TypeNameAsCode() })
-		values["LazySettings"] = settings
-		svc.fileWriter.GenerateFile(resources.Templates["lazy_implementations"], values)
+		values["CachedTypes"] = settings
+		svc.fileWriter.GenerateFile(resources.Templates["cache_implementations"], values)
 	}
 	// Copy generator settings if found (for future reference)
 	data, err := ioutil.ReadFile(viper.ConfigFileUsed())
