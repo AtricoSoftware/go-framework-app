@@ -29,8 +29,19 @@
       "Cmdline": "sub1",
       "CmdlineShortcut": "s",
       "AppliesTo": [
-        "root",
         "test"
+      ]
+    },
+    {
+      "Name": "Bool Flag",
+      "Id": "Flaggy",
+      "Description": "Boolean flag",
+      "Type": "bool",
+      "DefaultVal": "true",
+      "Cmdline": "flaggy",
+      "CmdlineShortcut": "f",
+      "AppliesTo": [
+        "root"
       ]
     },
     {
@@ -38,10 +49,21 @@
       "Id": "group.subgroup.sub2",
       "Description": "Sub setting",
       "Type": "string",
+      "Cmdline": "sub2",
       "DefaultVal": "default_sub2",
       "AppliesTo": [
         "test",
         "test2"
+      ]
+    },
+    {
+      "Name": "Slice entry",
+      "Id": "strSlice",
+      "Description": "String slice setting",
+      "Type": "[]string",
+      "Cmdline": "str",
+      "AppliesTo": [
+        "root"
       ]
     },
     {

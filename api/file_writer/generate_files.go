@@ -95,6 +95,8 @@ func (f fileWriter) GenerateNamedFile(fileTemplate FileTemplate, name string, va
 			// Simply copy to file
 			err = ioutil.WriteFile(info.fullOriginalPath(), buffer.Bytes(), 0644)
 		}
+	} else {
+		fmt.Fprintf(os.Stderr, "Failed to parse template: %v\n", err)
 	}
 	if err == nil {
 		*f.generatedFiles = append(*f.generatedFiles, info)

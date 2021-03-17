@@ -50,7 +50,7 @@ func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 {{- if .SingleReadConfiguration}}
 	return {{$cachedVarName}}.GetValue()
 {{- else}}
-	return {{$getTheValue}})
+	return {{$getTheValue}}
 {{- end}}
 }
 
@@ -72,4 +72,6 @@ func init() {
 func Parse{{.Setting.NameCode}}Setting(setting interface{}) {{.Setting.Type}} {
 // TODO - Implementation here
 }
+
+type {{.Setting.RawType}} struct{}
 {{- end}}

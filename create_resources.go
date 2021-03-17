@@ -55,7 +55,7 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 				templateName, newPath := calculateFilename(path[len(fileFolder)+1:], header["Name"])
 				tFile.WriteString(addTemplate(templateName, fileTemplateType, newPath, strings.ReplaceAll(contents, "`", "`+\"`\"+`")))
 			} else {
-				fmt.Fprintln(os.Stderr, "Failed to parse template: %s\n", info.Name())
+				fmt.Fprintf(os.Stderr, "Failed to parse template: %s (%v)\n", info.Name(), err)
 			}
 		}
 		return nil
