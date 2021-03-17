@@ -33,7 +33,7 @@ func create{{.Command.ApiName}}Command(api api.Runnable) *cobra.Command {
 		},
 	}
 {{- range .UserSettings}}
-	{{- if .AppliesToCmd $.Command.UseName}}
+	{{- if .AppliesToCmd $.Command.Name}}
 	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
 	{{- end}}
 {{- end}}
