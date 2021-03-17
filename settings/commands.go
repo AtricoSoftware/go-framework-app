@@ -1,4 +1,4 @@
-// Generated 2021-03-09 17:48:01 by go-framework development-version
+// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
 // SECTION-START: Framework
 package settings
 
@@ -10,12 +10,12 @@ import (
 
 const commandsSettingName = "Commands"
 
-// Lazy value
-var commandsSettingLazy = NewLazyUserCommandSliceValue(func() []UserCommand { return ParseCommandsSetting(viper.Get(commandsSettingName)) })
+// Cached value
+var commandsSettingCache = NewCachedUserCommandSliceValue(func() []UserCommand { return ParseCommandsSetting(viper.Get(commandsSettingName)) })
 
 // Fetch the setting
 func (theSettings) Commands() []UserCommand {
-	return commandsSettingLazy.GetValue()
+	return commandsSettingCache.GetValue()
 }
 
 // SECTION-END

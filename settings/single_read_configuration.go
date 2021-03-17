@@ -1,4 +1,4 @@
-// Generated 2021-03-09 17:48:01 by go-framework development-version
+// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
 // SECTION-START: Framework
 package settings
 
@@ -9,12 +9,12 @@ import (
 const singleReadConfigurationSettingName = "Config.SingleReadConfig"
 const singleReadConfigurationSettingDefaultVal = true
 
-// Lazy value
-var singleReadConfigurationSettingLazy = NewLazyBoolValue(func() bool { return viper.GetBool(singleReadConfigurationSettingName) })
+// Cached value
+var singleReadConfigurationSettingCache = NewCachedBoolValue(func() bool { return viper.GetBool(singleReadConfigurationSettingName) })
 
 // Fetch the setting
 func (theSettings) SingleReadConfiguration() bool {
-	return singleReadConfigurationSettingLazy.GetValue()
+	return singleReadConfigurationSettingCache.GetValue()
 }
 
 func init() {

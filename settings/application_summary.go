@@ -1,4 +1,4 @@
-// Generated 2021-03-09 17:48:01 by go-framework development-version
+// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
 // SECTION-START: Framework
 package settings
 
@@ -11,12 +11,12 @@ import (
 const applicationSummarySettingName = "Application.Summary"
 const applicationSummarySettingCmdline = "summary"
 
-// Lazy value
-var applicationSummarySettingLazy = NewLazyStringValue(func() string { return viper.GetString(applicationSummarySettingName) })
+// Cached value
+var applicationSummarySettingCache = NewCachedStringValue(func() string { return viper.GetString(applicationSummarySettingName) })
 
 // Fetch the setting
 func (theSettings) ApplicationSummary() string {
-	return applicationSummarySettingLazy.GetValue()
+	return applicationSummarySettingCache.GetValue()
 }
 
 func AddApplicationSummaryFlag(flagSet *pflag.FlagSet) {

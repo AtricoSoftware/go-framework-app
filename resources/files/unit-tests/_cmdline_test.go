@@ -10,6 +10,7 @@ import (
 	. "github.com/atrico-go/testing/assert"
 	"github.com/atrico-go/testing/is"
 
+	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/cmd"
 	"{{.RepositoryPath}}/pkg"
 	"{{.RepositoryPath}}/settings"
