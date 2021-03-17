@@ -1,4 +1,4 @@
-// Generated 2021-03-09 17:48:01 by go-framework development-version
+// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
 // SECTION-START: Framework
 package settings
 
@@ -13,12 +13,12 @@ const targetDirectorySettingCmdline = "directory"
 const targetDirectorySettingShortcut = "d"
 const targetDirectorySettingDefaultVal = "."
 
-// Lazy value
-var targetDirectorySettingLazy = NewLazyStringValue(func() string { return viper.GetString(targetDirectorySettingName) })
+// Cached value
+var targetDirectorySettingCache = NewCachedStringValue(func() string { return viper.GetString(targetDirectorySettingName) })
 
 // Fetch the setting
 func (theSettings) TargetDirectory() string {
-	return targetDirectorySettingLazy.GetValue()
+	return targetDirectorySettingCache.GetValue()
 }
 
 func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {

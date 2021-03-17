@@ -1,4 +1,4 @@
-// Generated 2021-03-16 14:39:51 by go-framework development-version
+// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
 // SECTION-START: Framework
 package settings
 
@@ -45,14 +45,14 @@ func ParseUserSettingsSetting(setting interface{}) []UserSetting {
 		emptyTCValues := make([]map[string]string, 0)
 		return []UserSetting{
 			UserSetting{
-				Name:            "Example", // Name of setting - used in const
-				Id:              "example", // viper ID, dotted values form groups
-				Description:     "Add your own settings here",
-				Type:            "string",
-				Cmdline:         "example",
-				CmdlineShortcut: "e",
-				DefaultVal:      "hello",
-				AppliesTo:       []string{"root"},
+				Name:                 "Example", // Name of setting - used in const
+				Id:                   "example", // viper ID, dotted values form groups
+				Description:          "Add your own settings here",
+				Type:                 "string",
+				Cmdline:              "example",
+				CmdlineShortcut:      "e",
+				DefaultVal:           "hello",
+				AppliesTo:            []string{"root"},
 				optionTestCaseValues: &emptyTCValues,
 			}}
 	}
@@ -279,7 +279,7 @@ func (u UserSetting) OptionTestCases() []string {
 func (u UserSetting) OptionTestCaseNames() []string {
 	valuesList := u.getOptionTestCases()
 	names := make([]string, 0)
-	for _,set := range valuesList {
+	for _, set := range valuesList {
 		names = append(names, set["OptName"])
 	}
 	return names
