@@ -10,14 +10,20 @@ import (
 )
 
 type {{.Command.ApiName}}Api Runnable
+type {{.Command.ApiName}}ApiFactory RunnableFactory
 // SECTION-END
 
 func RegisterApi{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func(config settings.Settings) {{.Command.ApiName}}Api {return {{.Command.Name}}Api{config: config}})
+	c.Singleton(func(config settings.Settings) {{.Command.ApiName}}ApiFactory {return {{.Command.Name}}ApiFactory{config}})
 }
 
 type {{.Command.Name}}Api struct {
 	config settings.Settings
+}
+type {{.Command.Name}}ApiFactory {{.Command.Name}}Api
+
+func (f {{.Command.Name}}ApiFactory) Create() Runnable {
+	return {{.Command.Name}}Api(f)
 }
 
 // {{.Command.Description}}
