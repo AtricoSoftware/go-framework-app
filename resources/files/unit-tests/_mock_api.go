@@ -12,6 +12,7 @@ type mockApi struct {
 	cmd    string
 	config settings.Settings
 }
+type mockApiFactory mockApi
 
 var results map[string]interface{}
 
@@ -26,9 +27,13 @@ func (m mockApi) Run() error {
 	return nil
 }
 
+func (f mockApiFactory) Create() api.Runnable {
+	return mockApi(f)
+}
+
 func registerMockApi(c container.Container) {
 	{{- range .Commands}}
-	c.Singleton(func(config settings.Settings) api.{{.ApiName}}Api {return mockApi{"{{.UseName}}",config}})
+	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{"{{.UseName}}",config}})
 	{{- end}}
 }
 

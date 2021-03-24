@@ -21,14 +21,15 @@ import (
 type {{.Command.ApiName}}Cmd *cobra.Command
 
 func RegisterCmd{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func(api api.{{.Command.ApiName}}Api) {{.Command.ApiName}}Cmd { return create{{.Command.ApiName}}Command(api) })
+	c.Singleton(func(api api.{{.Command.ApiName}}ApiFactory) {{.Command.ApiName}}Cmd { return create{{.Command.ApiName}}Command(api) })
 }
 
-func create{{.Command.ApiName}}Command(api api.Runnable) *cobra.Command {
+func create{{.Command.ApiName}}Command(apiFactory api.RunnableFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
 		RunE: func(*cobra.Command, []string) error {
+			api := apiFactory.Create()
 			return api.Run()
 		},
 	}
