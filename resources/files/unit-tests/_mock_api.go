@@ -31,7 +31,7 @@ func (f mockApiFactory) Create() api.Runnable {
 	return mockApi(f)
 }
 
-func registerMockApi(c container.Container) {
+func registerMockApiFactories(c container.Container) {
 	{{- range .Commands}}
 	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{"{{.UseName}}",config}})
 	{{- end}}
