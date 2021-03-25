@@ -10,7 +10,6 @@ import (
 	. "github.com/atrico-go/testing/assert"
 	"github.com/atrico-go/testing/is"
 
-	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/cmd"
 	"{{.RepositoryPath}}/pkg"
 	"{{.RepositoryPath}}/settings"
@@ -100,7 +99,7 @@ func resetCommand() *cobra.Command {
 	c := container.NewContainer()
 	settings.RegisterSettings(c)
 	cmd.RegisterCmd(c)
-	registerMockApi(c)
+	registerMockApiFactories(c)
 	// Reset settings
 	viperEx.Reset()
 {{- if .SingleReadConfiguration}}

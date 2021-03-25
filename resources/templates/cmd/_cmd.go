@@ -9,7 +9,7 @@ import (
 	"{{.RepositoryPath}}/api"
 {{- $write := false}}
 {{- range .UserSettings}}
-	{{- if .AppliesToCmd $.Command.UseName}}
+	{{- if .AppliesToCmd $.Command.Name}}
 	{{- $write = true}}
 	{{- end}}
 {{- end}}
@@ -21,17 +21,15 @@ import (
 type {{.Command.ApiName}}Cmd *cobra.Command
 
 func RegisterCmd{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func() {{.Command.ApiName}}Cmd { return create{{.Command.ApiName}}Command(c) })
+	c.Singleton(func(apiFactory api.{{.Command.ApiName}}ApiFactory) {{.Command.ApiName}}Cmd { return create{{.Command.ApiName}}Command(apiFactory) })
 }
 
-func create{{.Command.ApiName}}Command(c container.Container) *cobra.Command {
+func create{{.Command.ApiName}}Command(apiFactory api.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
 		RunE: func(*cobra.Command, []string) error {
-			api.RegisterApi{{.Command.ApiName}}(c)
-			var theApi api.{{.Command.ApiName}}Api
-			c.Make(&theApi)
+			theApi := apiFactory.Create()
 			return theApi.Run()
 		},
 	}

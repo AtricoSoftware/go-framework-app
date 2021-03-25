@@ -15,14 +15,15 @@ type commandFactory []*cobra.Command
 
 // Register Commands
 func RegisterCmd(c container.Container) {
-	{{- range .Commands}}
+{{- range .Commands}}
 	RegisterCmd{{.ApiName}}(c)
-	{{- end}}
-	c.Singleton(func({{- range .Commands}}{{.Name}} {{.ApiName}}Cmd, {{- end}}) CommandFactory { return commandFactory{
-	{{- range.Commands}}
-	{{.Name}},
-	{{- end}}
-	}
+{{- end}}
+	c.Singleton(func({{- range .Commands}}{{.Name}} {{.ApiName}}Cmd, {{- end}}) CommandFactory {
+		return commandFactory{
+{{- range.Commands}}
+			{{.Name}},
+{{- end}}
+		}
 	})
 }
 

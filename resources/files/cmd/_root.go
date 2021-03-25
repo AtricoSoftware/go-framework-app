@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atrico-go/container"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

@@ -10,6 +10,18 @@ import (
 )
 
 type {{.Command.ApiName}}Api Runnable
+type {{.Command.ApiName}}ApiFactory Factory
+
+type {{.Command.Name}}ApiFactory struct {
+	container.Container
+}
+
+func (f {{.Command.Name}}ApiFactory) Create() Runnable {
+	RegisterApi{{.Command.ApiName}}(f.Container)
+	var theApi {{.Command.ApiName}}Api
+	f.Container.Make(&theApi)
+	return theApi
+}
 // SECTION-END
 
 func RegisterApi{{.Command.ApiName}}(c container.Container) {
