@@ -52,13 +52,18 @@ var CmdlineTestCases = []CmdlineTestCase{
 
 // SECTION-END
 
+func addUserTests(tests []CmdlineTestCase) []CmdlineTestCase{
+// Append extra tests here
+return tests
+}
+
 // SECTION-START: Test
 // ----------------------------------------------------------------------------------------------------------------------------
 // Test
 // ----------------------------------------------------------------------------------------------------------------------------
 
 func Test_CommandLine(t *testing.T) {
-	for _,testCase := range CmdlineTestCases {
+	for _,testCase := range addUserTests(CmdlineTestCases) {
 		// Build command line and expectations
 		cmdline := strings.Builder{}
 		cmdline.WriteString(testCase.Command)
