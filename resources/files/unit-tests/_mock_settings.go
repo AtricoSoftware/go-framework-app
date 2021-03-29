@@ -1,10 +1,6 @@
 // {{.Comment}}
 package unit_tests
 
-import(
-	"{{.RepositoryPath}}/settings"
-)
-
 type MockSettings struct {
 	TheCommand	string
 {{- range .UserSettings}}
