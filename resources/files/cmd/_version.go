@@ -7,20 +7,18 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/pkg"
 )
-
-var fullVersion bool
 
 func createVersionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Shows version",
 		Run: func(*cobra.Command, []string) {
-			showVersion(fullVersion)
+			showVersion(api.VerboseFlag)
 		},
 	}
-	cmd.PersistentFlags().BoolVarP(&fullVersion, "full", "f", false, "Full program information")
 	return cmd
 }
 
