@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 // SECTION-START: Framework
 package settings
 
@@ -22,5 +22,4 @@ func (theSettings) ApplicationSummary() string {
 func AddApplicationSummaryFlag(flagSet *pflag.FlagSet) {
 	viperEx.AddStringSetting(flagSet, applicationSummarySettingName, applicationSummarySettingCmdline, "Summary description of application")
 }
-
 // SECTION-END

@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package cmd
 
 import (
@@ -7,20 +7,18 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/pkg"
 )
-
-var fullVersion bool
 
 func createVersionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Shows version",
 		Run: func(*cobra.Command, []string) {
-			showVersion(fullVersion)
+			showVersion(api.VerboseFlag)
 		},
 	}
-	cmd.PersistentFlags().BoolVarP(&fullVersion, "full", "f", false, "Full program information")
 	return cmd
 }
 

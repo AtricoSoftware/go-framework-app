@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package cmd
 
 import (
@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/pkg"
 )
 
@@ -19,6 +20,7 @@ func createRootCommand() *cobra.Command {
 		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
 	}
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
+	cmd.PersistentFlags().BoolVarP(&api.VerboseFlag, "verbose", "", false, "More output")
 	return cmd
 }
 
@@ -31,7 +33,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 		if err := tryReadConfig(); err != nil {
 			// Fail if specified config cannot be read
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 	} else {
@@ -57,7 +59,7 @@ func initConfig() {
 func tryReadConfig() error {
 	err := viper.ReadInConfig()
 	if err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		api.VerbosePrintln("Using config file:", viper.ConfigFileUsed())
 	}
 	return err
 }

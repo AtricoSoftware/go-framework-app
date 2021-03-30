@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package settings
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ type CachedBoolValue interface {
 }
 
 func NewCachedBoolValue(creator func() bool) CachedBoolValue {
-	cv := cachedBoolValue{creator: creator}
+	cv := cachedBoolValue{creator: creator }
 	return &cv
 }
 
@@ -41,7 +41,7 @@ type CachedStringValue interface {
 }
 
 func NewCachedStringValue(creator func() string) CachedStringValue {
-	cv := cachedStringValue{creator: creator}
+	cv := cachedStringValue{creator: creator }
 	return &cv
 }
 
@@ -72,7 +72,7 @@ type CachedUserCommandSliceValue interface {
 }
 
 func NewCachedUserCommandSliceValue(creator func() []UserCommand) CachedUserCommandSliceValue {
-	cv := cachedUserCommandSliceValue{creator: creator}
+	cv := cachedUserCommandSliceValue{creator: creator }
 	return &cv
 }
 
@@ -103,7 +103,7 @@ type CachedUserSettingSliceValue interface {
 }
 
 func NewCachedUserSettingSliceValue(creator func() []UserSetting) CachedUserSettingSliceValue {
-	cv := cachedUserSettingSliceValue{creator: creator}
+	cv := cachedUserSettingSliceValue{creator: creator }
 	return &cv
 }
 

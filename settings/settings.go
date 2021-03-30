@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package settings
 
 import "github.com/atrico-go/container"
