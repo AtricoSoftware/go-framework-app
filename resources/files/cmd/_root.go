@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/pkg"
 {{- $write := false}}
 {{- range .UserSettings}}
@@ -28,6 +29,7 @@ func createRootCommand() *cobra.Command {
 		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
 	}
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
+	cmd.PersistentFlags().BoolVarP(&api.VerboseFlag, "verbose", "", false, "More output")
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd "root"}}
 	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
@@ -45,7 +47,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 		if err := tryReadConfig(); err != nil {
 			// Fail if specified config cannot be read
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 	} else {
@@ -71,7 +73,7 @@ func initConfig() {
 func tryReadConfig() error {
 	err := viper.ReadInConfig()
 	if err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		api.VerbosePrintln("Using config file:", viper.ConfigFileUsed())
 	}
 	return err
 }
