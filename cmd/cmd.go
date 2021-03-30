@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package cmd
 
 import (
@@ -16,7 +16,7 @@ type commandFactory []*cobra.Command
 // Register Commands
 func RegisterCmd(c container.Container) {
 	RegisterCmdGenerate(c)
-	c.Singleton(func(generate GenerateCmd) CommandFactory {
+	c.Singleton(func(generate GenerateCmd,) CommandFactory {
 		return commandFactory{
 			generate,
 		}
@@ -27,7 +27,7 @@ func (c commandFactory) Create() *cobra.Command {
 	cobra.OnInitialize(initConfig)
 	rootCmd := createRootCommand()
 	rootCmd.AddCommand(createVersionCommand())
-	for _, cmd := range c {
+	for _,cmd := range c {
 		rootCmd.AddCommand(cmd)
 	}
 	return rootCmd

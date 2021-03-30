@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package cmd
 
 import (
@@ -12,15 +12,16 @@ import (
 type GenerateCmd *cobra.Command
 
 func RegisterCmdGenerate(c container.Container) {
-	c.Singleton(func(api api.GenerateApi) GenerateCmd { return createGenerateCommand(api) })
+	c.Singleton(func(apiFactory api.GenerateApiFactory) GenerateCmd { return createGenerateCommand(apiFactory) })
 }
 
-func createGenerateCommand(api api.Runnable) *cobra.Command {
+func createGenerateCommand(apiFactory api.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "generate",
 		Short: "Generate framework app",
 		RunE: func(*cobra.Command, []string) error {
-			return api.Run()
+			theApi := apiFactory.Create()
+			return theApi.Run()
 		},
 	}
 	settings.AddTargetDirectoryFlag(cmd.PersistentFlags())

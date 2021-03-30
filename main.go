@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package main
 
 import (
@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/atrico-go/container"
-
 	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/cmd"
 	"github.com/AtricoSoftware/go-framework-app/settings"
@@ -28,6 +27,6 @@ func register() container.Container {
 	c := container.NewContainer()
 	settings.RegisterSettings(c)
 	cmd.RegisterCmd(c)
-	api.RegisterApi(c)
+	api.RegisterApiFactories(c)
 	return c
 }

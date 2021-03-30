@@ -1,4 +1,4 @@
-// Generated 2021-03-17 16:07:26 by go-framework V1.8.0
+// Generated 2021-03-30 15:32:41 by go-framework development-version
 package unit_tests
 
 import (
@@ -12,6 +12,7 @@ type mockApi struct {
 	cmd    string
 	config settings.Settings
 }
+type mockApiFactory mockApi
 
 var results map[string]interface{}
 
@@ -27,6 +28,12 @@ func (m mockApi) Run() error {
 	return nil
 }
 
-func registerMockApi(c container.Container) {
-	c.Singleton(func(config settings.Settings) api.GenerateApi { return mockApi{"generate", config} })
+func (f mockApiFactory) Create() api.Runnable {
+	return mockApi(f)
 }
+
+func registerMockApiFactories(c container.Container) {
+	c.Singleton(func(config settings.Settings) api.GenerateApiFactory {return mockApiFactory{"generate",config}})
+}
+
+
