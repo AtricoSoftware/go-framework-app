@@ -1,20 +1,60 @@
 {"Type":"Mixed"}
 # {{.Comment}}
+
+# SECTION-START: SetDefaults
+# If different values are required, (re)set these after this section
+DEFAULT_VERSION=NoVersion
+DEFAULT_ARCH=amd64
+DEFAULT_PLATFORM=linux
+BUILD_DIR=release
+# SECTION-END
+
+# SECTION-START: Commandline
+PLATFORM=()
+ARCH=()
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+      -v|--version)
+      VERSION="$2"
+      shift # past argument
+      shift # past value
+      ;;
+      -a|--arch)
+      ARCH+=("$2")
+      shift # past argument
+      shift # past value
+      ;;
+      -p|--platform)
+      PLATFORM+=("$2")
+      shift # past argument
+      shift # past value
+      ;;
+      *)    # unknown option, treat as platform
+      PLATFORM+=("$1")
+      shift # past argument
+      ;;
+  esac
+done
+# Add defaults if missing
+if [[ -z "$VERSION" ]]; then
+  VERSION=$(git describe --tags --dirty --always)
+  if [[ -z "$VERSION" ]]; then
+    VERSION=$DEFAULT_VERSION
+  fi
+fi
+if [[ ${#ARCH[@]} -eq 0 ]]; then
+    ARCH=($DEFAULT_ARCH)
+fi
+if [[ ${#PLATFORM[@]} -eq 0 ]]; then
+    PLATFORM=($DEFAULT_PLATFORM)
+fi
+# SECTION-END
+
 # SECTION-START: Definitions
 MODULE="{{.RepositoryPath}}"
 export OUTPUT_NAME="{{.ApplicationName}}"
-TARGET_DIR=release
-TARGET_PLATFORMS="darwin windows linux"
-
-if [[ ! -z "$1" ]]
-then
-  VERSION=$1
-else
-  VERSION=$(git describe --tags --dirty)
-fi
-
 export CGO_ENABLED=0
-export GOARCH="amd64"
 
 # setup details
 # built
@@ -32,19 +72,28 @@ LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
 # SECTION-END
 
 # SECTION-START: Build
-mkdir -p $TARGET_DIR
-for GOOS in $TARGET_PLATFORMS; do
-    export GOOS
-    export EXT=""
-    if [[ ${GOOS} == "windows" ]]
-    then
-      export EXT=".exe"
-    fi
-    export TARGET="$TARGET_DIR/$VERSION-$GOOS-$GOARCH"
-    mkdir -p $TARGET
-    echo Building $TARGET
-    go build -v -ldflags="$LDFLAGS" -o $TARGET/$OUTPUT_NAME$EXT
-    echo Packaging $TARGET.zip
-    zip -j1 $TARGET.zip $TARGET/$OUTPUT_NAME$EXT
+mkdir -p $BUILD_DIR
+for GOARCH in ${ARCH[@]}; do
+    export GOARCH
+    for GOOS in ${PLATFORM[@]}; do
+        export GOOS
+        export EXT=""
+        if [[ ${GOOS} == "windows" ]]; then
+          export EXT=".exe"
+        fi
+        # Version build
+        export TARGET_DIR="$BUILD_DIR/$VERSION-$GOOS-$GOARCH"
+        export TARGET_APP="$TARGET_DIR/$OUTPUT_NAME$EXT"
+        mkdir -p $TARGET_DIR
+        echo Building $TARGET_APP
+        go build -v -ldflags="$LDFLAGS" -o $TARGET_APP
+        echo Packaging $TARGET_DIR.zip
+        zip -j1 $TARGET_DIR.zip $TARGET_APP
+        # Copy app to latest
+        export LATEST_DIR="$BUILD_DIR/latest-$GOOS-$GOARCH"
+        mkdir -p $LATEST_DIR
+        echo Copying to $LATEST_DIR
+        cp $TARGET_APP $LATEST_DIR/
+    done
 done
 # SECTION-END

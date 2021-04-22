@@ -2,7 +2,7 @@
 # SECTION-START: Definitions
 MODULE="github.com/AtricoSoftware/go-framework-app"
 export OUTPUT_NAME="go-framework"
-TARGET_DIR=release
+BUILD_DIR=release
 TARGET_PLATFORMS="darwin windows linux"
 
 if [[ ! -z "$1" ]]
@@ -41,12 +41,19 @@ for GOOS in $TARGET_PLATFORMS; do
     then
       export EXT=".exe"
     fi
-    export TARGET="$TARGET_DIR/$VERSION-$GOOS-$GOARCH"
-    mkdir -p $TARGET
-    echo Building $TARGET
-    go build -v -ldflags="$LDFLAGS" -o $TARGET/$OUTPUT_NAME$EXT
-    echo Packaging $TARGET.zip
-    zip -j1 $TARGET.zip $TARGET/$OUTPUT_NAME$EXT
+    # Version build
+    export TARGET_DIR="$BUILD_DIR/$VERSION-$GOOS-$GOARCH"
+    export TARGET_APP="$TARGET_DIR/$OUTPUT_NAME$EXT"
+    mkdir -p TARGET_DIR
+    echo Building $TARGET_APP
+    go build -v -ldflags="$LDFLAGS" -o $TARGET_APP
+    echo Packaging TARGET_DIR.zip
+    zip -j1 TARGET_DIR.zip TARGET_APP
+    # Copy app to latest
+    export LATEST_DIR="$BUILD_DIR/latest-$GOOS-$GOARCH"
+    mkdir -p $LATEST_DIR
+    echo Copying to $LATEST_DIR
+    cp $TARGET_APP $LATEST_DIR/
 done
 # SECTION-END
 
