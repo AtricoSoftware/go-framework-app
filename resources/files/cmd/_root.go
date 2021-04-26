@@ -4,8 +4,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 
-	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -41,11 +42,12 @@ func createRootCommand() *cobra.Command {
 var cfgFile string
 
 func initConfig() {
+	var err error
 	// Config file
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
-		if err := tryReadConfig(); err != nil {
+		if err = tryReadConfig(func() (string, error) { return cfgFile, nil }); err != nil {
 			// Fail if specified config cannot be read
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -54,26 +56,30 @@ func initConfig() {
 		// Standard name for config
 		viper.SetConfigName(fmt.Sprintf(".%s", pkg.Name))
 		// Try current working directory
-		dir, err := os.Getwd()
-		if err == nil {
-			viper.AddConfigPath(dir)
-			err = tryReadConfig()
+		err = tryReadConfig(func() (string, error) { return os.Getwd() })
+		if err != nil {
+			// Try home directory
+			err = tryReadConfig(func() (string, error) { return homedir.Dir() })
 		}
 		if err != nil {
-			// Finally, try home directory
-			dir, err = homedir.Dir()
-			if err == nil {
-				viper.AddConfigPath(dir)
-				tryReadConfig()
-			}
+			// Try executable directory
+			err = tryReadConfig(func() (string, error) {
+				_, filename, _, _ := runtime.Caller(0)
+				return filepath.Dir(filename), nil
+			})
 		}
 	}
 }
 
-func tryReadConfig() error {
-	err := viper.ReadInConfig()
-	if err == nil {
-		api.VerbosePrintln("Using config file:", viper.ConfigFileUsed())
+func tryReadConfig(getDir func() (dir string, err error)) error {
+	var err error
+	var dir string
+	if dir,err = getDir(); err == nil {
+		viper.AddConfigPath(dir)
+		err := viper.ReadInConfig()
+		if err == nil {
+			api.VerbosePrintln("Using config file:", viper.ConfigFileUsed())
+		}
 	}
 	return err
 }
