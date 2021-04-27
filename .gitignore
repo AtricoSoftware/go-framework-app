@@ -1,6 +1,7 @@
 # Generated 2021-03-30 15:32:41 by go-framework development-version
 # Workspace files
 .idea
+vendor
 
 # Binaries for programs and plugins
 *.exe
