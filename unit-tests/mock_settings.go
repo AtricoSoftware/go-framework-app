@@ -1,6 +1,10 @@
 // Generated 2021-03-30 15:32:41 by go-framework development-version
 package unit_tests
 
+import (
+	"github.com/AtricoSoftware/go-framework-app/settings"
+)
+
 type MockSettings struct {
 	TheCommand	string
 	SingleReadConfigurationVar bool

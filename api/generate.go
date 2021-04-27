@@ -3,16 +3,17 @@
 package api
 
 import (
-	"github.com/atrico-go/container"
-	"github.com/AtricoSoftware/go-framework-app/settings"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
-	"github.com/spf13/viper"
+
 	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
+	"github.com/AtricoSoftware/go-framework-app/settings"
+	"github.com/atrico-go/container"
+	"github.com/spf13/viper"
 )
 
 type GenerateApi Runnable
@@ -28,6 +29,7 @@ func (f generateApiFactory) Create() Runnable {
 	f.Container.Make(&theApi)
 	return theApi
 }
+
 // SECTION-END
 
 func RegisterApiGenerate(c container.Container) {
@@ -89,6 +91,9 @@ func (svc generateApi) Run() error {
 		destination := filepath.Join(svc.config.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
 		ioutil.WriteFile(destination, data, 0644)
 	}
+	// Module dependencies
+	GoCommand(svc.config.TargetDirectory(), "get", "-u", "all")
+	GoCommand(svc.config.TargetDirectory(), "mod", "download")
 	// Clean up the files
 	svc.fileWriter.CleanupFiles()
 	// Remove backups with no changes
