@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="create resources" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="go-framework-app" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="FILE" />
+    <package value="github.com/AtricoSoftware/go-framework-app" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/create_resources.go" />
+    <method v="2" />
+  </configuration>
+</component>
