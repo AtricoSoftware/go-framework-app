@@ -42,7 +42,7 @@ for GOOS in $TARGET_PLATFORMS; do
       export EXT=".exe"
     fi
     # Version build
-    export TARGET_DIR="$BUILD_DIR/$VERSION-$GOOS-$GOARCH"
+    export TARGET_DIR="$BUILD_DIR/${$OUTPUT_NAME}_$VERSION-$GOOS-$GOARCH"
     export TARGET_APP="$TARGET_DIR/$OUTPUT_NAME$EXT"
     mkdir -p TARGET_DIR
     echo Building $TARGET_APP
@@ -50,7 +50,7 @@ for GOOS in $TARGET_PLATFORMS; do
     echo Packaging TARGET_DIR.zip
     zip -j1 TARGET_DIR.zip TARGET_APP
     # Copy app to latest
-    export LATEST_DIR="$BUILD_DIR/latest-$GOOS-$GOARCH"
+    export LATEST_DIR="$BUILD_DIR/${$OUTPUT_NAME}_latest-$GOOS-$GOARCH"
     mkdir -p $LATEST_DIR
     echo Copying to $LATEST_DIR
     cp $TARGET_APP $LATEST_DIR/
