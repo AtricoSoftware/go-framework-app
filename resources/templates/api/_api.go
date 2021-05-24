@@ -12,11 +12,11 @@ import (
 type {{.Command.ApiName}}Api Runnable
 type {{.Command.ApiName}}ApiFactory Factory
 
-type {{.Command.Name}}ApiFactory struct {
+type {{.Command.LowerApiName}}ApiFactory struct {
 	container.Container
 }
 
-func (f {{.Command.Name}}ApiFactory) Create() Runnable {
+func (f {{.Command.LowerApiName}}ApiFactory) Create() Runnable {
 	RegisterApi{{.Command.ApiName}}(f.Container)
 	var theApi {{.Command.ApiName}}Api
 	f.Container.Make(&theApi)
@@ -25,15 +25,15 @@ func (f {{.Command.Name}}ApiFactory) Create() Runnable {
 // SECTION-END
 
 func RegisterApi{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func(config settings.Settings) {{.Command.ApiName}}Api {return {{.Command.Name}}Api{config}})
+	c.Singleton(func(config settings.Settings) {{.Command.ApiName}}Api {return {{.Command.LowerApiName}}Api{config}})
 }
 
-type {{.Command.Name}}Api struct {
+type {{.Command.LowerApiName}}Api struct {
 	config settings.Settings
 }
 
 // {{.Command.Description}}
-func (svc {{.Command.Name}}Api) Run() error {
+func (svc {{.Command.LowerApiName}}Api) Run() error {
 	// Implementation here!
 	return nil
 }

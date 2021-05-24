@@ -15,6 +15,6 @@ type Factory interface {
 
 func RegisterApiFactories(c container.Container) {
 {{- range .Commands}}
-	c.Singleton(func() {{.ApiName}}ApiFactory { return {{.Name}}ApiFactory{c} })
+	c.Singleton(func() {{.ApiName}}ApiFactory { return {{.LowerApiName}}ApiFactory{c} })
 {{- end}}
 }
