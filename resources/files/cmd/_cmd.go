@@ -18,10 +18,10 @@ func RegisterCmd(c container.Container) {
 {{- range .Commands}}
 	RegisterCmd{{.ApiName}}(c)
 {{- end}}
-	c.Singleton(func({{- range .Commands}}{{.Name}} {{.ApiName}}Cmd, {{- end}}) CommandFactory {
+	c.Singleton(func({{- range .Commands}}{{.LowerApiName}} {{.ApiName}}Cmd, {{- end}}) CommandFactory {
 		return commandFactory{
 {{- range.Commands}}
-			{{.Name}},
+			{{.LowerApiName}},
 {{- end}}
 		}
 	})
