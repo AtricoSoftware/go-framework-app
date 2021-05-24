@@ -3,9 +3,9 @@
 package settings
 
 import (
-	"github.com/spf13/viper"
 	"github.com/iancoleman/strcase"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 )
 
 const commandsSettingName = "Commands"
@@ -40,4 +40,5 @@ func ParseCommandsSetting(setting interface{}) []UserCommand {
 }
 
 func (c UserCommand) ApiName() string { return strcase.ToCamel(c.Name) }
+func (c UserCommand) LowerApiName() string { return strcase.ToLowerCamel(c.Name) }
 func (c UserCommand) UseName() string { return strcase.ToKebab(c.Name) }
