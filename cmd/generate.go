@@ -9,13 +9,13 @@ import (
 	"github.com/AtricoSoftware/go-framework-app/settings"
 )
 
-type GenerateCmd *cobra.Command
+type GenerateCmd commandInfo
 
 func RegisterCmdGenerate(c container.Container) {
-	c.Singleton(func(apiFactory api.GenerateApiFactory) GenerateCmd { return createGenerateCommand(apiFactory) })
+	c.Singleton(func(apiFactory api.GenerateApiFactory) GenerateCmd { return GenerateCmd(createGenerateCommand(apiFactory)) })
 }
 
-func createGenerateCommand(apiFactory api.Factory) *cobra.Command {
+func createGenerateCommand(apiFactory api.Factory) commandInfo {
 	cmd := &cobra.Command{
 		Use:   "generate",
 		Short: "Generate framework app",
@@ -30,5 +30,5 @@ func createGenerateCommand(apiFactory api.Factory) *cobra.Command {
 	settings.AddApplicationSummaryFlag(cmd.PersistentFlags())
 	settings.AddApplicationDescriptionFlag(cmd.PersistentFlags())
 	settings.AddRepositoryPathFlag(cmd.PersistentFlags())
-	return cmd
+	return commandInfo{cmd, "generate"}
 }

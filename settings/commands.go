@@ -3,6 +3,9 @@
 package settings
 
 import (
+	"path"
+	"strings"
+
 	"github.com/iancoleman/strcase"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
@@ -17,6 +20,7 @@ var commandsSettingCache = NewCachedUserCommandSliceValue(func() []UserCommand {
 func (theSettings) Commands() []UserCommand {
 	return commandsSettingCache.GetValue()
 }
+
 // SECTION-END
 
 type UserCommand struct {
@@ -39,6 +43,8 @@ func ParseCommandsSetting(setting interface{}) []UserCommand {
 	return results
 }
 
-func (c UserCommand) ApiName() string { return strcase.ToCamel(c.Name) }
-func (c UserCommand) LowerApiName() string { return strcase.ToLowerCamel(c.Name) }
-func (c UserCommand) UseName() string { return strcase.ToKebab(c.Name) }
+func (c UserCommand) ApiName() string      { return strcase.ToCamel(c.stripPath()) }
+func (c UserCommand) LowerApiName() string { return strcase.ToLowerCamel(c.stripPath()) }
+func (c UserCommand) UseName() string      { return strcase.ToKebab(path.Base(c.Name)) }
+func (c UserCommand) FileName() string      { return strcase.ToKebab(c.stripPath()) }
+func (c UserCommand) stripPath() string    { return strings.ReplaceAll(c.Name, "/", " ") }

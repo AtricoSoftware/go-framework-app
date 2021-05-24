@@ -2,6 +2,8 @@
 package cmd
 
 import (
+	"path"
+
 	"github.com/atrico-go/container"
 	"github.com/spf13/cobra"
 )
@@ -11,7 +13,11 @@ type CommandFactory interface {
 	Create() *cobra.Command
 }
 
-type commandFactory []*cobra.Command
+type commandInfo struct {
+	cmd *cobra.Command
+	path string
+}
+type commandFactory []commandInfo
 
 // Register Commands
 func RegisterCmd(c container.Container) {
@@ -21,7 +27,7 @@ func RegisterCmd(c container.Container) {
 	c.Singleton(func({{- range .Commands}}{{.LowerApiName}} {{.ApiName}}Cmd, {{- end}}) CommandFactory {
 		return commandFactory{
 {{- range.Commands}}
-			{{.LowerApiName}},
+		commandInfo({{.LowerApiName}}),
 {{- end}}
 		}
 	})
@@ -29,10 +35,13 @@ func RegisterCmd(c container.Container) {
 
 func (c commandFactory) Create() *cobra.Command {
 	cobra.OnInitialize(initConfig)
-	rootCmd := createRootCommand()
-	rootCmd.AddCommand(createVersionCommand())
-	for _,cmd := range c {
-		rootCmd.AddCommand(cmd)
+	commands := make(map[string]*cobra.Command, 1)
+	commands["."] = createRootCommand()
+	commands["."].AddCommand(createVersionCommand())
+	for _, cmdInfo := range c {
+		parent := path.Dir(cmdInfo.path)
+		commands[parent].AddCommand(cmdInfo.cmd)
+		commands[cmdInfo.path] = cmdInfo.cmd
 	}
-	return rootCmd
+	return commands["."]
 }

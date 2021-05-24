@@ -18,13 +18,13 @@ import (
 {{- end}}
 )
 
-type {{.Command.ApiName}}Cmd *cobra.Command
+type {{.Command.ApiName}}Cmd commandInfo
 
 func RegisterCmd{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func(apiFactory api.{{.Command.ApiName}}ApiFactory) {{.Command.ApiName}}Cmd { return create{{.Command.ApiName}}Command(apiFactory) })
+	c.Singleton(func(apiFactory api.{{.Command.ApiName}}ApiFactory) {{.Command.ApiName}}Cmd { return {{.Command.ApiName}}Cmd(create{{.Command.ApiName}}Command(apiFactory)) })
 }
 
-func create{{.Command.ApiName}}Command(apiFactory api.Factory) *cobra.Command {
+func create{{.Command.ApiName}}Command(apiFactory api.Factory) commandInfo {
 	cmd := &cobra.Command{
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
@@ -38,5 +38,5 @@ func create{{.Command.ApiName}}Command(apiFactory api.Factory) *cobra.Command {
 	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
 	{{- end}}
 {{- end}}
-	return cmd
+	return commandInfo{cmd, "{{.Command.Name}}" }
 }
