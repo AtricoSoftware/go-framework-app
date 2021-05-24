@@ -1,4 +1,4 @@
-// Generated 2021-03-30 15:32:41 by go-framework development-version
+// Generated 2021-05-24 17:41:23 by go-framework development-version
 package cmd
 
 import (
@@ -30,5 +30,5 @@ func createGenerateCommand(apiFactory api.Factory) commandInfo {
 	settings.AddApplicationSummaryFlag(cmd.PersistentFlags())
 	settings.AddApplicationDescriptionFlag(cmd.PersistentFlags())
 	settings.AddRepositoryPathFlag(cmd.PersistentFlags())
-	return commandInfo{cmd, "generate"}
+	return commandInfo{cmd, "generate" }
 }

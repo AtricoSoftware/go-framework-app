@@ -1,14 +1,13 @@
-// Generated 2021-03-30 15:32:41 by go-framework development-version
+// Generated 2021-05-24 17:41:23 by go-framework development-version
 // SECTION-START: Framework
 package settings
 
 import (
+	"github.com/spf13/viper"
 	"path"
 	"strings"
-
 	"github.com/iancoleman/strcase"
 	"github.com/mitchellh/mapstructure"
-	"github.com/spf13/viper"
 )
 
 const commandsSettingName = "Commands"
@@ -20,7 +19,6 @@ var commandsSettingCache = NewCachedUserCommandSliceValue(func() []UserCommand {
 func (theSettings) Commands() []UserCommand {
 	return commandsSettingCache.GetValue()
 }
-
 // SECTION-END
 
 type UserCommand struct {

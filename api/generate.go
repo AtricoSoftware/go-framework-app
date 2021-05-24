@@ -1,18 +1,17 @@
-// Generated 2021-03-30 15:32:41 by go-framework development-version
+// Generated 2021-05-24 17:41:23 by go-framework development-version
 // SECTION-START: Framework
 package api
 
 import (
+	"github.com/atrico-go/container"
+	"github.com/AtricoSoftware/go-framework-app/settings"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
-
 	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
-	"github.com/AtricoSoftware/go-framework-app/settings"
-	"github.com/atrico-go/container"
 	"github.com/spf13/viper"
 )
 
@@ -29,7 +28,6 @@ func (f generateApiFactory) Create() Runnable {
 	f.Container.Make(&theApi)
 	return theApi
 }
-
 // SECTION-END
 
 func RegisterApiGenerate(c container.Container) {

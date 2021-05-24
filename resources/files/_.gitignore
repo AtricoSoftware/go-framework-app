@@ -1,6 +1,7 @@
 # {{.Comment}}
 # Workspace files
 .idea
+vendor
 
 # Binaries for programs and plugins
 *.exe
