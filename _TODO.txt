@@ -1,6 +1,33 @@
 WIP
 ~~~
+sub commands
 
 TODO
 ~~~~
-Unit testing for cmdline
+move verbose writer to api/common (circular imports)
+remove names from struct init (safer as missing values causes error)
+dryrun flag (with disable in config) (copy from session-replay)
+handle settings types better - slices of X (cut off slice, handle X)
+cmdline params (see tf-tool)
+cache linked to changing config
+regex values to core
+string set, remove and add to core?
+cache - remove and add to core?
+validate settings (see tf-tool)
+config file template(?)
+calculate missing bits (like id) of config
+config - list of register functions?
+example in commands (see tf-tool)
+usage in cmdline (see tf-tool)
+return error from api, do something better
+MAYBE
+cmdline testcases - all options?
+
+UNIT TESTS
+~~~~~~~~~~
+Unit testing for config file
+
+BUGS
+~~~~
+cleanup readme (and all generated files)
+homedir import
