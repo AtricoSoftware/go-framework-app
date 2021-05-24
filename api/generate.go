@@ -62,7 +62,7 @@ func (svc generateApi) Run() error {
 	for _, command := range svc.config.Commands() {
 		values["Command"] = command
 		for _, pkg := range []string{"cmd", "api"} {
-			svc.fileWriter.GenerateNamedFile(resources.Templates[pkg], command.Name, values)
+			svc.fileWriter.GenerateNamedFile(resources.Templates[pkg], command.FileName(), values)
 		}
 	}
 	// Create settings
