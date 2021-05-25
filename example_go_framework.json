@@ -86,6 +86,16 @@
       "AppliesTo": [
         "root"
       ]
+    },
+    {
+      "Name": "Applies to sub only",
+      "Id": "subOnly",
+      "Description": "Sub only setting setting",
+      "Type": "bool",
+      "Cmdline": "subOnly",
+      "AppliesTo": [
+        "test/sub2"
+      ]
     }
   ]
 }
