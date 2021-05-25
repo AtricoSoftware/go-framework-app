@@ -29,7 +29,7 @@ func RegisterApi{{.Command.ApiName}}(c container.Container) {
 }
 
 type {{.Command.LowerApiName}}Api struct {
-	config settings.Settings
+	settings.Settings
 }
 
 // {{.Command.Description}}
