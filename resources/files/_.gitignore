@@ -1,7 +1,9 @@
+{"Type":"Mixed"}
 # {{.Comment}}
+
+# SECTION-START: Defaults
 # Workspace files
 .idea
-vendor
 
 # Binaries for programs and plugins
 *.exe
@@ -26,4 +28,5 @@ go.sum
 *.bak
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
+# SECTION-END
