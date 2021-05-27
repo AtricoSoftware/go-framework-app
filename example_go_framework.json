@@ -12,11 +12,14 @@
   "Commands": [
     {
       "Name": "test",
-      "Description": "Run test"
+      "Description": "Run test",
+      "Args": ["one","two"],
+      "OptionalArgs": ["three"]
     },
     {
       "Name": "test2",
-      "Description": "Run test2"
+      "Description": "Run test2",
+      "Args": ["one"]
     },
     {
       "Name": "test/sub1",

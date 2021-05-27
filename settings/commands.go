@@ -3,11 +3,13 @@
 package settings
 
 import (
-	"github.com/spf13/viper"
+	"fmt"
 	"path"
 	"strings"
+
 	"github.com/iancoleman/strcase"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 )
 
 const commandsSettingName = "Commands"
@@ -19,11 +21,14 @@ var commandsSettingCache = NewCachedUserCommandSliceValue(func() []UserCommand {
 func (theSettings) Commands() []UserCommand {
 	return commandsSettingCache.GetValue()
 }
+
 // SECTION-END
 
 type UserCommand struct {
-	Name        string
-	Description string
+	Name         string
+	Description  string
+	Args         []string
+	OptionalArgs []string
 }
 
 func ParseCommandsSetting(setting interface{}) []UserCommand {
@@ -32,6 +37,7 @@ func ParseCommandsSetting(setting interface{}) []UserCommand {
 			{
 				Name:        "example",
 				Description: "Example command",
+				Args:        []string{"param1"},
 			}}
 	}
 	results := make([]UserCommand, len(setting.([]interface{})))
@@ -44,5 +50,21 @@ func ParseCommandsSetting(setting interface{}) []UserCommand {
 func (c UserCommand) ApiName() string      { return strcase.ToCamel(c.stripPath()) }
 func (c UserCommand) LowerApiName() string { return strcase.ToLowerCamel(c.stripPath()) }
 func (c UserCommand) UseName() string      { return strcase.ToKebab(path.Base(c.Name)) }
-func (c UserCommand) FileName() string      { return strcase.ToKebab(c.stripPath()) }
-func (c UserCommand) stripPath() string    { return strings.ReplaceAll(c.Name, "/", " ") }
+func (c UserCommand) FileName() string     { return strcase.ToKebab(c.stripPath()) }
+func (c UserCommand) HasArgs() bool        { return len(c.Args)+len(c.OptionalArgs) > 0 }
+func (c UserCommand) ArgsValidator() string {
+	if len(c.Args) == 0 {
+		if len(c.OptionalArgs) == 0 {
+			return "NoArgs"
+		} else {
+			return fmt.Sprintf("MaximumNArgs(%d)", len(c.OptionalArgs))
+		}
+	} else {
+		if len(c.OptionalArgs) == 0 {
+			return fmt.Sprintf("ExactArgs(%d)", len(c.Args))
+		} else {
+			return fmt.Sprintf("RangeArgs(%d, %d)", len(c.Args), len(c.Args)+len(c.OptionalArgs))
+		}
+	}
+}
+func (c UserCommand) stripPath() string { return strings.ReplaceAll(c.Name, "/", " ") }
