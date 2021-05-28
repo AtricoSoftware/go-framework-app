@@ -43,6 +43,7 @@
       "DefaultVal": "default_sub1",
       "Cmdline": "sub1",
       "CmdlineShortcut": "s",
+      "EnvVar": "E_SUB1",
       "AppliesTo": [
         "test"
       ]
