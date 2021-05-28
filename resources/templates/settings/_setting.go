@@ -6,6 +6,7 @@ package settings
 {{- $settingVarName := print .Setting.LowerName "SettingName"}}
 {{- $cmdlineVarName := print .Setting.LowerName "SettingCmdline"}}
 {{- $shortcutVarName := print .Setting.LowerName "SettingShortcut"}}
+{{- $envVarName := print .Setting.LowerName "SettingEnvVar"}}
 {{- $defaultVarName := print .Setting.LowerName "SettingDefaultVal"}}
 {{- $cachedVarName := print .Setting.LowerName "SettingCache"}}
 
@@ -18,7 +19,7 @@ package settings
 
 import (
 {{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
-	"github.com/atrico-go/viperEx"
+	"github.com/atrico-go/viperEx/v2"
 {{- end}}
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 	"github.com/spf13/pflag"
@@ -33,7 +34,10 @@ const {{$settingVarName}} = "{{.Setting.Id}}"
 const {{$cmdlineVarName}} = "{{.Setting.Cmdline}}"
 {{- end}}
 {{- if (ne .Setting.CmdlineShortcut "")}}
-const {{$shortcutVarName}} = "{{.Setting.CmdlineShortcut}}"
+const {{$shortcutVarName}} = '{{.Setting.CmdlineShortcut}}'
+{{- end}}
+{{- if (ne .Setting.EnvVar "")}}
+const {{$envVarName}} = "{{.Setting.EnvVar}}"
 {{- end}}
 {{- if (ne .Setting.DefaultVal "")}}
 const {{$defaultVarName}} = {{if (eq .Setting.Type "string")}}"{{end}}{{.Setting.DefaultVal}}{{if (eq .Setting.Type "string")}}"{{end}}
@@ -57,13 +61,7 @@ func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 {{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 
 func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
-	{{.Setting.TypeFlagAdder}}{{if (ne .Setting.CmdlineShortcut "")}}P{{end}}(flagSet, {{$settingVarName}}, {{$cmdlineVarName}}, {{if (ne .Setting.CmdlineShortcut "")}}{{$shortcutVarName}}, {{end}}"{{.Setting.Description}}")
-}
-{{- end}}
-{{- if (ne .Setting.DefaultVal "")}}
-
-func init() {
-	viper.SetDefault({{$settingVarName}}, {{$defaultVarName}})
+	{{.Setting.TypeFlagAdder}}({{$settingVarName}}, "{{.Setting.Description}}"){{if (ne .Setting.Cmdline "")}}.Cmdline({{$cmdlineVarName}}){{end}}{{if (ne .Setting.CmdlineShortcut "")}}.CmdlineShortcut({{$shortcutVarName}}){{end}}{{if (ne .Setting.EnvVar "")}}.EnvVar({{$envVarName}}){{end}}{{if (ne .Setting.DefaultVal "")}}.DefaultVal({{$defaultVarName}}){{end}}.AddTo(flagSet)
 }
 {{- end}}
 // SECTION-END

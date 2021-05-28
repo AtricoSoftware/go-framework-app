@@ -3,14 +3,15 @@
 package settings
 
 import (
-	"github.com/spf13/viper"
 	"bytes"
 	"errors"
 	"fmt"
 	"strings"
 	"text/template"
+
 	"github.com/iancoleman/strcase"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 )
 
 const userSettingsSettingName = "UserSettings"
@@ -22,6 +23,7 @@ var userSettingsSettingCache = NewCachedUserSettingSliceValue(func() []UserSetti
 func (theSettings) UserSettings() []UserSetting {
 	return userSettingsSettingCache.GetValue()
 }
+
 // SECTION-END
 
 type UserSetting struct {
@@ -31,6 +33,7 @@ type UserSetting struct {
 	Type                 string
 	Cmdline              string
 	CmdlineShortcut      string
+	EnvVar               string
 	DefaultVal           string
 	AppliesTo            []string
 	testDataCmdline      string
@@ -49,6 +52,7 @@ func ParseUserSettingsSetting(setting interface{}) []UserSetting {
 				Type:                 "string",
 				Cmdline:              "example",
 				CmdlineShortcut:      "e",
+				EnvVar:               "EXAMPLE",
 				DefaultVal:           "hello",
 				AppliesTo:            []string{"root"},
 				optionTestCaseValues: &emptyTCValues,
@@ -71,10 +75,10 @@ type typeDetails struct {
 }
 
 var typeInfo = map[string]typeDetails{
-	"string":   {typeGetter: "viper.GetString", typeFlagAdder: "viperEx.AddStringSetting"},
-	"[]string": {typeGetter: "viperEx.GetStringSlice", typeFlagAdder: "viperEx.AddStringArraySetting"},
-	"bool":     {typeGetter: "viper.GetBool", typeFlagAdder: "viperEx.AddBoolSetting"},
-	"int":      {typeGetter: "viper.GetInt", typeFlagAdder: "viperEx.AddIntSetting"},
+	"string":   {typeGetter: "viper.GetString", typeFlagAdder: "viperEx.StringSetting"},
+	"[]string": {typeGetter: "viperEx.GetStringSlice", typeFlagAdder: "viperEx.StringArraySetting"},
+	"bool":     {typeGetter: "viper.GetBool", typeFlagAdder: "viperEx.BoolSetting"},
+	"int":      {typeGetter: "viper.GetInt", typeFlagAdder: "viperEx.IntSetting"},
 }
 
 func (u *UserSetting) appliesToRootOnly() {
@@ -301,75 +305,3 @@ func mapCombinations(existing []map[string]string, additions []map[string]string
 	}
 	return newMaps
 }
-
-// ----------------------------------------------------------------------------------------------------------------------------
-// Delete below this
-// ----------------------------------------------------------------------------------------------------------------------------
-
-// // Return appropriate test data
-// // In a form that will compile as code
-// func (u UserSetting) GetTestDataCode() string {
-// 	return u.testDataCode
-// }
-//
-// // Return appropriate test data
-// // In a form to use on cmdline
-// func (u UserSetting) GetTestDataCmdline() string {
-// 	return u.testDataCmdline
-// }
-//
-// func (u *UserSetting) GenerateTestData(cmdline string) string {
-// 	switch u.Type {
-// 	case "string":
-// 		val := randomString()
-// 		u.testDataCmdline = fmt.Sprintf(`%s %s`, cmdline, val)
-// 		u.testDataCode = fmt.Sprintf(`"%s"`, val)
-// 	case "[]string":
-// 		val := randomStringSlice()
-// 		cmdlineSep := fmt.Sprintf(` %s `, cmdline)
-// 		cmdlineFormat := fmt.Sprintf("%s %%s", cmdline)
-// 		u.testDataCmdline = fmt.Sprintf(cmdlineFormat, strings.Join(val, cmdlineSep)) // Relies on slice having at least 1 entry
-// 		u.testDataCode = fmt.Sprintf(`[]string{"%s"}`, strings.Join(val, `","`))
-// 	case "bool":
-// 		// TODO - false as possibility
-// 		u.testDataCmdline = cmdline
-// 		u.testDataCode = "true"
-// 	case "int":
-// 		val := rand.Intn(1000)
-// 		u.testDataCmdline = fmt.Sprintf(`%s %d`, cmdline, val)
-// 		u.testDataCode = fmt.Sprintf(`%d`, val)
-// 	}
-// 	return ""
-// }
-//
-// // ----------------------------------------------------------------------------------------------------------------------------
-// // Random values
-// // ----------------------------------------------------------------------------------------------------------------------------
-//
-// func randomRune() rune {
-// 	val := rand.Intn(62)
-// 	switch {
-// 	case val < 26:
-// 		return rune('A' + val)
-// 	case val < 52:
-// 		return rune('a' + val - 26)
-// 	default:
-// 		return rune('0' + val - 52)
-// 	}
-// }
-//
-// func randomString() string {
-// 	str := strings.Builder{}
-// 	for i := 0; i < 5; i++ {
-// 		str.WriteRune(randomRune())
-// 	}
-// 	return str.String()
-// }
-//
-// func randomStringSlice() []string {
-// 	slice := make([]string, 3)
-// 	for i := 0; i < 3; i++ {
-// 		slice[i] = randomString()
-// 	}
-// 	return slice
-// }
