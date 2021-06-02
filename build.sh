@@ -70,7 +70,10 @@ LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.Version=$VERSION'"
 LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
 # SECTION-END
 
+go run ./create_resources.go
+
 # SECTION-START: Build
+echo Build dir = $BUILD_DIR
 mkdir -p $BUILD_DIR
 for GOARCH in ${ARCH[@]}; do
     export GOARCH
