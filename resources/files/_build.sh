@@ -72,6 +72,7 @@ LDFLAGS=$LDFLAGS" -X '$MODULE/pkg.BuildDetails=$DETAILS'"
 # SECTION-END
 
 # SECTION-START: Build
+echo Build dir = $BUILD_DIR
 mkdir -p $BUILD_DIR
 for GOARCH in ${ARCH[@]}; do
     export GOARCH
