@@ -1,16 +1,16 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 // SECTION-START: Framework
 package settings
 
 import (
-	"github.com/atrico-go/viperEx"
+	"github.com/atrico-go/viperEx/v2"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
 const targetDirectorySettingName = "Config.TargetDirectory"
 const targetDirectorySettingCmdline = "directory"
-const targetDirectorySettingShortcut = "d"
+const targetDirectorySettingShortcut = 'd'
 const targetDirectorySettingDefaultVal = "."
 
 // Cached value
@@ -22,10 +22,7 @@ func (theSettings) TargetDirectory() string {
 }
 
 func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingP(flagSet, targetDirectorySettingName, targetDirectorySettingCmdline, targetDirectorySettingShortcut, "Target directory")
+	viperEx.StringSetting(targetDirectorySettingName, "Target directory").Cmdline(targetDirectorySettingCmdline).CmdlineShortcut(targetDirectorySettingShortcut).DefaultVal(targetDirectorySettingDefaultVal).AddTo(flagSet)
 }
 
-func init() {
-	viper.SetDefault(targetDirectorySettingName, targetDirectorySettingDefaultVal)
-}
 // SECTION-END

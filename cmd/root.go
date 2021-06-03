@@ -1,4 +1,4 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 package cmd
 
 import (
@@ -61,7 +61,7 @@ func initConfig() {
 func tryReadConfig(getDir func() (dir string, err error)) error {
 	var err error
 	var dir string
-	if dir,err = getDir(); err == nil {
+	if dir, err = getDir(); err == nil {
 		viper.AddConfigPath(dir)
 		err := viper.ReadInConfig()
 		if err == nil {

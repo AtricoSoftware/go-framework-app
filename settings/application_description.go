@@ -1,9 +1,9 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 // SECTION-START: Framework
 package settings
 
 import (
-	"github.com/atrico-go/viperEx"
+	"github.com/atrico-go/viperEx/v2"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -20,6 +20,7 @@ func (theSettings) ApplicationDescription() string {
 }
 
 func AddApplicationDescriptionFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSetting(flagSet, applicationDescriptionSettingName, applicationDescriptionSettingCmdline, "Description of application")
+	viperEx.StringSetting(applicationDescriptionSettingName, "Description of application").Cmdline(applicationDescriptionSettingCmdline).AddTo(flagSet)
 }
+
 // SECTION-END

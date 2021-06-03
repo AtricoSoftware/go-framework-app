@@ -1,4 +1,4 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 package cmd
 
 import (
@@ -14,7 +14,7 @@ type CommandFactory interface {
 }
 
 type commandInfo struct {
-	cmd *cobra.Command
+	cmd  *cobra.Command
 	path string
 }
 type commandFactory []commandInfo
@@ -22,9 +22,9 @@ type commandFactory []commandInfo
 // Register Commands
 func RegisterCmd(c container.Container) {
 	RegisterCmdGenerate(c)
-	c.Singleton(func(generate GenerateCmd,) CommandFactory {
+	c.Singleton(func(generate GenerateCmd, ) CommandFactory {
 		return commandFactory{
-		commandInfo(generate),
+			commandInfo(generate),
 		}
 	})
 }
