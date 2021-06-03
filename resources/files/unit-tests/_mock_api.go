@@ -16,7 +16,7 @@ type mockApiFactory mockApi
 
 var results map[string]interface{}
 
-func (m mockApi) Run() error {
+func (m mockApi) Run(args []string) error {
 	results = make(map[string]interface{})
 	results["TheCommand"] = m.cmd
 	{{- range .UserSettings}}
@@ -24,6 +24,7 @@ func (m mockApi) Run() error {
 	results["{{.NameCode}}"] = m.config.{{.NameCode}}()
 	{{- end}}
 	{{- end}}
+	results["Args"] = args
 	return nil
 }
 
