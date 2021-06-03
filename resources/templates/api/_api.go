@@ -33,7 +33,7 @@ type {{.Command.LowerApiName}}Api struct {
 }
 
 // {{.Command.Description}}
-func (svc {{.Command.LowerApiName}}Api) Run() error {
+func (svc {{.Command.LowerApiName}}Api) Run(args []string) error {
 	// Implementation here!
 	return nil
 }

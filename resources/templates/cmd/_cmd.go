@@ -32,13 +32,13 @@ func create{{.Command.ApiName}}Command(apiFactory api.Factory) commandInfo {
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
 		Args: cobra.{{.Command.ArgsValidator}},
-		RunE: func(*cobra.Command, []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			theApi := apiFactory.Create()
-			return theApi.Run()
+			return theApi.Run(args)
 		},
 	}
 {{- if .Command.HasArgs}}
-	cobraEx.AddUsageParameters(cmd, []string{ {{- range $el := .Command.Args}}"{{$el}}",{{end}} }, []string{ {{- range $el := .Command.OptionalArgs}}"{{$el}}",{{end}} })
+	cobraEx.AddUsageParameters(cmd, []string{ {{- commaList (quoted .Command.Args) -}} }, []string{ {{- commaList (quoted .Command.OptionalArgs) -}} })
 {{- end}}
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd $.Command.Name}}

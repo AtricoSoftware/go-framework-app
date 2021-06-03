@@ -12,6 +12,7 @@ import (
 	"text/template"
 
 	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
+	"github.com/AtricoSoftware/go-framework-app/resources"
 )
 
 const filesPkg = "files"
@@ -50,7 +51,7 @@ func createTemplates(pkg string, header string, footer string, addTemplate func(
 			if fileTemplateType, ok = file_writer.ParseTemplateType(header["Type"]); !ok {
 				fileTemplateType = file_writer.FrameworkTemplate
 			}
-			if _, err = template.New("").Parse(contents); err == nil {
+			if _, err = template.New("").Funcs(resources.FuncMap).Parse(contents); err == nil {
 				// Strip resource path and correct filename (deps on header)
 				templateName, newPath := calculateFilename(path[len(fileFolder)+1:], header["Name"])
 				tFile.WriteString(addTemplate(templateName, fileTemplateType, newPath, strings.ReplaceAll(contents, "`", "`+\"`\"+`")))
@@ -106,7 +107,7 @@ var fileFooter = `
 }`
 
 func createTemplateInit(fileTemplateType file_writer.FileTemplateType, path string, content string) string {
-	return fmt.Sprintf("file_writer.FileTemplate{FileTemplateType: file_writer.%s, Path: `%s`,MainFile: template.Must(template.New(`mainFile`).Parse(`%s`))}", fileTemplateType.String(), path, content)
+	return fmt.Sprintf("file_writer.FileTemplate{FileTemplateType: file_writer.%s, Path: `%s`,MainFile: template.Must(template.New(`mainFile`).Funcs(FuncMap).Parse(`%s`))}", fileTemplateType.String(), path, content)
 
 }
 

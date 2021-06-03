@@ -6,7 +6,7 @@ import (
 )
 
 type Runnable interface {
-	Run() error
+	Run(args []string) error
 }
 
 type Factory interface {
