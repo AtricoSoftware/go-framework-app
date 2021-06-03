@@ -1,16 +1,16 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 // SECTION-START: Framework
 package settings
 
 import (
-	"github.com/atrico-go/viperEx"
+	"github.com/atrico-go/viperEx/v2"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
 const applicationTitleSettingName = "Application.Title"
 const applicationTitleSettingCmdline = "title"
-const applicationTitleSettingShortcut = "t"
+const applicationTitleSettingShortcut = 't'
 
 // Cached value
 var applicationTitleSettingCache = NewCachedStringValue(func() string { return viper.GetString(applicationTitleSettingName) })
@@ -21,6 +21,7 @@ func (theSettings) ApplicationTitle() string {
 }
 
 func AddApplicationTitleFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingP(flagSet, applicationTitleSettingName, applicationTitleSettingCmdline, applicationTitleSettingShortcut, "Name of application")
+	viperEx.StringSetting(applicationTitleSettingName, "Name of application").Cmdline(applicationTitleSettingCmdline).CmdlineShortcut(applicationTitleSettingShortcut).AddTo(flagSet)
 }
+
 // SECTION-END

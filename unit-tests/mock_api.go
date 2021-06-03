@@ -1,4 +1,4 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 package unit_tests
 
 import (
@@ -16,7 +16,7 @@ type mockApiFactory mockApi
 
 var results map[string]interface{}
 
-func (m mockApi) Run() error {
+func (m mockApi) Run(args []string) error {
 	results = make(map[string]interface{})
 	results["TheCommand"] = m.cmd
 	results["TargetDirectory"] = m.config.TargetDirectory()
@@ -25,6 +25,7 @@ func (m mockApi) Run() error {
 	results["ApplicationSummary"] = m.config.ApplicationSummary()
 	results["ApplicationDescription"] = m.config.ApplicationDescription()
 	results["RepositoryPath"] = m.config.RepositoryPath()
+	results["Args"] = args
 	return nil
 }
 
@@ -33,7 +34,5 @@ func (f mockApiFactory) Create() api.Runnable {
 }
 
 func registerMockApiFactories(c container.Container) {
-	c.Singleton(func(config settings.Settings) api.GenerateApiFactory {return mockApiFactory{"generate",config}})
+	c.Singleton(func(config settings.Settings) api.GenerateApiFactory { return mockApiFactory{"generate", config} })
 }
-
-

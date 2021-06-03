@@ -1,7 +1,7 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 module github.com/AtricoSoftware/go-framework-app
 
-go 1.15
+go 1.16
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
@@ -9,6 +9,7 @@ require (
 	github.com/atrico-go/core v1.7.2
 	github.com/atrico-go/testing v1.2.0
 	github.com/atrico-go/viperEx v1.0.1
+	github.com/atrico-go/viperEx/v2 v2.0.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20210519211817-2312de329ae4 // indirect
@@ -33,7 +34,6 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	golang.org/x/sys v0.0.0-20210521203332-0cec03c779c1 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect

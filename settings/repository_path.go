@@ -1,16 +1,16 @@
-// Generated 2021-05-24 17:41:23 by go-framework development-version
+// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
 // SECTION-START: Framework
 package settings
 
 import (
-	"github.com/atrico-go/viperEx"
+	"github.com/atrico-go/viperEx/v2"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
 const repositoryPathSettingName = "Application.Repository"
 const repositoryPathSettingCmdline = "repository"
-const repositoryPathSettingShortcut = "r"
+const repositoryPathSettingShortcut = 'r'
 
 // Cached value
 var repositoryPathSettingCache = NewCachedStringValue(func() string { return viper.GetString(repositoryPathSettingName) })
@@ -21,6 +21,7 @@ func (theSettings) RepositoryPath() string {
 }
 
 func AddRepositoryPathFlag(flagSet *pflag.FlagSet) {
-	viperEx.AddStringSettingP(flagSet, repositoryPathSettingName, repositoryPathSettingCmdline, repositoryPathSettingShortcut, "Path to repository")
+	viperEx.StringSetting(repositoryPathSettingName, "Path to repository").Cmdline(repositoryPathSettingCmdline).CmdlineShortcut(repositoryPathSettingShortcut).AddTo(flagSet)
 }
+
 // SECTION-END
