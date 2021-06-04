@@ -1,4 +1,4 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 // SECTION-START: Framework
 package settings
 
@@ -12,16 +12,12 @@ const applicationNameSettingName = "Application.Name"
 const applicationNameSettingCmdline = "name"
 const applicationNameSettingShortcut = 'n'
 
-// Cached value
-var applicationNameSettingCache = NewCachedStringValue(func() string { return viper.GetString(applicationNameSettingName) })
-
 // Fetch the setting
 func (theSettings) ApplicationName() string {
-	return applicationNameSettingCache.GetValue()
+	return viper.GetString(applicationNameSettingName)
 }
 
 func AddApplicationNameFlag(flagSet *pflag.FlagSet) {
 	viperEx.StringSetting(applicationNameSettingName, "Name of application").Cmdline(applicationNameSettingCmdline).CmdlineShortcut(applicationNameSettingShortcut).AddTo(flagSet)
 }
-
 // SECTION-END

@@ -44,6 +44,16 @@
   ],
   "UserSettings": [
     {
+      "Name": "No command line",
+      "Id": "nocmdline",
+      "Description": "Setting with no cmd line component",
+      "Type": "string",
+      "DefaultVal": "default_sub1",
+      "AppliesTo": [
+        "root"
+      ]
+    },
+    {
       "Name": "First sub entry",
       "Id": "group.sub1",
       "Description": "Sub setting",
