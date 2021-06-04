@@ -32,6 +32,4 @@ func NewMockSettings(cmd []string, args []string) MockSettings {
 {{- end}}
 {{- end}}
 	}
-	// Set defaults
-
 }
