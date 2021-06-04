@@ -107,11 +107,11 @@ func (o *sliceOption) Set() {
 }
 
 func (o *sliceOption) Cmdline() string {
-	cmdline := strings.Builder{}
-	for _,item := range o.value {
-		cmdline.WriteString(fmt.Sprintf("%s %v ", o.option, item))
+	items:= make([]string, len(o.value))
+	for i,item := range o.value {
+		items[i] = fmt.Sprintf("%s %v", o.option, item)
 	}
-	return cmdline.String()
+	return strings.Join(items, " ")
 }
 
 func (o *sliceOption) ModifySettings(settings *MockSettings) {

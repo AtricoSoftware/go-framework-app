@@ -5,6 +5,7 @@ package settings
 import (
 	"fmt"
 	"path"
+	"regexp"
 	"strings"
 
 	"github.com/iancoleman/strcase"
@@ -25,10 +26,11 @@ func (theSettings) Commands() []UserCommand {
 // SECTION-END
 
 type UserCommand struct {
-	Name         string
-	Description  string
-	Args         []string
-	OptionalArgs []string
+	Name             string
+	Description      string
+	NoImplementation bool
+	Args             []string
+	OptionalArgs     []string
 }
 
 func ParseCommandsSetting(setting interface{}) []UserCommand {
@@ -49,9 +51,10 @@ func ParseCommandsSetting(setting interface{}) []UserCommand {
 
 func (c UserCommand) ApiName() string      { return strcase.ToCamel(c.stripPath()) }
 func (c UserCommand) LowerApiName() string { return strcase.ToLowerCamel(c.stripPath()) }
-func (c UserCommand) UseName() string      { return strcase.ToKebab(path.Base(c.Name)) }
-func (c UserCommand) FileName() string     { return strcase.ToKebab(c.stripPath()) }
+func (c UserCommand) UseName() string      { return ToKebabEx(path.Base(c.Name)) }
+func (c UserCommand) FileName() string     { return ToKebabEx(c.stripPath()) }
 func (c UserCommand) HasArgs() bool        { return len(c.Args)+len(c.OptionalArgs) > 0 }
+func (c UserCommand) SplitPath() []string  { return strings.Split(ToKebabEx(c.Name), "/") }
 func (c UserCommand) ArgsValidator() string {
 	if len(c.Args) == 0 {
 		if len(c.OptionalArgs) == 0 {
@@ -68,3 +71,11 @@ func (c UserCommand) ArgsValidator() string {
 	}
 }
 func (c UserCommand) stripPath() string { return strings.ReplaceAll(c.Name, "/", " ") }
+
+var regExShish = regexp.MustCompile(`\-(\d+)`)
+
+func ToKebabEx(input string) string {
+	str := strcase.ToKebab(input)
+	// Strip out delimiters before numbers
+	return regExShish.ReplaceAllString(str, "$1")
+}
