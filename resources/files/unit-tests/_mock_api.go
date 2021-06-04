@@ -9,7 +9,7 @@ import (
 )
 
 type mockApi struct {
-	cmd    string
+	cmd    []string
 	config settings.Settings
 }
 type mockApiFactory mockApi
@@ -33,9 +33,11 @@ func (f mockApiFactory) Create() api.Runnable {
 }
 
 func registerMockApiFactories(c container.Container) {
-	{{- range .Commands}}
-	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{"{{.UseName}}",config}})
-	{{- end}}
+{{- range .Commands}}
+{{- if not .NoImplementation}}
+	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{[]string{ {{- commaList (quoted .SplitPath) -}} } ,config}})
+{{- end}}
+{{- end}}
 }
 
 

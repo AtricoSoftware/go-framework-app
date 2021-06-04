@@ -7,9 +7,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/atrico-go/container"
+	"github.com/atrico-go/core"
 	. "github.com/atrico-go/testing/assert"
 	"github.com/atrico-go/testing/is"
-
+	"github.com/atrico-go/testing/random"
+	"github.com/atrico-go/viperEx/v2"
+	"github.com/spf13/cobra"
 	"{{.RepositoryPath}}/cmd"
 	"{{.RepositoryPath}}/pkg"
 	"{{.RepositoryPath}}/settings"
@@ -35,15 +39,18 @@ var Option{{.NameCode}} = OptionSet {
 // Test cases
 // ----------------------------------------------------------------------------------------------------------------------------
 type CmdlineTestCase struct {
-	Command string
+	Command []string
+	Args    []string
 	Options []Option
 }
 var CmdlineTestCases = []CmdlineTestCase{
-{{- range .Commands}}{{- $cmdName := .Name}}{{- $useName := .UseName}}
+{{- range .Commands}}{{- if not .NoImplementation}}
+{{- $cmdName := .Name}}{{- $useName := commaList (quoted .SplitPath)}}{{- $args := concat .Args .OptionalArgs}}
 {{- range $.UserSettings}}{{$settingName := .NameCode}}
 {{- if and (.AppliesToCmdOrRoot $cmdName) (or (ne .Cmdline "") (ne .CmdlineShortcut ""))}}
 {{- range .OptionTestCaseNames}}
-	{Command: "{{$useName}}", Options: []Option {	Option{{$settingName}}["{{.}}"] }},
+	{Command: []string{ {{- $useName -}} }, Args: []string{ {{- commaList (quoted $args) -}} }, Options: []Option {	Option{{$settingName}}["{{.}}"] }},
+{{- end}}
 {{- end}}
 {{- end}}
 {{- end}}
@@ -66,8 +73,12 @@ func Test_CommandLine(t *testing.T) {
 	for _,testCase := range addUserTests(CmdlineTestCases) {
 		// Build command line and expectations
 		cmdline := strings.Builder{}
-		cmdline.WriteString(testCase.Command)
-		expected := NewMockSettings(testCase.Command)
+		cmdline.WriteString(strings.Join(testCase.Command, " "))
+		expected := NewMockSettings(testCase.Command, testCase.Args)
+		if len(testCase.Args) > 0 {
+			cmdline.WriteString(" ")
+			cmdline.WriteString(strings.Join(testCase.Args, " "))
+		}
 		for _, opt := range testCase.Options {
 			opt.Set()
 			cmdline.WriteString(" ")
@@ -91,7 +102,7 @@ func testCommandLineImpl(t *testing.T, cmdline string, expected MockSettings) {
 
 	// Assert
 	Assert(t).That(err, is.EqualTo(nil), "Error")
-	Assert(t).That(results["TheCommand"], is.EqualTo(expected.TheCommand), "Command")
+	Assert(t).That(results["TheCommand"], is.DeepEqualTo(expected.TheCommand), "Command")
 {{- range .UserSettings}}
 {{- if or (ne .Cmdline "") (ne .CmdlineShortcut "")}}
 	Assert(t).That(results["{{.NameCode}}"], is.DeepEqualTo(expected.{{.NameCode}}()), "{{.NameCode}}")

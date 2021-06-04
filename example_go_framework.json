@@ -34,7 +34,8 @@
     },
     {
       "Name": "test/sub2",
-      "Description": "Run sub command 2"
+      "Description": "Run sub command 2",
+      "NoImplementation": true
     },
     {
       "Name": "test/sub2/sub3",

@@ -9,12 +9,16 @@ import (
 {{- end}}
 	"github.com/spf13/cobra"
 
+{{- if not .Command.NoImplementation}}
 	"{{.RepositoryPath}}/api"
+{{- end}}
 {{- $write := false}}
+{{- if not .Command.NoImplementation}}
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd $.Command.Name}}
 	{{- $write = true}}
 	{{- end}}
+{{- end}}
 {{- end}}
 {{- if $write}}
 	"{{.RepositoryPath}}/settings"
@@ -24,13 +28,14 @@ import (
 type {{.Command.ApiName}}Cmd commandInfo
 
 func RegisterCmd{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func(apiFactory api.{{.Command.ApiName}}ApiFactory) {{.Command.ApiName}}Cmd { return {{.Command.ApiName}}Cmd(create{{.Command.ApiName}}Command(apiFactory)) })
+	c.Singleton(func({{ if not .Command.NoImplementation}}apiFactory api.{{.Command.ApiName}}ApiFactory{{end}}) {{.Command.ApiName}}Cmd { return {{.Command.ApiName}}Cmd(create{{.Command.ApiName}}Command({{ if not .Command.NoImplementation}}apiFactory{{end}})) })
 }
 
-func create{{.Command.ApiName}}Command(apiFactory api.Factory) commandInfo {
+func create{{.Command.ApiName}}Command({{ if not .Command.NoImplementation}}apiFactory api.Factory{{end}}) commandInfo {
 	cmd := &cobra.Command{
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
+{{- if not .Command.NoImplementation}}
 		Args: cobra.{{.Command.ArgsValidator}},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			theApi := apiFactory.Create()
@@ -44,6 +49,9 @@ func create{{.Command.ApiName}}Command(apiFactory api.Factory) commandInfo {
 	{{- if .AppliesToCmd $.Command.Name}}
 	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
 	{{- end}}
+{{- end}}
+{{- else}}
+	}
 {{- end}}
 	return commandInfo{cmd, "{{.Command.Name}}" }
 }
