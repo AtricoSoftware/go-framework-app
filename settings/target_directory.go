@@ -1,4 +1,4 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 // SECTION-START: Framework
 package settings
 
@@ -13,16 +13,12 @@ const targetDirectorySettingCmdline = "directory"
 const targetDirectorySettingShortcut = 'd'
 const targetDirectorySettingDefaultVal = "."
 
-// Cached value
-var targetDirectorySettingCache = NewCachedStringValue(func() string { return viper.GetString(targetDirectorySettingName) })
-
 // Fetch the setting
 func (theSettings) TargetDirectory() string {
-	return targetDirectorySettingCache.GetValue()
+	return viper.GetString(targetDirectorySettingName)
 }
 
 func AddTargetDirectoryFlag(flagSet *pflag.FlagSet) {
 	viperEx.StringSetting(targetDirectorySettingName, "Target directory").Cmdline(targetDirectorySettingCmdline).CmdlineShortcut(targetDirectorySettingShortcut).DefaultVal(targetDirectorySettingDefaultVal).AddTo(flagSet)
 }
-
 // SECTION-END

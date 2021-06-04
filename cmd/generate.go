@@ -1,10 +1,9 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 package cmd
 
 import (
 	"github.com/atrico-go/container"
 	"github.com/spf13/cobra"
-
 	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/settings"
 )
@@ -19,7 +18,7 @@ func createGenerateCommand(apiFactory api.Factory) commandInfo {
 	cmd := &cobra.Command{
 		Use:   "generate",
 		Short: "Generate framework app",
-		Args:  cobra.NoArgs,
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			theApi := apiFactory.Create()
 			return theApi.Run(args)
@@ -31,5 +30,5 @@ func createGenerateCommand(apiFactory api.Factory) commandInfo {
 	settings.AddApplicationSummaryFlag(cmd.PersistentFlags())
 	settings.AddApplicationDescriptionFlag(cmd.PersistentFlags())
 	settings.AddRepositoryPathFlag(cmd.PersistentFlags())
-	return commandInfo{cmd, "generate"}
+	return commandInfo{cmd, "generate" }
 }

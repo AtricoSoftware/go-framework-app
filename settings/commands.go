@@ -1,28 +1,23 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 // SECTION-START: Framework
 package settings
 
 import (
+	"github.com/spf13/viper"
 	"fmt"
 	"path"
 	"regexp"
 	"strings"
-
 	"github.com/iancoleman/strcase"
 	"github.com/mitchellh/mapstructure"
-	"github.com/spf13/viper"
 )
 
 const commandsSettingName = "Commands"
 
-// Cached value
-var commandsSettingCache = NewCachedUserCommandSliceValue(func() []UserCommand { return ParseCommandsSetting(viper.Get(commandsSettingName)) })
-
 // Fetch the setting
 func (theSettings) Commands() []UserCommand {
-	return commandsSettingCache.GetValue()
+	return ParseCommandsSetting(viper.Get(commandsSettingName))
 }
-
 // SECTION-END
 
 type UserCommand struct {

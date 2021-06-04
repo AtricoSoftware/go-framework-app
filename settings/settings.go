@@ -1,4 +1,4 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 package settings
 
 import "github.com/atrico-go/container"
@@ -27,19 +27,6 @@ type Settings interface {
 // Register the settings
 func RegisterSettings(c container.Container) {
 	c.Singleton(func() Settings { return theSettings{} })
-}
-
-// Force all settings to be recalculated on next request
-func ResetCaches() {
-	singleReadConfigurationSettingCache.Reset()
-	targetDirectorySettingCache.Reset()
-	applicationTitleSettingCache.Reset()
-	applicationNameSettingCache.Reset()
-	applicationSummarySettingCache.Reset()
-	applicationDescriptionSettingCache.Reset()
-	repositoryPathSettingCache.Reset()
-	commandsSettingCache.Reset()
-	userSettingsSettingCache.Reset()
 }
 
 // Stub object for settings interface

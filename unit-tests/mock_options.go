@@ -1,4 +1,4 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 package unit_tests
 
 import (
@@ -26,18 +26,18 @@ type OptionSetList []OptionSet
 
 func NewSimpleOption(option string, generator func() interface{}, modifier func(s *MockSettings, value interface{})) Option {
 	opt := simpleOption{
-		option:    option,
+		option: option,
 		generator: generator,
-		modifier:  modifier,
+		modifier: modifier,
 	}
 	return &opt
 }
 
 type simpleOption struct {
-	value     interface{}
-	option    string
+	value interface{}
+	option string
 	generator func() interface{}
-	modifier  func(s *MockSettings, value interface{})
+	modifier func(s *MockSettings, value interface{})
 }
 
 func (o *simpleOption) Set() {
@@ -58,15 +58,15 @@ func (o *simpleOption) ModifySettings(settings *MockSettings) {
 
 func NewBooleanOption(option string, modifier func(s *MockSettings)) Option {
 	opt := boolOption{
-		option:   option,
+		option: option,
 		modifier: modifier,
 	}
 	return &opt
 }
 
 type boolOption struct {
-	value    bool
-	option   string
+	value bool
+	option string
 	modifier func(s *MockSettings)
 }
 
@@ -88,18 +88,18 @@ func (o *boolOption) ModifySettings(settings *MockSettings) {
 
 func NewSliceOption(option string, generator func() interface{}, modifier func(s *MockSettings, value interface{})) Option {
 	opt := sliceOption{
-		option:    option,
+		option: option,
 		generator: generator,
-		modifier:  modifier,
+		modifier: modifier,
 	}
 	return &opt
 }
 
 type sliceOption struct {
-	value     []interface{}
-	option    string
+	value []interface{}
+	option string
 	generator func() interface{}
-	modifier  func(s *MockSettings, value interface{})
+	modifier func(s *MockSettings, value interface{})
 }
 
 func (o *sliceOption) Set() {
@@ -107,13 +107,15 @@ func (o *sliceOption) Set() {
 }
 
 func (o *sliceOption) Cmdline() string {
-	cmdline := strings.Builder{}
-	for _, item := range o.value {
-		cmdline.WriteString(fmt.Sprintf("%s %v ", o.option, item))
+	items:= make([]string, len(o.value))
+	for i,item := range o.value {
+		items[i] = fmt.Sprintf("%s %v", o.option, item)
 	}
-	return cmdline.String()
+	return strings.Join(items, " ")
 }
 
 func (o *sliceOption) ModifySettings(settings *MockSettings) {
 	o.modifier(settings, o.value)
 }
+
+

@@ -63,6 +63,13 @@ func (theSettings) {{.Setting.NameCode}}() {{.Setting.Type}} {
 func Add{{.Setting.NameCode}}Flag(flagSet *pflag.FlagSet) {
 	{{.Setting.TypeFlagAdder}}({{$settingVarName}}, "{{.Setting.Description}}"){{if (ne .Setting.Cmdline "")}}.Cmdline({{$cmdlineVarName}}){{end}}{{if (ne .Setting.CmdlineShortcut "")}}.CmdlineShortcut({{$shortcutVarName}}){{end}}{{if (ne .Setting.EnvVar "")}}.EnvVar({{$envVarName}}){{end}}{{if (ne .Setting.DefaultVal "")}}.DefaultVal({{$defaultVarName}}){{end}}.AddTo(flagSet)
 }
+{{- else}}
+{{- if (ne .Setting.DefaultVal "")}}
+
+func init() {
+	viper.SetDefault({{$settingVarName}}, {{$defaultVarName}})
+}
+{{- end}}
 {{- end}}
 // SECTION-END
 {{- if (eq .Setting.TypeGetter "")}}

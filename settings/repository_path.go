@@ -1,4 +1,4 @@
-// Generated 2021-06-03 14:15:48 by go-framework v1.17.0
+// Generated 2021-06-04 15:53:11 by go-framework development-version
 // SECTION-START: Framework
 package settings
 
@@ -12,16 +12,12 @@ const repositoryPathSettingName = "Application.Repository"
 const repositoryPathSettingCmdline = "repository"
 const repositoryPathSettingShortcut = 'r'
 
-// Cached value
-var repositoryPathSettingCache = NewCachedStringValue(func() string { return viper.GetString(repositoryPathSettingName) })
-
 // Fetch the setting
 func (theSettings) RepositoryPath() string {
-	return repositoryPathSettingCache.GetValue()
+	return viper.GetString(repositoryPathSettingName)
 }
 
 func AddRepositoryPathFlag(flagSet *pflag.FlagSet) {
 	viperEx.StringSetting(repositoryPathSettingName, "Path to repository").Cmdline(repositoryPathSettingCmdline).CmdlineShortcut(repositoryPathSettingShortcut).AddTo(flagSet)
 }
-
 // SECTION-END
