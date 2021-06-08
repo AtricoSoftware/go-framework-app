@@ -5,7 +5,8 @@ import "github.com/atrico-go/container"
 
 type Settings interface {
 	// Cmd line arguments
-	Argument(name string) (value string, ok bool)
+	GetArgument(name string) (value string, ok bool)
+	MustGetArgument(name string) (value string)
 {{- range .UserSettings}}
 	// {{.Description}}
 	{{.NameCode}}() {{.Type}}
@@ -41,7 +42,14 @@ func (s *theSettings) SetArgs(args map[string]string) {
 	s.args = args
 }
 
-func (s theSettings) Argument(name string) (value string, ok bool) {
+func (s theSettings) GetArgument(name string) (value string, ok bool) {
 	value, ok = s.args[name]
 	return value, ok
+}
+
+func (s theSettings) MustGetArgument(name string) string {
+	if value, ok := s.GetArgument("game"); ok {
+		return value
+	}
+	panic(fmt.Sprintf("'%s' argument not found", name))
 }
