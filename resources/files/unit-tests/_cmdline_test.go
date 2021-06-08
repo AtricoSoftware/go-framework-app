@@ -43,6 +43,7 @@ type CmdlineTestCase struct {
 	Args    []string
 	Options []Option
 }
+
 var CmdlineTestCases = []CmdlineTestCase{
 {{- range .Commands}}{{- if not .NoImplementation}}
 {{- $cmdName := .Name}}{{- $useName := commaList (quoted .SplitPath)}}{{- $args := concat .Args .OptionalArgs}}
@@ -60,8 +61,8 @@ var CmdlineTestCases = []CmdlineTestCase{
 // SECTION-END
 
 func addUserTests(tests []CmdlineTestCase) []CmdlineTestCase{
-// Append extra tests here
-return tests
+	// Append extra tests here
+	return tests
 }
 
 // SECTION-START: Test
@@ -75,9 +76,9 @@ func Test_CommandLine(t *testing.T) {
 		cmdline := strings.Builder{}
 		cmdline.WriteString(strings.Join(testCase.Command, " "))
 		expected := NewMockSettings(testCase.Command, testCase.Args)
-		if len(testCase.Args) > 0 {
+		for _,arg := range testCase.Args {
 			cmdline.WriteString(" ")
-			cmdline.WriteString(strings.Join(testCase.Args, " "))
+			cmdline.WriteString(arg)
 		}
 		for _, opt := range testCase.Options {
 			opt.Set()
@@ -103,6 +104,7 @@ func testCommandLineImpl(t *testing.T, cmdline string, expected MockSettings) {
 	// Assert
 	Assert(t).That(err, is.EqualTo(nil), "Error")
 	Assert(t).That(results["TheCommand"], is.DeepEqualTo(expected.TheCommand), "Command")
+	Assert(t).That(results["Args"], is.DeepEqualTo(expected.TheArgs), "Args")
 {{- range .UserSettings}}
 {{- if or (ne .Cmdline "") (ne .CmdlineShortcut "")}}
 	Assert(t).That(results["{{.NameCode}}"], is.DeepEqualTo(expected.{{.NameCode}}()), "{{.NameCode}}")

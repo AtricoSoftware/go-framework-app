@@ -38,8 +38,8 @@ func create{{.Command.ApiName}}Command({{ if not .Command.NoImplementation}}apiF
 {{- if not .Command.NoImplementation}}
 		Args: cobra.{{.Command.ArgsValidator}},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			theApi := apiFactory.Create()
-			return theApi.Run(args)
+			theApi := apiFactory.Create(args)
+			return theApi.Run()
 		},
 	}
 {{- if .Command.HasArgs}}

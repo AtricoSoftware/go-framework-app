@@ -7,7 +7,7 @@ import (
 
 type MockSettings struct {
 	TheCommand	[]string
-	Args        []string
+	TheArgs	[]string
 {{- range .UserSettings}}
 	{{.NameCode}}Var {{.QualifiedType}}
 {{- end}}
@@ -21,7 +21,7 @@ func (s MockSettings) {{.NameCode}}() {{.QualifiedType}} {
 func NewMockSettings(cmd []string, args []string) MockSettings {
 	return MockSettings{
 		TheCommand: cmd,
-		Args: args,
+		TheArgs: args,
 {{- range .UserSettings}}
 {{- if (ne .DefaultVal "")}}
 		{{.NameCode}}Var: {{if (eq .Type "string")}}"{{end}}{{.DefaultVal}}{{if (eq .Type "string")}}"{{end}},
