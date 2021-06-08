@@ -10,32 +10,34 @@ import (
 
 type mockApi struct {
 	cmd    []string
+	args   []string
 	config settings.Settings
 }
 type mockApiFactory mockApi
 
 var results map[string]interface{}
 
-func (m mockApi) Run(args []string) error {
+func (m mockApi) Run() error {
 	results = make(map[string]interface{})
 	results["TheCommand"] = m.cmd
+	results["Args"] = m.args
 	{{- range .UserSettings}}
 	{{- if or (ne .Cmdline "") (ne .CmdlineShortcut "")}}
 	results["{{.NameCode}}"] = m.config.{{.NameCode}}()
 	{{- end}}
 	{{- end}}
-	results["Args"] = args
 	return nil
 }
 
-func (f mockApiFactory) Create() api.Runnable {
+func (f mockApiFactory) Create(args []string) api.Runnable {
+	f.args = args
 	return mockApi(f)
 }
 
 func registerMockApiFactories(c container.Container) {
 {{- range .Commands}}
 {{- if not .NoImplementation}}
-	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{[]string{ {{- commaList (quoted .SplitPath) -}} } ,config}})
+	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{[]string{ {{- commaList (quoted .SplitPath) -}} }, nil, config}})
 {{- end}}
 {{- end}}
 }

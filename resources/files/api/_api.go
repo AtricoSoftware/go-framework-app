@@ -6,11 +6,11 @@ import (
 )
 
 type Runnable interface {
-	Run(args []string) error
+	Run() error
 }
 
 type Factory interface {
-	Create() Runnable
+	Create(args []string) Runnable
 }
 
 func RegisterApiFactories(c container.Container) {

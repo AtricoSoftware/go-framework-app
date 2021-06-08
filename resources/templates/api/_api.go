@@ -16,8 +16,19 @@ type {{.Command.LowerApiName}}ApiFactory struct {
 	container.Container
 }
 
-func (f {{.Command.LowerApiName}}ApiFactory) Create() Runnable {
+func (f {{.Command.LowerApiName}}ApiFactory) Create(args []string) Runnable {
 	RegisterApi{{.Command.ApiName}}(f.Container)
+{{- if .Command.HasArgs}}
+	theArgs := make(map[string]string)
+	for i, arg := range []string{ {{- commaList (quoted (concat .Command.Args .Command.OptionalArgs)) -}} } {
+		if i < len(args) {
+			theArgs[arg] = args[i]
+		}
+	}
+	var addArgs settings.SetArgs
+	f.Container.Make(&addArgs)
+	addArgs.SetArgs(theArgs)
+{{- end}}
 	var theApi {{.Command.ApiName}}Api
 	f.Container.Make(&theApi)
 	return theApi
@@ -33,7 +44,7 @@ type {{.Command.LowerApiName}}Api struct {
 }
 
 // {{.Command.Description}}
-func (svc {{.Command.LowerApiName}}Api) Run(args []string) error {
+func (svc {{.Command.LowerApiName}}Api) Run() error {
 	// Implementation here!
 	return nil
 }
