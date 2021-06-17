@@ -12,7 +12,11 @@ func (f fileWriter) CreateTemplateValues() TemplateValues {
 	values := make(TemplateValues, numMethods)
 	for i := 0; i < numMethods; i++ {
 		method := t.Method(i)
-		values[method.Name] = reflect.ValueOf(f.config).MethodByName(method.Name).Call([]reflect.Value{})[0].Interface()
+		// Skip argument functions
+		if method.Name != "GetArgument" && method.Name != "MustGetArgument" && method.Name != "SetArgs" {
+
+			values[method.Name] = reflect.ValueOf(f.config).MethodByName(method.Name).Call([]reflect.Value{})[0].Interface()
+		}
 	}
 	// Add comment string/backup suffix to values
 	values["Comment"] = f.fileComment()

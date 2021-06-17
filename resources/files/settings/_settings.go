@@ -1,7 +1,11 @@
 // {{.Comment}}
 package settings
 
-import "github.com/atrico-go/container"
+import (
+	"fmt"
+
+	"github.com/atrico-go/container"
+)
 
 type Settings interface {
 	// Cmd line arguments

@@ -32,6 +32,9 @@ func createRootCommand() *cobra.Command {
 	}
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
 	cmd.PersistentFlags().BoolVarP(&api.VerboseFlag, "verbose", "", false, "More output")
+{{- if .IncludeDryRun}}
+	cmd.PersistentFlags().BoolVarP(&api.DryRun, "dry-run", "", false, "Dry run, take no action")
+{{- end }}
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd "root"}}
 	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())

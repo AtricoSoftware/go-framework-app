@@ -1,4 +1,4 @@
-// Generated 2021-06-04 15:53:11 by go-framework development-version
+// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
 package unit_tests
 
 import (
@@ -6,20 +6,25 @@ import (
 )
 
 type MockSettings struct {
-	TheCommand	[]string
-	Args        []string
+	TheCommand                 []string
+	TheArgs                    []string
 	SingleReadConfigurationVar bool
-	TargetDirectoryVar string
-	ApplicationTitleVar string
-	ApplicationNameVar string
-	ApplicationSummaryVar string
-	ApplicationDescriptionVar string
-	RepositoryPathVar string
-	CommandsVar []settings.UserCommand
-	UserSettingsVar []settings.UserSetting
+	IncludeDryRunVar           bool
+	TargetDirectoryVar         string
+	ApplicationTitleVar        string
+	ApplicationNameVar         string
+	ApplicationSummaryVar      string
+	ApplicationDescriptionVar  string
+	RepositoryPathVar          string
+	CommandsVar                []settings.UserCommand
+	UserSettingsVar            []settings.UserSetting
 }
+
 func (s MockSettings) SingleReadConfiguration() bool {
 	return s.SingleReadConfigurationVar
+}
+func (s MockSettings) IncludeDryRun() bool {
+	return s.IncludeDryRunVar
 }
 func (s MockSettings) TargetDirectory() string {
 	return s.TargetDirectoryVar
@@ -48,11 +53,12 @@ func (s MockSettings) UserSettings() []settings.UserSetting {
 
 func NewMockSettings(cmd []string, args []string) MockSettings {
 	return MockSettings{
-		TheCommand: cmd,
-		Args: args,
+		TheCommand:                 cmd,
+		TheArgs:                    args,
 		SingleReadConfigurationVar: true,
-		TargetDirectoryVar: ".",
-		CommandsVar: make([]settings.UserCommand, 0),
-		UserSettingsVar: make([]settings.UserSetting, 0),
+		IncludeDryRunVar:           true,
+		TargetDirectoryVar:         ".",
+		CommandsVar:                make([]settings.UserCommand, 0),
+		UserSettingsVar:            make([]settings.UserSetting, 0),
 	}
 }

@@ -4,6 +4,10 @@ package api
 import (
 	"github.com/atrico-go/container"
 )
+{{- if .IncludeDryRun}}
+
+var DryRun bool
+{{- end }}
 
 type Runnable interface {
 	Run() error
@@ -20,3 +24,4 @@ func RegisterApiFactories(c container.Container) {
 {{- end}}
 {{- end}}
 }
+

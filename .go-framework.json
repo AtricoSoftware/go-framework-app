@@ -1,4 +1,8 @@
 {
+  "Config": {
+    "SingleReadConfig": "true",
+    "IncludeDryRun": "false"
+  },
   "Application": {
     "Title": "Go app framework generator",
     "Name": "go-framework",
@@ -17,6 +21,16 @@
       "Name": "Single read configuration",
       "Id": "Config.SingleReadConfig",
       "Description": "Configuration is only read once (at startup)",
+      "Type": "bool",
+      "DefaultVal": "true",
+      "AppliesTo": [
+        "root"
+      ]
+    },
+    {
+      "Name": "Include dry run",
+      "Id": "Config.IncludeDryRun",
+      "Description": "Dry run flag used",
       "Type": "bool",
       "DefaultVal": "true",
       "AppliesTo": [

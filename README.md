@@ -1,4 +1,4 @@
-[comment]: <> ( Generated 2021-06-04 15:53:11 by go-framework development-version )
+[comment]: <> ( Generated 2021-06-17 17:07:26 by go-framework v1.20.0 )
 
 # Go app framework generator
 
@@ -28,6 +28,7 @@ TODO: Describe and show how to build your code and run the tests.
 | Setting | Config file | Cmdline | Default Val | Applies to | Description |
 | :------ | :---------- | :------ | :---------- | :--------- | :---------- |
 | Single read configuration (bool) | Config.SingleReadConfig |  | true | all | Configuration is only read once (at startup) |
+| Include dry run (bool) | Config.IncludeDryRun |  | true | all | Dry run flag used |
 | Target directory (string) | Config.TargetDirectory | -d, --directory | . | generate | Target directory |
 | Application title (string) | Application.Title | -t, --title |  | generate | Name of application |
 | Application name (string) | Application.Name | -n, --name |  | generate | Name of application |

@@ -1,17 +1,18 @@
-// Generated 2021-06-04 15:53:11 by go-framework development-version
+// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
 // SECTION-START: Framework
 package api
 
 import (
-	"github.com/atrico-go/container"
-	"github.com/AtricoSoftware/go-framework-app/settings"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
+
 	"github.com/AtricoSoftware/go-framework-app/api/file_writer"
 	"github.com/AtricoSoftware/go-framework-app/resources"
+	"github.com/AtricoSoftware/go-framework-app/settings"
+	"github.com/atrico-go/container"
 	"github.com/spf13/viper"
 )
 
@@ -22,12 +23,13 @@ type generateApiFactory struct {
 	container.Container
 }
 
-func (f generateApiFactory) Create() Runnable {
+func (f generateApiFactory) Create(args []string) Runnable {
 	RegisterApiGenerate(f.Container)
 	var theApi GenerateApi
 	f.Container.Make(&theApi)
 	return theApi
 }
+
 // SECTION-END
 
 func RegisterApiGenerate(c container.Container) {
@@ -43,7 +45,7 @@ type generateApi struct {
 }
 
 // Generate framework app
-func (svc generateApi) Run(args []string) error {
+func (svc generateApi) Run() error {
 	validateMandatorySetting(svc.config.ApplicationName(), "Application name")
 	validateMandatorySetting(svc.config.RepositoryPath(), "Repository path")
 	// Ensure target folder exists
