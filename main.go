@@ -1,14 +1,14 @@
-// Generated 2021-06-04 15:53:11 by go-framework development-version
+// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
 package main
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/atrico-go/container"
 	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/cmd"
 	"github.com/AtricoSoftware/go-framework-app/settings"
+	"github.com/atrico-go/container"
 )
 
 func main() {

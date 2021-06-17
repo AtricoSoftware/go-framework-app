@@ -1,6 +1,7 @@
 {
   "Config": {
-    "SingleReadConfig": "true"
+    "SingleReadConfig": "true",
+    "IncludeDryRun": "true"
   },
   "Application": {
     "Title": "Test App",

@@ -1,4 +1,4 @@
-// Generated 2021-06-04 15:53:11 by go-framework development-version
+// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
 // SECTION-START: Framework
 package settings
 
@@ -11,12 +11,16 @@ import (
 const applicationDescriptionSettingName = "Application.Description"
 const applicationDescriptionSettingCmdline = "description"
 
+// Cached value
+var applicationDescriptionSettingCache = NewCachedStringValue(func() string { return viper.GetString(applicationDescriptionSettingName) })
+
 // Fetch the setting
 func (theSettings) ApplicationDescription() string {
-	return viper.GetString(applicationDescriptionSettingName)
+	return applicationDescriptionSettingCache.GetValue()
 }
 
 func AddApplicationDescriptionFlag(flagSet *pflag.FlagSet) {
 	viperEx.StringSetting(applicationDescriptionSettingName, "Description of application").Cmdline(applicationDescriptionSettingCmdline).AddTo(flagSet)
 }
+
 // SECTION-END
