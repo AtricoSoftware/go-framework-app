@@ -14,7 +14,6 @@ func (f fileWriter) CreateTemplateValues() TemplateValues {
 		method := t.Method(i)
 		// Skip argument functions
 		if method.Name != "GetArgument" && method.Name != "MustGetArgument" && method.Name != "SetArgs" {
-
 			values[method.Name] = reflect.ValueOf(f.config).MethodByName(method.Name).Call([]reflect.Value{})[0].Interface()
 		}
 	}

@@ -107,7 +107,7 @@ var fileFooter = `
 }`
 
 func createTemplateInit(fileTemplateType file_writer.FileTemplateType, path string, content string) string {
-	return fmt.Sprintf("file_writer.FileTemplate{FileTemplateType: file_writer.%s, Path: `%s`,MainFile: template.Must(template.New(`mainFile`).Funcs(FuncMap).Parse(`%s`))}", fileTemplateType.String(), path, content)
+	return fmt.Sprintf("file_writer.FileTemplate{FileTemplateType: file_writer.%s, Path: `%s`,MainFile: template.Must(template.New(`%s`).Funcs(FuncMap).Parse(`%s`))}", fileTemplateType.String(), path, path, content)
 
 }
 
