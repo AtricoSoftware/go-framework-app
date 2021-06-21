@@ -1,12 +1,19 @@
 package settings
 
 func generateExtraSettings() (extra []UserSetting) {
-	// Verbose
-	extra = append(extra, verboseSetting)
-
-	return extra
+	// Config file, Verbose
+	return append(extra, configSetting, verboseSetting)
 }
 
+var configSetting = UserSetting{
+	Name:                 "ConfigFile",
+	Id:                   "ConfigFile",
+	Description:          "Alternate config file",
+	Type:                 "string",
+	Cmdline:              "config",
+	AppliesTo:            []string{"root"},
+	optionTestCaseValues: emptyTcValues(),
+}
 var verboseSetting = UserSetting{
 	Name:                 "Verbose",
 	Id:                   "Verbose",
@@ -18,3 +25,5 @@ var verboseSetting = UserSetting{
 	AppliesTo:            []string{"root"},
 	optionTestCaseValues: emptyTcValues(),
 }
+
+
