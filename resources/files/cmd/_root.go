@@ -30,7 +30,6 @@ func createRootCommand() *cobra.Command {
 		Short: pkg.Summary,
 		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
 	}
-	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
 {{- if .IncludeDryRun}}
 	cmd.PersistentFlags().BoolVarP(&api.DryRun, "dry-run", "", false, "Dry run, take no action")
 {{- end }}
@@ -42,11 +41,11 @@ func createRootCommand() *cobra.Command {
 	return cmd
 }
 
-var cfgFile string
 
 func initConfig() {
 	var err error
 	// Config file
+	cfgFile := viper.GetString("ConfigFile")
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -79,7 +78,7 @@ func tryReadConfig(getDir func() (dir string, err error)) error {
 	var dir string
 	if dir,err = getDir(); err == nil {
 		viper.AddConfigPath(dir)
-		err := viper.ReadInConfig()
+		err = viper.ReadInConfig()
 		if err == nil {
 			verbosePrintln("Using config file:", viper.ConfigFileUsed())
 		}
