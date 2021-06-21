@@ -6,8 +6,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-
-	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/pkg"
 )
 
@@ -16,38 +14,34 @@ func createVersionCommand() *cobra.Command {
 		Use:   "version",
 		Short: "Shows version",
 		Run: func(*cobra.Command, []string) {
-			showVersion(api.VerboseFlag)
+			showVersion()
 		},
 	}
 	return cmd
 }
 
-func showVersion(fullVersion bool) {
-	if fullVersion {
-		fmt.Println(pkg.Name)
-		fmt.Println(pkg.Description)
-	}
+func showVersion() {
+	verbosePrintln(pkg.Name)
+	verbosePrintln(pkg.Description)
 	fmt.Println(pkg.Version)
-	if fullVersion {
-		fmt.Println()
-		var details map[string]interface{}
-		if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
-			fmt.Println("Details")
-			fmt.Println("-------")
-			displaySection(details, "")
-		}
+	verbosePrintln()
+	var details map[string]interface{}
+	if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
+		verbosePrintln("Details")
+		verbosePrintln("-------")
+		displaySection(details, "")
 	}
 }
 
 func displaySection(section map[string]interface{}, indent string) {
 	for k, v := range section {
-		fmt.Printf("%s%s:", indent, k)
+		verbosePrintf("%s%s:", indent, k)
 		switch v.(type) {
 		case map[string]interface{}:
-			fmt.Println()
+			verbosePrintln()
 			displaySection(v.(map[string]interface{}), indent+"  ")
 		default:
-			fmt.Printf(" %s\n", v)
+			verbosePrintln(" ",v)
 		}
 	}
 }

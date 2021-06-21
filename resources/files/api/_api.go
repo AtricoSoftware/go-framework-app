@@ -20,6 +20,7 @@ type Factory interface {
 func RegisterApiFactories(c container.Container) {
 {{- range .Commands}}
 {{- if not .NoImplementation}}
+	RegisterVerboseService(c)
 	c.Singleton(func() {{.ApiName}}ApiFactory { return {{.LowerApiName}}ApiFactory{c} })
 {{- end}}
 {{- end}}

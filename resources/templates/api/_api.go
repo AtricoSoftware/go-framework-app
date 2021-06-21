@@ -36,11 +36,12 @@ func (f {{.Command.LowerApiName}}ApiFactory) Create(args []string) Runnable {
 // SECTION-END
 
 func RegisterApi{{.Command.ApiName}}(c container.Container) {
-	c.Singleton(func(config settings.Settings) {{.Command.ApiName}}Api {return {{.Command.LowerApiName}}Api{config}})
+	c.Singleton(func(config settings.Settings, verboseService VerboseService) {{.Command.ApiName}}Api {return {{.Command.LowerApiName}}Api{config, verboseService}})
 }
 
 type {{.Command.LowerApiName}}Api struct {
 	settings.Settings
+	VerboseService
 }
 
 // {{.Command.Description}}

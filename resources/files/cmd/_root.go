@@ -31,7 +31,6 @@ func createRootCommand() *cobra.Command {
 		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
 	}
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
-	cmd.PersistentFlags().BoolVarP(&api.VerboseFlag, "verbose", "", false, "More output")
 {{- if .IncludeDryRun}}
 	cmd.PersistentFlags().BoolVarP(&api.DryRun, "dry-run", "", false, "Dry run, take no action")
 {{- end }}
@@ -82,8 +81,23 @@ func tryReadConfig(getDir func() (dir string, err error)) error {
 		viper.AddConfigPath(dir)
 		err := viper.ReadInConfig()
 		if err == nil {
-			api.VerbosePrintln("Using config file:", viper.ConfigFileUsed())
+			verbosePrintln("Using config file:", viper.ConfigFileUsed())
 		}
 	}
 	return err
+}
+
+func verbosePrintln(a ...interface{}) (n int, err error) {
+	if viper.GetBool("Verbose") {
+		return fmt.Println(a...)
+	} else {
+		return 0, nil
+	}
+}
+func verbosePrintf(format string, a ...interface{}) (n int, err error) {
+	if viper.GetBool("Verbose") {
+		return fmt.Printf(format, a...)
+	} else {
+		return 0, nil
+	}
 }

@@ -45,7 +45,7 @@ func ParseUserSettingsSetting(setting interface{}) []UserSetting {
 	if setting == nil {
 		emptyTCValues := make([]map[string]string, 0)
 		return []UserSetting{
-			UserSetting{
+			{
 				Name:                 "Example", // Name of setting - used in const
 				Id:                   "example", // viper ID, dotted values form groups
 				Description:          "Add your own settings here",
@@ -61,12 +61,17 @@ func ParseUserSettingsSetting(setting interface{}) []UserSetting {
 	results := make([]UserSetting, len(setting.([]interface{})))
 	for i, item := range setting.([]interface{}) {
 		mapstructure.Decode(item, &(results[i]))
-		emptyTCValues := make([]map[string]string, 0)
-		results[i].optionTestCaseValues = &emptyTCValues
+		results[i].optionTestCaseValues = emptyTcValues()
 		results[i].appliesToRootOnly()
 	}
-
+	// Add extra settings
+	results = append(results, generateExtraSettings()...)
 	return results
+}
+
+func emptyTcValues() *[]map[string]string{
+	emptyTCValues := make([]map[string]string, 0)
+	return &emptyTCValues
 }
 
 type typeDetails struct {
@@ -305,3 +310,4 @@ func mapCombinations(existing []map[string]string, additions []map[string]string
 	}
 	return newMaps
 }
+
