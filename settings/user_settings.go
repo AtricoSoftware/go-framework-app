@@ -69,7 +69,7 @@ func ParseUserSettingsSetting(setting interface{}) []UserSetting {
 	return results
 }
 
-func emptyTcValues() *[]map[string]string{
+func emptyTcValues() *[]map[string]string {
 	emptyTCValues := make([]map[string]string, 0)
 	return &emptyTCValues
 }
@@ -87,8 +87,9 @@ var typeInfo = map[string]typeDetails{
 }
 
 func (u *UserSetting) appliesToRootOnly() {
+	// If nil or empty, set to root
 	// If contains root, remove others
-	if len(u.AppliesTo) > 1 && sliceContains(u.AppliesTo, "root") {
+	if u.AppliesTo == nil || len(u.AppliesTo) == 0 || (len(u.AppliesTo) > 1 && sliceContains(u.AppliesTo, "root")) {
 		u.AppliesTo = []string{"root"}
 	}
 }
@@ -310,4 +311,3 @@ func mapCombinations(existing []map[string]string, additions []map[string]string
 	}
 	return newMaps
 }
-
