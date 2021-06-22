@@ -49,11 +49,8 @@
       "Id": "nocmdline",
       "Description": "Setting with no cmd line component",
       "Type": "string",
-      "DefaultVal": "default_sub1",
-      "AppliesTo": [
-        "root"
-      ]
-    },
+      "DefaultVal": "default_sub1"
+     },
     {
       "Name": "First sub entry",
       "Id": "group.sub1",
