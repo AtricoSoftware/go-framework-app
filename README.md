@@ -1,4 +1,4 @@
-[comment]: <> ( Generated 2021-06-17 17:07:26 by go-framework v1.20.0 )
+[comment]: <> ( Generated 2021-06-23 15:07:34 by go-framework v1.21.0 )
 
 # Go app framework generator
 
@@ -27,8 +27,7 @@ TODO: Describe and show how to build your code and run the tests.
 
 | Setting | Config file | Cmdline | Default Val | Applies to | Description |
 | :------ | :---------- | :------ | :---------- | :--------- | :---------- |
-| Single read configuration (bool) | Config.SingleReadConfig |  | true | all | Configuration is only read once (at startup) |
-| Include dry run (bool) | Config.IncludeDryRun |  | true | all | Dry run flag used |
+| Single read configuration (bool) | Config.SingleReadConfig |  | true | generate | Configuration is only read once (at startup) |
 | Target directory (string) | Config.TargetDirectory | -d, --directory | . | generate | Target directory |
 | Application title (string) | Application.Title | -t, --title |  | generate | Name of application |
 | Application name (string) | Application.Name | -n, --name |  | generate | Name of application |
@@ -37,6 +36,9 @@ TODO: Describe and show how to build your code and run the tests.
 | RepositoryPath (string) | Application.Repository | -r, --repository |  | generate | Path to repository |
 | Commands ([]UserCommand) | Commands |  |  | generate | Commands to add |
 | UserSettings ([]UserSetting) | UserSettings |  |  | generate | Settings to add |
+| Skeleton Files ([]string) | SkeletonFiles | -s, --skeleton |  | generate, list/skeletons | File(s) with skeleton definitions |
+| ConfigFile (string) | ConfigFile | --config-file |  | all | Alternate config file |
+| Verbose (bool) | Verbose | -v, --verbose |  | all | Generate more detailed output |
 
 <details>
   <summary>Further details</summary>

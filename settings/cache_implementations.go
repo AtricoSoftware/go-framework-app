@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package settings
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -60,6 +60,37 @@ func (v *cachedStringValue) GetValue() string {
 }
 
 func (v *cachedStringValue) Reset() {
+	v.hasValue = false
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------
+// StringSlice
+// ----------------------------------------------------------------------------------------------------------------------------
+type CachedStringSliceValue interface {
+	GetValue() []string
+	Reset()
+}
+
+func NewCachedStringSliceValue(creator func() []string) CachedStringSliceValue {
+	cv := cachedStringSliceValue{creator: creator}
+	return &cv
+}
+
+type cachedStringSliceValue struct {
+	theValue []string
+	creator  func() []string
+	hasValue bool
+}
+
+func (v *cachedStringSliceValue) GetValue() []string {
+	if !v.hasValue {
+		v.theValue = v.creator()
+		v.hasValue = true
+	}
+	return v.theValue
+}
+
+func (v *cachedStringSliceValue) Reset() {
 	v.hasValue = false
 }
 

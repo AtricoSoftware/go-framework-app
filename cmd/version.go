@@ -1,14 +1,13 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package cmd
 
 import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/spf13/cobra"
-
-	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/pkg"
+	"github.com/AtricoSoftware/go-framework-app/settings"
+	"github.com/spf13/cobra"
 )
 
 func createVersionCommand() *cobra.Command {
@@ -16,38 +15,35 @@ func createVersionCommand() *cobra.Command {
 		Use:   "version",
 		Short: "Shows version",
 		Run: func(*cobra.Command, []string) {
-			showVersion(api.VerboseFlag)
+			showVersion()
 		},
 	}
 	return cmd
 }
 
-func showVersion(fullVersion bool) {
-	if fullVersion {
-		fmt.Println(pkg.Name)
-		fmt.Println(pkg.Description)
-	}
+func showVersion() {
+	verboseService := settings.GetVerboseService()
+	verboseService.VerbosePrintln(pkg.Name)
+	verboseService.VerbosePrintln(pkg.Description)
 	fmt.Println(pkg.Version)
-	if fullVersion {
-		fmt.Println()
-		var details map[string]interface{}
-		if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
-			fmt.Println("Details")
-			fmt.Println("-------")
-			displaySection(details, "")
-		}
+	verboseService.VerbosePrintln()
+	var details map[string]interface{}
+	if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
+		verboseService.VerbosePrintln("Details")
+		verboseService.VerbosePrintln("-------")
+		displaySection(details, "", verboseService)
 	}
 }
 
-func displaySection(section map[string]interface{}, indent string) {
+func displaySection(section map[string]interface{}, indent string, verboseService settings.VerboseService) {
 	for k, v := range section {
-		fmt.Printf("%s%s:", indent, k)
+		verboseService.VerbosePrintf("%s%s:", indent, k)
 		switch v.(type) {
 		case map[string]interface{}:
-			fmt.Println()
-			displaySection(v.(map[string]interface{}), indent+"  ")
+			verboseService.VerbosePrintln()
+			displaySection(v.(map[string]interface{}), indent+"  ", verboseService)
 		default:
-			fmt.Printf(" %s\n", v)
+			verboseService.VerbosePrintln(" ", v)
 		}
 	}
 }

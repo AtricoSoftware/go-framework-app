@@ -7,6 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"{{.RepositoryPath}}/pkg"
+	"{{.RepositoryPath}}/settings"
 )
 
 func createVersionCommand() *cobra.Command {
@@ -21,27 +22,28 @@ func createVersionCommand() *cobra.Command {
 }
 
 func showVersion() {
-	verbosePrintln(pkg.Name)
-	verbosePrintln(pkg.Description)
+	verboseService := settings.GetVerboseService()
+	verboseService.VerbosePrintln(pkg.Name)
+	verboseService.VerbosePrintln(pkg.Description)
 	fmt.Println(pkg.Version)
-	verbosePrintln()
+	verboseService.VerbosePrintln()
 	var details map[string]interface{}
 	if err := json.Unmarshal([]byte(pkg.BuildDetails), &details); err == nil && len(details) > 0 {
-		verbosePrintln("Details")
-		verbosePrintln("-------")
-		displaySection(details, "")
+		verboseService.VerbosePrintln("Details")
+		verboseService.VerbosePrintln("-------")
+		displaySection(details, "", verboseService)
 	}
 }
 
-func displaySection(section map[string]interface{}, indent string) {
+func displaySection(section map[string]interface{}, indent string, verboseService settings.VerboseService) {
 	for k, v := range section {
-		verbosePrintf("%s%s:", indent, k)
+		verboseService.VerbosePrintf("%s%s:", indent, k)
 		switch v.(type) {
 		case map[string]interface{}:
-			verbosePrintln()
-			displaySection(v.(map[string]interface{}), indent+"  ")
+			verboseService.VerbosePrintln()
+			displaySection(v.(map[string]interface{}), indent+"  ", verboseService)
 		default:
-			verbosePrintln(" ",v)
+			verboseService.VerbosePrintln(" ", v)
 		}
 	}
 }

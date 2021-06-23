@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package unit_tests
 
 import (
@@ -27,6 +27,9 @@ func (m mockApi) Run() error {
 	results["ApplicationSummary"] = m.config.ApplicationSummary()
 	results["ApplicationDescription"] = m.config.ApplicationDescription()
 	results["RepositoryPath"] = m.config.RepositoryPath()
+	results["SkeletonFiles"] = m.config.SkeletonFiles()
+	results["ConfigFile"] = m.config.ConfigFile()
+	results["Verbose"] = m.config.Verbose()
 	return nil
 }
 
@@ -37,4 +40,5 @@ func (f mockApiFactory) Create(args []string) api.Runnable {
 
 func registerMockApiFactories(c container.Container) {
 	c.Singleton(func(config settings.Settings) api.GenerateApiFactory { return mockApiFactory{[]string{"generate"}, nil, config} })
+	c.Singleton(func(config settings.Settings) api.ListSkeletonsApiFactory { return mockApiFactory{[]string{"list", "skeletons"}, nil, config} })
 }

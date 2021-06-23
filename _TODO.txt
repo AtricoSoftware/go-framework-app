@@ -1,14 +1,18 @@
 WIP
 ~~~
-sub commands
+"skeleton" settings (directory, file, etc)
+   - from templates file
+
 
 TODO
 ~~~~
-move verbose writer to api/common (circular imports)
+Make parameters like settings
+	- settings file per parameters
+	- ID to be picked up for names
+	- validate parameters
+add strcase functions to template parser (remove from settings)
 remove names from struct init (safer as missing values causes error)
-dryrun flag (with disable in config) (copy from session-replay)
 handle settings types better - slices of X (cut off slice, handle X)
-cmdline params (see tf-tool)
 cache linked to changing config
 regex values to core
 string set, remove and add to core?
@@ -22,6 +26,14 @@ usage in cmdline (see tf-tool)
 return error from api, do something better
 MAYBE
 cmdline testcases - all options?
+
+COMMANDS
+~~~~~~~~
+list
+    - info about app that will be generated (settings, commands, etc)
+dry run generate
+parse/validate config
+
 
 UNIT TESTS
 ~~~~~~~~~~

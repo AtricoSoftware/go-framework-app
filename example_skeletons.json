@@ -1,0 +1,22 @@
+{
+  "Boney": {
+    "Id": "Bones.Yard",
+    "Name": "First skelly bob",
+    "Type": "string",
+    "CmdLineShortcut": "b",
+    "CmdLine": "boney",
+    "EnvVar": "BONE_YARD",
+    "DefaultVal": "dry bones",
+    "Description": "Dem bones"
+  },
+  "Macabre": {
+    "Id": "Bones.Danse",
+    "Name": "DanseMacabre",
+    "Type": "string",
+    "CmdLineShortcut": "d",
+    "CmdLine": "danse-macabre",
+    "EnvVar": "DANSE_MACABRE",
+    "DefaultVal": "Saint Saens",
+    "Description": "Dem dry bones"
+  }
+}

@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package api
 
 import (
@@ -14,5 +14,8 @@ type Factory interface {
 }
 
 func RegisterApiFactories(c container.Container) {
+	RegisterVerboseService(c)
 	c.Singleton(func() GenerateApiFactory { return generateApiFactory{c} })
+	RegisterVerboseService(c)
+	c.Singleton(func() ListSkeletonsApiFactory { return listSkeletonsApiFactory{c} })
 }

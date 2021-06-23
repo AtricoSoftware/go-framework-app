@@ -11,17 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"{{.RepositoryPath}}/api"
 	"{{.RepositoryPath}}/pkg"
-{{- $write := false}}
-{{- range .UserSettings}}
-	{{- if .AppliesToCmd "root"}}
-	{{- $write = true}}
-	{{- end}}
-{{- end}}
-{{- if $write}}
 	"{{.RepositoryPath}}/settings"
-{{- end}}
 )
 
 func createRootCommand() *cobra.Command {
@@ -30,9 +21,6 @@ func createRootCommand() *cobra.Command {
 		Short: pkg.Summary,
 		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
 	}
-{{- if .IncludeDryRun}}
-	cmd.PersistentFlags().BoolVarP(&api.DryRun, "dry-run", "", false, "Dry run, take no action")
-{{- end }}
 {{- range .UserSettings}}
 	{{- if .AppliesToCmd "root"}}
 	settings.Add{{.NameCode}}Flag(cmd.PersistentFlags())
@@ -40,7 +28,6 @@ func createRootCommand() *cobra.Command {
 {{- end}}
 	return cmd
 }
-
 
 func initConfig() {
 	var err error
@@ -80,23 +67,8 @@ func tryReadConfig(getDir func() (dir string, err error)) error {
 		viper.AddConfigPath(dir)
 		err = viper.ReadInConfig()
 		if err == nil {
-			verbosePrintln("Using config file:", viper.ConfigFileUsed())
+			settings.GetVerboseService().VerbosePrintln("Using config file:", viper.ConfigFileUsed())
 		}
 	}
 	return err
-}
-
-func verbosePrintln(a ...interface{}) (n int, err error) {
-	if viper.GetBool("Verbose") {
-		return fmt.Println(a...)
-	} else {
-		return 0, nil
-	}
-}
-func verbosePrintf(format string, a ...interface{}) (n int, err error) {
-	if viper.GetBool("Verbose") {
-		return fmt.Printf(format, a...)
-	} else {
-		return 0, nil
-	}
 }

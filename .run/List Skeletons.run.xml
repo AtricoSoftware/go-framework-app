@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Generate Example" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <configuration default="false" name="List Skeletons" type="GoApplicationRunConfiguration" factoryName="Go Application">
         <module name="go-framework-app"/>
         <working_directory value="$PROJECT_DIR$"/>
-        <parameters value="generate --config-file example_go_framework.json -d D:\temp\test-app"/>
+        <parameters value="list skeletons -s ./example_skeletons.json --verbose"/>
         <kind value="FILE"/>
-        <package value="github.com/AtricoSoftware/go-framework-app"/>
+        <package value="github.com/atricosoftware/go-framework-app"/>
         <directory value="$PROJECT_DIR$"/>
         <filePath value="$PROJECT_DIR$/main.go"/>
         <method v="2"/>
