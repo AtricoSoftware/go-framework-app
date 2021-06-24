@@ -3,6 +3,7 @@ package settings
 import (
 	"fmt"
 
+	"github.com/iancoleman/strcase"
 	"github.com/spf13/viper"
 )
 
@@ -11,6 +12,8 @@ const commandsSettingName = "commands"
 type UserCommand interface {
 	Name() string
 	Description() string
+
+	ApiName() string
 }
 
 // Fetch the setting
@@ -37,8 +40,8 @@ func (theSettings) Commands() []UserCommand {
 			}
 		}
 		results[i] = userCommand{
-			name:            name,
-			description:     description,
+			name:        name,
+			description: description,
 		}
 	}
 
@@ -50,5 +53,6 @@ type userCommand struct {
 	description string
 }
 
-func (c userCommand) Name() string        { return c.name }
+func (c userCommand) Name() string        { return strcase.ToLowerCamel(c.name) }
 func (c userCommand) Description() string { return c.description }
+func (c userCommand) ApiName() string     { return strcase.ToCamel(c.name) }
