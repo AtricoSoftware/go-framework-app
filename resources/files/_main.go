@@ -26,6 +26,7 @@ func main() {
 func register() container.Container {
 	c := container.NewContainer()
 	settings.RegisterSettings(c)
+	settings.RegisterVerboseService(c)
 	cmd.RegisterCmd(c)
 	api.RegisterApiFactories(c)
 	return c

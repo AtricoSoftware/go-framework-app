@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package unit_tests
 
 import (
@@ -9,7 +9,6 @@ type MockSettings struct {
 	TheCommand                 []string
 	TheArgs                    []string
 	SingleReadConfigurationVar bool
-	IncludeDryRunVar           bool
 	TargetDirectoryVar         string
 	ApplicationTitleVar        string
 	ApplicationNameVar         string
@@ -18,13 +17,13 @@ type MockSettings struct {
 	RepositoryPathVar          string
 	CommandsVar                []settings.UserCommand
 	UserSettingsVar            []settings.UserSetting
+	SkeletonFilesVar           []string
+	ConfigFileVar              string
+	VerboseVar                 bool
 }
 
 func (s MockSettings) SingleReadConfiguration() bool {
 	return s.SingleReadConfigurationVar
-}
-func (s MockSettings) IncludeDryRun() bool {
-	return s.IncludeDryRunVar
 }
 func (s MockSettings) TargetDirectory() string {
 	return s.TargetDirectoryVar
@@ -50,15 +49,24 @@ func (s MockSettings) Commands() []settings.UserCommand {
 func (s MockSettings) UserSettings() []settings.UserSetting {
 	return s.UserSettingsVar
 }
+func (s MockSettings) SkeletonFiles() []string {
+	return s.SkeletonFilesVar
+}
+func (s MockSettings) ConfigFile() string {
+	return s.ConfigFileVar
+}
+func (s MockSettings) Verbose() bool {
+	return s.VerboseVar
+}
 
 func NewMockSettings(cmd []string, args []string) MockSettings {
 	return MockSettings{
 		TheCommand:                 cmd,
 		TheArgs:                    args,
 		SingleReadConfigurationVar: true,
-		IncludeDryRunVar:           true,
 		TargetDirectoryVar:         ".",
 		CommandsVar:                make([]settings.UserCommand, 0),
 		UserSettingsVar:            make([]settings.UserSetting, 0),
+		SkeletonFilesVar:           make([]string, 0),
 	}
 }

@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package unit_tests
 
 import (
@@ -10,6 +10,7 @@ import (
 	"github.com/AtricoSoftware/go-framework-app/pkg"
 	"github.com/AtricoSoftware/go-framework-app/settings"
 	"github.com/atrico-go/container"
+	"github.com/atrico-go/core"
 	. "github.com/atrico-go/testing/assert"
 	"github.com/atrico-go/testing/is"
 	"github.com/atrico-go/testing/random"
@@ -43,6 +44,18 @@ var OptionRepositoryPath = OptionSet{
 	"Default": NewSimpleOption("--repository", func() interface{} { var value string; rg.Value(&value); return value }, func(s *MockSettings, value interface{}) { s.RepositoryPathVar = value.(string) }),
 	"Short":   NewSimpleOption("-r", func() interface{} { var value string; rg.Value(&value); return value }, func(s *MockSettings, value interface{}) { s.RepositoryPathVar = value.(string) }),
 }
+var OptionSkeletonFiles = OptionSet{
+	"Default": NewSliceOption("--skeleton", func() interface{} { var value []string; rg.Value(&value); return value }, func(s *MockSettings, value interface{}) { core.ConvertSlice(value, &s.SkeletonFilesVar) }),
+	"Short":   NewSliceOption("-s", func() interface{} { var value []string; rg.Value(&value); return value }, func(s *MockSettings, value interface{}) { core.ConvertSlice(value, &s.SkeletonFilesVar) }),
+}
+var OptionVerbose = OptionSet{
+	"Default":     NewBooleanOption("--verbose", func(s *MockSettings) { s.VerboseVar = true }),
+	"=True":       NewBooleanOption("--verbose=true", func(s *MockSettings) { s.VerboseVar = true }),
+	"=False":      NewBooleanOption("--verbose=false", func(s *MockSettings) { s.VerboseVar = false }),
+	"Short":       NewBooleanOption("-v", func(s *MockSettings) { s.VerboseVar = true }),
+	"Short=True":  NewBooleanOption("-v=true", func(s *MockSettings) { s.VerboseVar = true }),
+	"Short=False": NewBooleanOption("-v=false", func(s *MockSettings) { s.VerboseVar = false }),
+}
 
 // SECTION-END
 
@@ -67,6 +80,22 @@ var CmdlineTestCases = []CmdlineTestCase{
 	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionApplicationDescription["Default"]}},
 	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionRepositoryPath["Default"]}},
 	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionRepositoryPath["Short"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionSkeletonFiles["Default"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionSkeletonFiles["Short"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionVerbose["Default"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionVerbose["=True"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionVerbose["=False"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionVerbose["Short"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionVerbose["Short=True"]}},
+	{Command: []string{"generate"}, Args: []string{}, Options: []Option{OptionVerbose["Short=False"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionSkeletonFiles["Default"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionSkeletonFiles["Short"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionVerbose["Default"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionVerbose["=True"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionVerbose["=False"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionVerbose["Short"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionVerbose["Short=True"]}},
+	{Command: []string{"list", "skeletons"}, Args: []string{}, Options: []Option{OptionVerbose["Short=False"]}},
 }
 
 // SECTION-END
@@ -122,6 +151,9 @@ func testCommandLineImpl(t *testing.T, cmdline string, expected MockSettings) {
 	Assert(t).That(results["ApplicationSummary"], is.DeepEqualTo(expected.ApplicationSummary()), "ApplicationSummary")
 	Assert(t).That(results["ApplicationDescription"], is.DeepEqualTo(expected.ApplicationDescription()), "ApplicationDescription")
 	Assert(t).That(results["RepositoryPath"], is.DeepEqualTo(expected.RepositoryPath()), "RepositoryPath")
+	Assert(t).That(results["SkeletonFiles"], is.DeepEqualTo(expected.SkeletonFiles()), "SkeletonFiles")
+	Assert(t).That(results["ConfigFile"], is.DeepEqualTo(expected.ConfigFile()), "ConfigFile")
+	Assert(t).That(results["Verbose"], is.DeepEqualTo(expected.Verbose()), "Verbose")
 }
 
 func resetCommand() *cobra.Command {

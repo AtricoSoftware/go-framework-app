@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package main
 
 import (
@@ -26,6 +26,7 @@ func main() {
 func register() container.Container {
 	c := container.NewContainer()
 	settings.RegisterSettings(c)
+	settings.RegisterVerboseService(c)
 	cmd.RegisterCmd(c)
 	api.RegisterApiFactories(c)
 	return c

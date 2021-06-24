@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package cmd
 
 import (
@@ -22,9 +22,13 @@ type commandFactory []commandInfo
 // Register Commands
 func RegisterCmd(c container.Container) {
 	RegisterCmdGenerate(c)
-	c.Singleton(func(generate GenerateCmd, ) CommandFactory {
+	RegisterCmdList(c)
+	RegisterCmdListSkeletons(c)
+	c.Singleton(func(generate GenerateCmd, list ListCmd, listSkeletons ListSkeletonsCmd, ) CommandFactory {
 		return commandFactory{
 			commandInfo(generate),
+			commandInfo(list),
+			commandInfo(listSkeletons),
 		}
 	})
 }

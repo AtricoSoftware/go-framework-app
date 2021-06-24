@@ -10,7 +10,7 @@ var configSetting = UserSetting{
 	Id:                   "ConfigFile",
 	Description:          "Alternate config file",
 	Type:                 "string",
-	Cmdline:              "config",
+	Cmdline:              "config-file",
 	AppliesTo:            []string{"root"},
 	optionTestCaseValues: emptyTcValues(),
 }
@@ -20,10 +20,8 @@ var verboseSetting = UserSetting{
 	Description:          "Generate more detailed output",
 	Type:                 "bool",
 	Cmdline:              "verbose",
+	CmdlineShortcut:      "v",
 	EnvVar:               "VERBOSE",
-	DefaultVal:           "false",
 	AppliesTo:            []string{"root"},
 	optionTestCaseValues: emptyTcValues(),
 }
-
-

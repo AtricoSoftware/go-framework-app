@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package settings
 
 import (
@@ -13,8 +13,6 @@ type Settings interface {
 	MustGetArgument(name string) (value string)
 	// Configuration is only read once (at startup)
 	SingleReadConfiguration() bool
-	// Dry run flag used
-	IncludeDryRun() bool
 	// Target directory
 	TargetDirectory() string
 	// Name of application
@@ -31,6 +29,12 @@ type Settings interface {
 	Commands() []UserCommand
 	// Settings to add
 	UserSettings() []UserSetting
+	// File(s) with skeleton definitions
+	SkeletonFiles() []string
+	// Alternate config file
+	ConfigFile() string
+	// Generate more detailed output
+	Verbose() bool
 }
 
 type SetArgs interface {
@@ -47,7 +51,6 @@ func RegisterSettings(c container.Container) {
 // Force all settings to be recalculated on next request
 func ResetCaches() {
 	singleReadConfigurationSettingCache.Reset()
-	includeDryRunSettingCache.Reset()
 	targetDirectorySettingCache.Reset()
 	applicationTitleSettingCache.Reset()
 	applicationNameSettingCache.Reset()
@@ -56,6 +59,9 @@ func ResetCaches() {
 	repositoryPathSettingCache.Reset()
 	commandsSettingCache.Reset()
 	userSettingsSettingCache.Reset()
+	skeletonFilesSettingCache.Reset()
+	configFileSettingCache.Reset()
+	verboseSettingCache.Reset()
 }
 
 // Stub object for settings interface

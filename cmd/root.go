@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 package cmd
 
 import (
@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/AtricoSoftware/go-framework-app/api"
 	"github.com/AtricoSoftware/go-framework-app/pkg"
+	"github.com/AtricoSoftware/go-framework-app/settings"
 )
 
 func createRootCommand() *cobra.Command {
@@ -21,16 +21,15 @@ func createRootCommand() *cobra.Command {
 		Short: pkg.Summary,
 		Long:  fmt.Sprintf("%s\n%s", pkg.Description, pkg.Version),
 	}
-	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
-	cmd.PersistentFlags().BoolVarP(&api.VerboseFlag, "verbose", "", false, "More output")
+	settings.AddConfigFileFlag(cmd.PersistentFlags())
+	settings.AddVerboseFlag(cmd.PersistentFlags())
 	return cmd
 }
-
-var cfgFile string
 
 func initConfig() {
 	var err error
 	// Config file
+	cfgFile := viper.GetString("ConfigFile")
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -63,9 +62,9 @@ func tryReadConfig(getDir func() (dir string, err error)) error {
 	var dir string
 	if dir, err = getDir(); err == nil {
 		viper.AddConfigPath(dir)
-		err := viper.ReadInConfig()
+		err = viper.ReadInConfig()
 		if err == nil {
-			api.VerbosePrintln("Using config file:", viper.ConfigFileUsed())
+			settings.GetVerboseService().VerbosePrintln("Using config file:", viper.ConfigFileUsed())
 		}
 	}
 	return err

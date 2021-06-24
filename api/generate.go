@@ -1,4 +1,4 @@
-// Generated 2021-06-17 17:07:26 by go-framework v1.20.0
+// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
 // SECTION-START: Framework
 package api
 
@@ -34,22 +34,23 @@ func (f generateApiFactory) Create(args []string) Runnable {
 
 func RegisterApiGenerate(c container.Container) {
 	file_writer.RegisterFileWriter(c)
-	c.Singleton(func(config settings.Settings, fileWriter file_writer.FileWriter) GenerateApi {
-		return generateApi{config, fileWriter}
+	c.Singleton(func(config settings.Settings, verboseService settings.VerboseService, fileWriter file_writer.FileWriter) GenerateApi {
+		return generateApi{config, verboseService, fileWriter}
 	})
 }
 
 type generateApi struct {
-	config     settings.Settings
+	settings.Settings
+	settings.VerboseService
 	fileWriter file_writer.FileWriter
 }
 
 // Generate framework app
 func (svc generateApi) Run() error {
-	validateMandatorySetting(svc.config.ApplicationName(), "Application name")
-	validateMandatorySetting(svc.config.RepositoryPath(), "Repository path")
+	validateMandatorySetting(svc.ApplicationName(), "Application name")
+	validateMandatorySetting(svc.RepositoryPath(), "Repository path")
 	// Ensure target folder exists
-	validateFolder(svc.config.TargetDirectory())
+	validateFolder(svc.TargetDirectory())
 	// Create values for the template
 	values := svc.fileWriter.CreateTemplateValues()
 
@@ -59,7 +60,7 @@ func (svc generateApi) Run() error {
 		svc.fileWriter.GenerateFile(t, values)
 	}
 	// Create commands/api
-	for _, command := range svc.config.Commands() {
+	for _, command := range svc.Commands() {
 		values["Command"] = command
 		svc.fileWriter.GenerateNamedFile(resources.Templates["cmd"], command.FileName(), values)
 		if !command.NoImplementation {
@@ -68,10 +69,10 @@ func (svc generateApi) Run() error {
 	}
 	// Create settings
 	cachedTypes := make(map[string]settings.UserSetting, 0)
-	for _, setting := range svc.config.UserSettings() {
+	for _, setting := range svc.UserSettings() {
 		values["Setting"] = setting
 		svc.fileWriter.GenerateNamedFile(resources.Templates["setting"], setting.Filename(), values)
-		if svc.config.SingleReadConfiguration() {
+		if svc.SingleReadConfiguration() {
 			cachedTypes[setting.Type] = setting
 		}
 	}
@@ -89,16 +90,18 @@ func (svc generateApi) Run() error {
 	data, err := ioutil.ReadFile(viper.ConfigFileUsed())
 	if err == nil {
 		configExt := filepath.Ext(viper.ConfigFileUsed())
-		destination := filepath.Join(svc.config.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
+		destination := filepath.Join(svc.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
 		ioutil.WriteFile(destination, data, 0644)
 	}
 	// Module dependencies
-	GoCommand(svc.config.TargetDirectory(), "get", "-u", "all")
-	GoCommand(svc.config.TargetDirectory(), "mod", "download")
+	GoCommand(svc.TargetDirectory(), "get", "-u", "all")
+	GoCommand(svc.TargetDirectory(), "mod", "download")
 	// Clean up the files
 	svc.fileWriter.CleanupFiles()
 	// Remove backups with no changes
 	svc.fileWriter.RemoveObsoleteBackups()
+	// Run the unit tests
+	GoCommand(svc.TargetDirectory(), "test", "./unit-tests")
 	return nil
 }
 
