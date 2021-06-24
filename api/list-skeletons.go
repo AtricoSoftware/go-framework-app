@@ -62,15 +62,20 @@ func (svc listSkeletonsApi) Run() error {
 	}
 	sort.Slice(names, func(i, j int) bool { return names[i] < names[j] })
 	for _, name := range names {
-		cmdLine := make([]string, 0, 2)
+		cmdLine := strings.Builder{}
 		s := settings.SkeletonCloset[name]
+		separator := " "
 		if s.CmdlineShortcut != "" {
-			cmdLine = append(cmdLine, fmt.Sprintf("-%s", s.CmdlineShortcut))
+			cmdLine.WriteString("-")
+			cmdLine.WriteString(s.CmdlineShortcut)
+			separator = ","
+		} else {
+			cmdLine.WriteString("  ")
 		}
 		if s.Cmdline != "" {
-			cmdLine = append(cmdLine, fmt.Sprintf("--%s", s.Cmdline))
+			cmdLine.WriteString(fmt.Sprintf("%s --%s", separator, s.Cmdline))
 		}
-		table.AppendRow(name, s.Id, strings.Join(cmdLine, ", "), s.Type, s.EnvVar, s.DefaultVal, s.Description)
+		table.AppendRow(name, s.Id, cmdLine.String(), s.Type, s.EnvVar, s.DefaultVal, s.Description)
 	}
 	core.DisplayMultiline(table.Build().Render())
 	return nil
