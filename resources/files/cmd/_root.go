@@ -63,7 +63,7 @@ func initConfig() {
 func tryReadConfig(getDir func() (dir string, err error)) error {
 	var err error
 	var dir string
-	if dir,err = getDir(); err == nil {
+	if dir, err = getDir(); err == nil {
 		viper.AddConfigPath(dir)
 		err = viper.ReadInConfig()
 		if err == nil {

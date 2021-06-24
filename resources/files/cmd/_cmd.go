@@ -14,7 +14,7 @@ type CommandFactory interface {
 }
 
 type commandInfo struct {
-	cmd *cobra.Command
+	cmd  *cobra.Command
 	path string
 }
 type commandFactory []commandInfo
@@ -24,10 +24,10 @@ func RegisterCmd(c container.Container) {
 {{- range .Commands}}
 	RegisterCmd{{.ApiName}}(c)
 {{- end}}
-	c.Singleton(func({{- range .Commands}}{{.LowerApiName}} {{.ApiName}}Cmd, {{- end}}) CommandFactory {
+	c.Singleton(func({{- range .Commands}}{{.LowerApiName}} {{.ApiName}}Cmd, {{end}}) CommandFactory {
 		return commandFactory{
 {{- range.Commands}}
-		commandInfo({{.LowerApiName}}),
+			commandInfo({{.LowerApiName}}),
 {{- end}}
 		}
 	})

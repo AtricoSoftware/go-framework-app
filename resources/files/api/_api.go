@@ -21,4 +21,3 @@ func RegisterApiFactories(c container.Container) {
 {{- end}}
 {{- end}}
 }
-

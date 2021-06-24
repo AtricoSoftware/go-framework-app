@@ -6,30 +6,37 @@ import (
 )
 
 type MockSettings struct {
-	TheCommand	[]string
-	TheArgs	[]string
+{{- $table := createTable }}
+{{- $table = $table.AppendRow "\tTheCommand" "[]string" }}
+{{- $table = $table.AppendRow "\tTheArgs" "[]string" }}
 {{- range .UserSettings}}
-	{{.NameCode}}Var {{.QualifiedType}}
+{{- $table = $table.AppendRow (print "\t" .NameCode "Var") .QualifiedType }}
 {{- end}}
+{{ printTable $table -}}
 }
 {{- range .UserSettings}}
+
 func (s MockSettings) {{.NameCode}}() {{.QualifiedType}} {
 	return s.{{.NameCode}}Var
 }
 {{- end}}
 
 func NewMockSettings(cmd []string, args []string) MockSettings {
-	return MockSettings{
-		TheCommand: cmd,
-		TheArgs: args,
+{{- $table := createTable }}
+{{- $table = $table.AppendRow "\t\tTheCommand:" "cmd," }}
+{{- $table = $table.AppendRow "\t\tTheArgs:" "args," }}
 {{- range .UserSettings}}
 {{- if (ne .DefaultVal "")}}
-		{{.NameCode}}Var: {{if (eq .Type "string")}}"{{end}}{{.DefaultVal}}{{if (eq .Type "string")}}"{{end}},
+	{{- $quote := "" }}
+	{{- if (eq .Type "string")}}{{ $quote = "\"" }}{{end}}
+	{{- $table = $table.AppendRow (print "\t\t" .NameCode "Var:") (print $quote .DefaultVal $quote ",") }}
 {{- else}}
 {{- if (ne .InitCode "")}}
-		{{.NameCode}}Var: {{.QualifiedInitCode}},
+	{{- $table = $table.AppendRow (print "\t\t" .NameCode "Var:") (print .QualifiedInitCode ",") }}
 {{- end}}
 {{- end}}
 {{- end}}
-	}
+	return MockSettings{
+{{ printTable $table -}}
+	{{ print "\t}" }}
 }

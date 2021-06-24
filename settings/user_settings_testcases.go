@@ -19,19 +19,19 @@ func (u UserSetting) getOptionTestCases() []map[string]string {
 			// Opt type / Modifier
 			if strings.HasPrefix(u.Type, "[]") {
 				values["OptType"] = "Slice"
-				values["Modifier"] = fmt.Sprintf(`, func(s *MockSettings, value interface{}) { core.ConvertSlice(value, &s.%sVar)}`, u.NameCode())
+				values["Modifier"] = fmt.Sprintf(`, func(s *MockSettings, value interface{}) { core.ConvertSlice(value, &s.%sVar) }`, u.NameCode())
 			} else if u.Type == "bool" {
 				values["OptType"] = "Boolean"
-				values["Modifier"] = fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = true}`, u.NameCode())
+				values["Modifier"] = fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = true }`, u.NameCode())
 			} else {
 				values["OptType"] = "Simple"
-				values["Modifier"] = fmt.Sprintf(`, func(s *MockSettings, value interface{}) { s.%sVar = value.(%s)}`, u.NameCode(), u.Type)
+				values["Modifier"] = fmt.Sprintf(`, func(s *MockSettings, value interface{}) { s.%sVar = value.(%s) }`, u.NameCode(), u.Type)
 			}
 			// Generator
 			if u.Type == "bool" {
 				values["Generator"] = ""
 			} else {
-				values["Generator"] = fmt.Sprintf(`, func() interface{} {var value %s; rg.Value(&value); return value }`, u.Type)
+				values["Generator"] = fmt.Sprintf(`, func() interface{} { var value %s; rg.Value(&value); return value }`, u.Type)
 			}
 			*u.optionTestCaseValues = append(*u.optionTestCaseValues, values)
 			options := make([]map[string]string, 0, 2)
@@ -44,12 +44,12 @@ func (u UserSetting) getOptionTestCases() []map[string]string {
 					options = append(options, map[string]string{
 						"OptName":  "=True",
 						"CmdLine":  fmt.Sprintf("--%s=true", u.Cmdline),
-						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = true}`, u.NameCode()),
+						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = true }`, u.NameCode()),
 					})
 					options = append(options, map[string]string{
 						"OptName":  "=False",
 						"CmdLine":  fmt.Sprintf("--%s=false", u.Cmdline),
-						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = false}`, u.NameCode()),
+						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = false }`, u.NameCode()),
 					})
 				}
 			}
@@ -62,12 +62,12 @@ func (u UserSetting) getOptionTestCases() []map[string]string {
 					options = append(options, map[string]string{
 						"OptName":  "Short=True",
 						"CmdLine":  fmt.Sprintf("-%s=true", u.CmdlineShortcut),
-						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = true}`, u.NameCode()),
+						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = true }`, u.NameCode()),
 					})
 					options = append(options, map[string]string{
 						"OptName":  "Short=False",
 						"CmdLine":  fmt.Sprintf("-%s=false", u.CmdlineShortcut),
-						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = false}`, u.NameCode()),
+						"Modifier": fmt.Sprintf(`, func(s *MockSettings) { s.%sVar = false }`, u.NameCode()),
 					})
 				}
 			}

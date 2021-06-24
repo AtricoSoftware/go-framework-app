@@ -13,7 +13,7 @@ type {{$interfaceName}} interface {
 }
 
 func New{{$interfaceName}}(creator func() {{.Type}}) {{$interfaceName}} {
-	cv := {{$structName}}{creator: creator }
+	cv := {{$structName}}{creator: creator}
 	return &cv
 }
 

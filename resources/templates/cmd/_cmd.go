@@ -3,10 +3,10 @@
 package cmd
 
 import (
-	"github.com/atrico-go/container"
 {{- if .Command.HasArgs}}
 	"github.com/atrico-go/cobraEx"
 {{- end}}
+	"github.com/atrico-go/container"
 	"github.com/spf13/cobra"
 
 {{- if not .Command.NoImplementation}}
@@ -36,7 +36,7 @@ func create{{.Command.ApiName}}Command({{ if not .Command.NoImplementation}}apiF
 		Use:   "{{.Command.UseName}}",
 		Short: "{{.Command.Description}}",
 {{- if not .Command.NoImplementation}}
-		Args: cobra.{{.Command.ArgsValidator}},
+		Args:  cobra.{{.Command.ArgsValidator}},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			theApi := apiFactory.Create(args)
 			return theApi.Run()
@@ -53,5 +53,5 @@ func create{{.Command.ApiName}}Command({{ if not .Command.NoImplementation}}apiF
 {{- else}}
 	}
 {{- end}}
-	return commandInfo{cmd, "{{.Command.Name}}" }
+	return commandInfo{cmd, "{{.Command.Name}}"}
 }

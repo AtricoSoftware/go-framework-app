@@ -100,6 +100,8 @@ func (svc generateApi) Run() error {
 	svc.fileWriter.CleanupFiles()
 	// Remove backups with no changes
 	svc.fileWriter.RemoveObsoleteBackups()
+	// Build the app
+	GoCommand(svc.TargetDirectory(), "build", ".")
 	// Run the unit tests
 	GoCommand(svc.TargetDirectory(), "test", "./unit-tests")
 	return nil

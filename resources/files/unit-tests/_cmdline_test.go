@@ -23,7 +23,7 @@ import (
 {{ if gt (len .UserSettings) 0 }}
 var rg = random.NewValueGenerator()
 {{ range .UserSettings}}{{if gt (len .OptionTestCases) 0 }}
-var Option{{.NameCode}} = OptionSet {
+var Option{{.NameCode}} = OptionSet{
 {{- range .OptionTestCases}}
 	{{ . }},
 {{- end}}
@@ -32,6 +32,7 @@ var Option{{.NameCode}} = OptionSet {
 
 {{- end}}
 {{- end}}
+
 // SECTION-END
 
 // SECTION-START: TestCases
@@ -50,7 +51,7 @@ var CmdlineTestCases = []CmdlineTestCase{
 {{- range $.UserSettings}}{{$settingName := .NameCode}}
 {{- if and (.AppliesToCmdOrRoot $cmdName) (or (ne .Cmdline "") (ne .CmdlineShortcut ""))}}
 {{- range .OptionTestCaseNames}}
-	{Command: []string{ {{- $useName -}} }, Args: []string{ {{- commaList (quoted $args) -}} }, Options: []Option {	Option{{$settingName}}["{{.}}"] }},
+	{Command: []string{ {{- $useName -}} }, Args: []string{ {{- commaList (quoted $args) -}} }, Options: []Option{Option{{$settingName}}["{{.}}"]}},
 {{- end}}
 {{- end}}
 {{- end}}
@@ -71,12 +72,12 @@ func addUserTests(tests []CmdlineTestCase) []CmdlineTestCase{
 // ----------------------------------------------------------------------------------------------------------------------------
 
 func Test_CommandLine(t *testing.T) {
-	for _,testCase := range addUserTests(CmdlineTestCases) {
+	for _, testCase := range addUserTests(CmdlineTestCases) {
 		// Build command line and expectations
 		cmdline := strings.Builder{}
 		cmdline.WriteString(strings.Join(testCase.Command, " "))
 		expected := NewMockSettings(testCase.Command, testCase.Args)
-		for _,arg := range testCase.Args {
+		for _, arg := range testCase.Args {
 			cmdline.WriteString(" ")
 			cmdline.WriteString(arg)
 		}
@@ -86,7 +87,7 @@ func Test_CommandLine(t *testing.T) {
 			cmdline.WriteString(opt.Cmdline())
 			opt.ModifySettings(&expected)
 		}
-		t.Run(cmdline.String(), func(t *testing.T) {testCommandLineImpl(t, cmdline.String(), expected)})
+		t.Run(cmdline.String(), func(t *testing.T) { testCommandLineImpl(t, cmdline.String(), expected) })
 	}
 }
 
@@ -128,5 +129,6 @@ func resetCommand() *cobra.Command {
 	c.Make(&cmdFactory)
 	return cmdFactory.Create()
 }
+
 // SECTION-END
 

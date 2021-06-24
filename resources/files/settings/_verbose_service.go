@@ -1,6 +1,6 @@
 package settings
 
-import(
+import (
 	"fmt"
 	"io"
 	"os"
@@ -54,4 +54,3 @@ func (v verboseService) VerboseFprintf(w io.Writer, format string, a ...interfac
 		return 0, nil
 	}
 }
-

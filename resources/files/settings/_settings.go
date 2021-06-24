@@ -38,7 +38,7 @@ func ResetCaches() {
 {{- end}}
 
 // Stub object for settings interface
-type theSettings struct{
+type theSettings struct {
 	args map[string]string
 }
 

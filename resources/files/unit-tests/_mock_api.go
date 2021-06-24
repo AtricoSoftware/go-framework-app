@@ -37,9 +37,7 @@ func (f mockApiFactory) Create(args []string) api.Runnable {
 func registerMockApiFactories(c container.Container) {
 {{- range .Commands}}
 {{- if not .NoImplementation}}
-	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory {return mockApiFactory{[]string{ {{- commaList (quoted .SplitPath) -}} }, nil, config}})
+	c.Singleton(func(config settings.Settings) api.{{.ApiName}}ApiFactory { return mockApiFactory{[]string{ {{- commaList (quoted .SplitPath) -}} }, nil, config} })
 {{- end}}
 {{- end}}
 }
-
-

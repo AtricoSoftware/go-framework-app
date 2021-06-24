@@ -33,6 +33,7 @@ func (f {{.Command.LowerApiName}}ApiFactory) Create(args []string) Runnable {
 	f.Container.Make(&theApi)
 	return theApi
 }
+
 // SECTION-END
 
 func RegisterApi{{.Command.ApiName}}(c container.Container) {
