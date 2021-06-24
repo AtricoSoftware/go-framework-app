@@ -94,14 +94,26 @@ func (svc generateApi) Run() error {
 		ioutil.WriteFile(destination, data, 0644)
 	}
 	// Module dependencies
+	fmt.Println("Getting dependencies (go get)")
 	GoCommand(svc.TargetDirectory(), "get", "-u", "all")
+	fmt.Println("Downloading dependencies (go mod download)")
 	GoCommand(svc.TargetDirectory(), "mod", "download")
+	// Format code
+	fmt.Println("Formatting code (gofmt)")
+	ExecuteCommand(svc.TargetDirectory(), "gofmt", "-w", ".")
+	// Build the app
+	fmt.Println("Building code")
+	const buildFile = "build-temp"
+	GoCommand(svc.TargetDirectory(), "build", "-o", buildFile, ".")
+	os.Remove(filepath.Join(svc.TargetDirectory(), buildFile))
+	// Run the unit tests
+	fmt.Println("Running unit tests")
+	GoCommand(svc.TargetDirectory(), "test", "./unit-tests")
 	// Clean up the files
+	fmt.Println("Cleaning up")
 	svc.fileWriter.CleanupFiles()
 	// Remove backups with no changes
 	svc.fileWriter.RemoveObsoleteBackups()
-	// Run the unit tests
-	GoCommand(svc.TargetDirectory(), "test", "./unit-tests")
 	return nil
 }
 

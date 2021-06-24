@@ -3,6 +3,7 @@ package api
 
 import (
 	"github.com/atrico-go/container"
+	"{{.RepositoryPath}}/settings"
 )
 
 type Runnable interface {
@@ -14,9 +15,9 @@ type Factory interface {
 }
 
 func RegisterApiFactories(c container.Container) {
+	settings.RegisterVerboseService(c)
 {{- range .Commands}}
 {{- if not .NoImplementation}}
-	RegisterVerboseService(c)
 	c.Singleton(func() {{.ApiName}}ApiFactory { return {{.LowerApiName}}ApiFactory{c} })
 {{- end}}
 {{- end}}

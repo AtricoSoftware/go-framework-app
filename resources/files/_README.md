@@ -1,5 +1,6 @@
 {"Type":"Mixed"}
 [comment]: <> ( {{.Comment}} )
+
 # {{.ApplicationTitle}}
 
 {{.ApplicationDescription}}

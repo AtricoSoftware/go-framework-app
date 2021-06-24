@@ -75,7 +75,8 @@ func init() {
 {{- if (eq .Setting.TypeGetter "")}}
 
 func Parse{{.Setting.NameCode}}Setting(setting interface{}) {{.Setting.Type}} {
-// TODO - Implementation here
+	// TODO - Implementation here
+	return nil
 }
 
 type {{.Setting.RawType}} struct{}
