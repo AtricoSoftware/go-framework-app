@@ -18,4 +18,9 @@ var {{.CommandName}}Cmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand({{.CommandName}}Cmd)
+{{- range .UserSettings}}
+	{{- if .AppliesToCmd $.CommandName}}
+	settings.Add{{.Name}}Flag({{$.CommandName}}Cmd.PersistentFlags())
+	{{- end}}
+{{- end}}
 }

@@ -1,8 +1,10 @@
 package settings
 
 type Settings interface {
-	// TODO - Add your own settings as required
-	Example() string
+{{- range .UserSettings}}
+	// {{.Description}}
+	{{.Name}}() {{.Type}}
+{{- end}}
 }
 
 // Get the settings for this run

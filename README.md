@@ -2,14 +2,63 @@
 Framework for go application
 
 # Getting Started
-1. Copy this code to a new folder
-1. Rename the project
-1. Change the module url as appropriate (go.mod)
-1. Change the import statements to match new module name
-    * replace all 'ma.ci.go-framework-app' with new repo name (Make sure you include all files, not just code)
-    * replace all 'go-framework-app' with new app name (Make sure you include all files, not just code)
-1. Update pkg/Info details
-1. Check build.sh values (MODULE and OUTPUT)
+## Run the generator
+```none
+go-framework generate --name <application name> --repository <url to repo where app will be stored> --directory <dirlectory into which to write project> 
+```
+It is recommended that you perform a code cleanup to ensure the files conform to your project's guidelines.  Some files will contain extraneous newlines due to the templating library used ins generation (this will not affect function)
+
+## Upgrading existing projects
+The generator will read some settings from the config file in order to create a framework closer to your existing application.  This can be used to generate fuller fromeworks but is primarily intended to allow upgrades to improeved versions of the framework without rewriting all of your code)
+### Config file name and location
+Config file should be named 
+```none
+.go-framework.<type>
+```
+where the type is json, yaml, etc which indicates the format of the file
+### Config file structure 
+#### Example
+```json
+{
+   "commands": [
+     "cmd1",
+     "cmd2",
+     "cmd3"
+   ],
+   "settings": [
+     {
+       "name": "String1",
+       "description": "This is setting 1 (string, shortcut)",
+       "type": "string",
+       "cmdline": "setting1",
+       "cmdlineShortcut": "a",
+       "appliesTo": [
+         "root",
+         "cmd1"
+       ]
+     },
+     {
+       "name": "String2",
+       "description": "This is setting 2 (string, no-shortcut)",
+       "type": "string",
+       "cmdline": "setting2",
+       "appliesTo": [
+         "cmd2",
+         "cmd3"
+       ]
+     }
+}
+``` 
+commands is a simple list of commands as text that will be created<br>
+settings is a list of settings objects as follows: <br>
+| attribute       | Meaning                                                                                                                         |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------|
+| name            | Name of setting, will be used as the function name in Setting interface                                                         |
+| description     | Description, this will be used in comments and for the usage information                                                        |
+| type            | Type of variable, currently supported are [string, []string, bool, int]                                                         |
+| cmdline         | Long cmd line string, can be set on command line with --<cmdline>, if not present then setting can only be set from config file |
+| cmdlineShortcut | Single char cmdline,  can be set on command line with -<cmdlineShortcut>, if cmdline is not present, this is ignored            |
+| appliesTo       | List of commands to which this commandline is applied, if cmdline is not present, this is ignored                               |
 
 # Features
 ## Commands

@@ -9,6 +9,15 @@ import (
 	"github.com/spf13/viper"
 
 	"{{.RepositoryPath}}/pkg"
+{{- $write := false}}
+{{- range .UserSettings}}
+	{{- if .AppliesToCmd "root"}}
+	{{- $write = true}}
+	{{- end}}
+{{- end}}
+{{- if $write}}
+	"{{.RepositoryPath}}/settings"
+{{- end}}
 )
 
 func Execute() {
@@ -29,6 +38,11 @@ var cfgFile string
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "alternate config file")
+{{- range .UserSettings}}
+	{{- if .AppliesToCmd "root"}}
+	settings.Add{{.Name}}Flag(rootCmd.PersistentFlags())
+	{{- end}}
+{{- end}}
 }
 
 func initConfig() {
