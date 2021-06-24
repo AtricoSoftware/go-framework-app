@@ -1,11 +1,14 @@
 WIP
 ~~~
-"skeleton" settings (directory, file, etc)
-   - from templates file
-
+move todo
 
 TODO
 ~~~~
+cleanup space code (cmdline_test - use table)
+Readme
+    - skeleton file format
+    - config format
+    - commands
 Make parameters like settings
 	- settings file per parameters
 	- ID to be picked up for names
@@ -41,5 +44,3 @@ Unit testing for config file
 
 BUGS
 ~~~~
-cleanup readme (and all generated files)
-homedir import
