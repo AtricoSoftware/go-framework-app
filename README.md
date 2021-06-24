@@ -47,6 +47,12 @@ where the type is json, yaml, etc which indicates the format of the file
          "cmd3"
        ]
      }
+  ],
+  "libraries": [
+    "github.com/company/lib1",
+    "github.com/company/lib2@version"
+  ]
+}
 }
 ``` 
 commands is a simple list of commands as text that will be created<br>
@@ -59,7 +65,7 @@ settings is a list of settings objects as follows: <br>
 | cmdline         | Long cmd line string, can be set on command line with --<cmdline>, if not present then setting can only be set from config file |
 | cmdlineShortcut | Single char cmdline,  can be set on command line with -<cmdlineShortcut>, if cmdline is not present, this is ignored            |
 | appliesTo       | List of commands to which this commandline is applied, if cmdline is not present, this is ignored                               |
-
+libraries is a list of urls of external libraries to "go get", use @version to specify a specific version
 # Features
 ## Commands
 cobra is used for commands<br>
