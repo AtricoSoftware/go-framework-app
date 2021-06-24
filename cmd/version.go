@@ -1,13 +1,14 @@
-// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
+// Generated 2021-06-24 14:50:11 by go-framework v1.21.1
 package cmd
 
 import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/AtricoSoftware/go-framework-app/pkg"
 	"github.com/AtricoSoftware/go-framework-app/settings"
-	"github.com/spf13/cobra"
 )
 
 func createVersionCommand() *cobra.Command {

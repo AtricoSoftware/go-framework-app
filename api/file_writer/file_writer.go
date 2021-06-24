@@ -21,7 +21,9 @@ type FileWriter interface {
 }
 
 func RegisterFileWriter(c container.Container) {
-	c.Singleton(func(config settings.Settings) FileWriter { return fileWriter{config, time.Now(), new([]generatedFileInfo)} })
+	c.Singleton(func(config settings.Settings) FileWriter {
+		return fileWriter{config, time.Now(), new([]generatedFileInfo)}
+	})
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------

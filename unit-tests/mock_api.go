@@ -1,4 +1,4 @@
-// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
+// Generated 2021-06-24 14:50:11 by go-framework v1.21.1
 package unit_tests
 
 import (
@@ -39,6 +39,10 @@ func (f mockApiFactory) Create(args []string) api.Runnable {
 }
 
 func registerMockApiFactories(c container.Container) {
-	c.Singleton(func(config settings.Settings) api.GenerateApiFactory { return mockApiFactory{[]string{"generate"}, nil, config} })
-	c.Singleton(func(config settings.Settings) api.ListSkeletonsApiFactory { return mockApiFactory{[]string{"list", "skeletons"}, nil, config} })
+	c.Singleton(func(config settings.Settings) api.GenerateApiFactory {
+		return mockApiFactory{[]string{"generate"}, nil, config}
+	})
+	c.Singleton(func(config settings.Settings) api.ListSkeletonsApiFactory {
+		return mockApiFactory{[]string{"list", "skeletons"}, nil, config}
+	})
 }

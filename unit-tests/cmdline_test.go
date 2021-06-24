@@ -1,4 +1,4 @@
-// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
+// Generated 2021-06-24 14:50:11 by go-framework v1.21.1
 package unit_tests
 
 import (
@@ -6,9 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/AtricoSoftware/go-framework-app/cmd"
-	"github.com/AtricoSoftware/go-framework-app/pkg"
-	"github.com/AtricoSoftware/go-framework-app/settings"
 	"github.com/atrico-go/container"
 	"github.com/atrico-go/core"
 	. "github.com/atrico-go/testing/assert"
@@ -16,6 +13,10 @@ import (
 	"github.com/atrico-go/testing/random"
 	"github.com/atrico-go/viperEx/v2"
 	"github.com/spf13/cobra"
+
+	"github.com/AtricoSoftware/go-framework-app/cmd"
+	"github.com/AtricoSoftware/go-framework-app/pkg"
+	"github.com/AtricoSoftware/go-framework-app/settings"
 )
 
 // SECTION-START: Options

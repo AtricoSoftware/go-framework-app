@@ -1,4 +1,4 @@
-// Generated 2021-06-23 15:07:34 by go-framework v1.21.0
+// Generated 2021-06-24 14:50:11 by go-framework v1.21.1
 // SECTION-START: Framework
 package api
 
@@ -7,10 +7,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/AtricoSoftware/go-framework-app/settings"
 	"github.com/atrico-go/container"
 	"github.com/atrico-go/core"
 	"github.com/atrico-go/display"
+
+	"github.com/AtricoSoftware/go-framework-app/settings"
 )
 
 type ListSkeletonsApi Runnable
@@ -30,7 +31,9 @@ func (f listSkeletonsApiFactory) Create(args []string) Runnable {
 // SECTION-END
 
 func RegisterApiListSkeletons(c container.Container) {
-	c.Singleton(func(config settings.Settings, verboseService settings.VerboseService) ListSkeletonsApi { return listSkeletonsApi{config, verboseService} })
+	c.Singleton(func(config settings.Settings, verboseService settings.VerboseService) ListSkeletonsApi {
+		return listSkeletonsApi{config, verboseService}
+	})
 }
 
 type listSkeletonsApi struct {

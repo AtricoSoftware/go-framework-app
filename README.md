@@ -1,4 +1,4 @@
-[comment]: <> ( Generated 2021-06-23 15:07:34 by go-framework v1.21.0 )
+[comment]: <> ( Generated 2021-06-24 14:50:11 by go-framework v1.21.1 )
 
 # Go app framework generator
 
