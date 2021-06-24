@@ -3,6 +3,7 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -71,6 +72,8 @@ func init() {
 	rootCmd.AddCommand(generateCmd)
 }
 
+var runTime = time.Now()
+
 func validateMandatorySetting(setting string, name string) {
 	if setting == "" {
 		fmt.Println(name, " not specified")
@@ -109,6 +112,7 @@ func generateFile(path string, filename string, contents *template.Template, val
 	fullPath := filepath.Join(path, filename)
 	fmt.Println("Writing: ", fullPath)
 	os.MkdirAll(filepath.Dir(fullPath), 0755)
+	backupFile(fullPath)
 	file, err := os.Create(fullPath)
 	if err != nil {
 		return err
@@ -116,7 +120,7 @@ func generateFile(path string, filename string, contents *template.Template, val
 	defer file.Close()
 	writer := bufio.NewWriter(file)
 	if comment := getComment(filepath.Base(filename)); comment != "" {
-		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, time.Now().Format("2006-01-02"), pkg.Name, pkg.Version))
+		writer.WriteString(fmt.Sprintf("%s Generated %s by %s %s\n", comment, runTime.Format("2006-01-02 15:04:05"), pkg.Name, pkg.Version))
 	}
 	// DEBUG contents.Execute(os.Stdout, values)
 
@@ -124,6 +128,20 @@ func generateFile(path string, filename string, contents *template.Template, val
 		return err
 	}
 	return writer.Flush()
+}
+
+// Backup file (if it already exists)
+func backupFile(fullPath string) {
+	source, err := os.Open(fullPath)
+	if !os.IsNotExist(err) {
+		defer source.Close()
+		// Copy to backup file
+		destination, err := os.Create(fmt.Sprintf("%s_%s.bak", fullPath, runTime.Format("2006-01-02_15-04-05")))
+		if err == nil {
+			defer destination.Close()
+			io.Copy(destination, source)
+		}
+	}
 }
 
 func getComment(filename string) string {
