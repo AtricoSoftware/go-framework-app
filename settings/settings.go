@@ -8,7 +8,7 @@ type Settings interface {
 	// Path to the repository
 	RepositoryPath() string
 	// Commands to add
-	Commands() []string
+	Commands() []UserCommand
 	// Settings to add
 	UserSettings() []UserSetting
 }
