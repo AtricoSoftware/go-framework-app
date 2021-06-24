@@ -1,20 +1,22 @@
 package api
 
 import (
-	"{{.RepositoryPath}}/settings"
+	"github.com/atrico-go/container"
 )
 
-type Api interface {
+// Api command to run
+type ApiCommand interface {
+	Run() error
+}
+
+{{range .Commands}}
+// {{.Description}}
+type {{.ApiName}}Api ApiCommand
+{{- end}}
+
+// Register Api services
+func RegisterApi(c container.Container) {
 {{- range .Commands}}
-	// {{.Description}}
-	{{.ApiName}}(config settings.Settings) error
+	Register{{.ApiName}}(c)
 {{- end}}
 }
-
-// Get the API for normal run
-func GetApi() Api {
-	return theApi{}
-}
-
-// Stub object for api interface
-type theApi struct{}
