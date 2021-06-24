@@ -2,6 +2,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/atrico-go/container"
 	"github.com/spf13/cobra"
 
@@ -22,9 +25,11 @@ func createGenerateCommand(apiFactory api.Factory) commandInfo {
 		Use:   "generate",
 		Short: "Generate framework app",
 		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			theApi := apiFactory.Create(args)
-			return theApi.Run()
+			if err := theApi.Run(); err != nil {
+				fmt.Fprint(os.Stderr, err)
+			}
 		},
 	}
 	settings.AddTargetDirectoryFlag(cmd.PersistentFlags())
