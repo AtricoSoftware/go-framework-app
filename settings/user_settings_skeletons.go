@@ -80,13 +80,46 @@ func ReadSkeletonFiles(files []string) {
 
 var skeletonsRead = false
 var SkeletonCloset = map[string]UserSetting{
+	"daemon-mode": {
+		Name:            "Daemon mode",
+		Id:              "DaemonMode",
+		Description:     "Exit but run command in the background",
+		Type:            "bool",
+		Cmdline:         "daemon-mode",
+		CmdlineShortcut: "d",
+	},
+	"directory": {
+		Name:            "Directory",
+		Id:              "Directory",
+		Description:     "Directory",
+		Type:            "string",
+		Cmdline:         "directory",
+		CmdlineShortcut: "d",
+		DefaultVal:      ".",
+	},
 	"dry-run": {
-		Name:        "DryRun",
+		Name:        "Dry run",
 		Id:          "DryRun",
 		Description: "Show actions but do not perform them",
 		Type:        "bool",
 		Cmdline:     "dry-run",
 		EnvVar:      "DRY_RUN",
+	},
+	"file": {
+		Name:            "File",
+		Id:              "File",
+		Description:     "File",
+		Type:            "string",
+		Cmdline:         "file",
+		CmdlineShortcut: "f",
+	},
+	"force": {
+		Name:            "Force",
+		Id:              "Force",
+		Description:     "Force operation",
+		Type:            "bool",
+		Cmdline:         "force",
+		CmdlineShortcut: "f",
 	},
 	"quiet": {
 		Name:            "Quiet",
@@ -103,30 +136,5 @@ var SkeletonCloset = map[string]UserSetting{
 		Type:            "bool",
 		Cmdline:         "recursive",
 		CmdlineShortcut: "R",
-	},
-	"force": {
-		Name:            "Force",
-		Id:              "Force",
-		Description:     "Force operation",
-		Type:            "bool",
-		Cmdline:         "force",
-		CmdlineShortcut: "f",
-	},
-	"directory": {
-		Name:            "Directory",
-		Id:              "Directory",
-		Description:     "Directory",
-		Type:            "string",
-		Cmdline:         "directory",
-		CmdlineShortcut: "d",
-		DefaultVal:      ".",
-	},
-	"file": {
-		Name:            "File",
-		Id:              "File",
-		Description:     "File",
-		Type:            "string",
-		Cmdline:         "file",
-		CmdlineShortcut: "f",
 	},
 }
