@@ -5,14 +5,13 @@ go 1.16
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
-	github.com/atrico-go/cobraEx v1.0.0
+	github.com/atrico-go/cobraEx v1.0.0 // indirect
 	github.com/atrico-go/console v1.7.1 // indirect
 	github.com/atrico-go/container v1.4.0
 	github.com/atrico-go/core v1.7.2
 	github.com/atrico-go/display v1.0.0
 	github.com/atrico-go/testing v1.3.0
-	github.com/atrico-go/viperEx v1.0.1 // indirect
-	github.com/atrico-go/viperEx/v2 v2.0.0
+	github.com/atrico-go/viperEx/v2 v2.0.2
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20210519211817-2312de329ae4 // indirect
@@ -34,12 +33,12 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.8.0
+	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
+	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/text v0.3.6 // indirect
-	golang.org/x/tools v0.1.4
+	golang.org/x/tools v0.1.4 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
