@@ -61,7 +61,7 @@ This will list the available skeletons. This will include those built in and any
 Configuration can be read from a variety of file formats (json, yaml, etc) See [viper library](https://github.com/spf13/viper)
 <br>
 The following table shows the configuration options available. Some options can be configured from the commandline and/or environment variables and all can be
-configured from the config file. The default config file is called .go-framework.<ext> where <ext> is json,yaml, etc and determines how it will be parsed.
+configured from the config file. The default config file is called .go-framework.< ext > where < ext > is json,yaml, etc and determines how it will be parsed.
 
 [comment]: <> ( SECTION-START: ConfigTable )
 
@@ -112,16 +112,16 @@ a:
 ## UserCommand
 
 ```json
-    {
+{
   "Name": "<name of command>",
   "Description": "<description>",
   "NoImplementation": "<true/false>",
   "Args": [
     "<mandatory cmdline arg>",
-    "mandatory cmdline arg"
+    "<mandatory cmdline arg>"
   ],
   "OptionalArgs": [
-    "optional cmdline arg"
+    "<optional cmdline arg>"
   ]
 }
 ```
@@ -156,9 +156,7 @@ To apply the setting to all commands, AppliesTo can be omitted
 ```json
 {
   "<name>": {
-    <as
-    for
-    userSetting>
+    <as for userSetting>
   }
 }
 ```
