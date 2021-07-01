@@ -18,15 +18,9 @@ package settings
 {{- end}}
 
 import (
-{{- if or (and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")) (.Setting.HasPrefix .Setting.TypeGetter "viperEx.")}}
 	"github.com/atrico-go/viperEx/v2"
-{{- end}}
-{{- if and (gt (len .Setting.AppliesTo) 0) (ne .Setting.Cmdline "")}}
 	"github.com/spf13/pflag"
-{{- end}}
-{{- if or (.Setting.HasPrefix .Setting.TypeGetter "viper.") (eq .Setting.TypeGetter "")}}
 	"github.com/spf13/viper"
-{{- end}}
 )
 
 const {{$settingVarName}} = "{{.Setting.Id}}"

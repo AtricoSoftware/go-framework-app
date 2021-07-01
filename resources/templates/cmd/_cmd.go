@@ -3,30 +3,14 @@
 package cmd
 
 import (
-{{- if not .Command.NoImplementation}}
 	"fmt"
 	"os"
-{{- end}}
 	"github.com/atrico-go/container"
-{{- if .Command.HasArgs}}
 	"github.com/atrico-go/cobraEx"
-{{- end}}
 	"github.com/spf13/cobra"
 
-{{- if not .Command.NoImplementation}}
 	"{{.RepositoryPath}}/api"
-{{- end}}
-{{- $write := false}}
-{{- if not .Command.NoImplementation}}
-{{- range .UserSettings}}
-	{{- if .AppliesToCmd $.Command.Name}}
-	{{- $write = true}}
-	{{- end}}
-{{- end}}
-{{- end}}
-{{- if $write}}
 	"{{.RepositoryPath}}/settings"
-{{- end}}
 )
 
 type {{.Command.ApiName}}Cmd commandInfo
