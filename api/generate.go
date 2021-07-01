@@ -4,6 +4,7 @@ package api
 
 import (
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -94,6 +95,15 @@ func (svc generateApi) Run() error {
 		destination := filepath.Join(svc.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
 		ioutil.WriteFile(destination, data, 0644)
 	}
+	// Set executable flag on scripts
+	filepath.Walk(svc.TargetDirectory(), func(path string, info fs.FileInfo, err error) error {
+		// Script files
+		if !info.IsDir() && filepath.Ext(path) == ".sh" {
+			fmt.Println("Setting exec flag on ", path)
+			ExecuteCommand(svc.TargetDirectory(), "git", "update-index", "--chmod=+x", path)
+		}
+		return nil
+	})
 	// Optimise imports
 	fmt.Println("Optimising imports (goimports)")
 	ExecuteCommand(svc.TargetDirectory(), "goimports", "-w", ".")
