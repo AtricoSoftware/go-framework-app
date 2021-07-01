@@ -94,14 +94,17 @@ func (svc generateApi) Run() error {
 		destination := filepath.Join(svc.TargetDirectory(), fmt.Sprintf(".go-framework%s", configExt))
 		ioutil.WriteFile(destination, data, 0644)
 	}
+	// Optimise imports
+	fmt.Println("Optimising imports (goimports)")
+	ExecuteCommand(svc.TargetDirectory(), "goimports", "-w", ".")
+	// Format code
+	fmt.Println("Formatting code (gofmt)")
+	ExecuteCommand(svc.TargetDirectory(), "gofmt", "-w", ".")
 	// Module dependencies
 	fmt.Println("Getting dependencies (go get)")
 	GoCommand(svc.TargetDirectory(), "get", "-u", "all")
 	fmt.Println("Downloading dependencies (go mod download)")
 	GoCommand(svc.TargetDirectory(), "mod", "download")
-	// Format code
-	fmt.Println("Formatting code (gofmt)")
-	ExecuteCommand(svc.TargetDirectory(), "gofmt", "-w", ".")
 	// Build the app
 	fmt.Println("Building code")
 	const buildFile = "build-temp"
